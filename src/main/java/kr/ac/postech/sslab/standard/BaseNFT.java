@@ -7,11 +7,12 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
 import java.util.List;
 
 public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
+	private final String argumentMessage = "Incorrect number of arguments, expecting %d";
     @Override
     public Response mint(ChaincodeStub stub, List<String> args) {
         try {
             if (args.size() != 2) {
-                throw new Exception("Incorrect number of arguments, expecting 2");
+                throw new IllegalArgumentException(String.format(argumentMessage, 2));
             }
 
             String id = args.get(0);
@@ -35,7 +36,7 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
     public Response burn(ChaincodeStub stub, List<String> args) {
         try {
             if (args.size() != 1) {
-                throw new Exception("Incorrect number of arguments, expecting 1");
+                throw new IllegalArgumentException(String.format(argumentMessage, 1));
             }
 
             String id = args.get(0);
@@ -60,7 +61,7 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
     public Response getType(ChaincodeStub stub, List<String> args) {
         try {
             if (args.size() != 1) {
-                throw new Exception("Incorrect number of arguments, expecting 1");
+                throw new IllegalArgumentException(String.format(argumentMessage, 1));
             }
 
             String id = args.get(0);
@@ -78,7 +79,7 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
     public Response setOwner(ChaincodeStub stub, List<String> args) {
         try {
             if (args.size() != 3) {
-                throw new Exception("Incorrect number of arguments, expecting 3");
+                throw new IllegalArgumentException(String.format(argumentMessage, 3));
             }
 
             String sender = args.get(0);
@@ -110,7 +111,7 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
     public Response getOwner(ChaincodeStub stub, List<String> args) {
         try {
             if (args.size() != 1) {
-                throw new Exception("Incorrect number of arguments, expecting 1");
+                throw new IllegalArgumentException(String.format(argumentMessage, 1));
             }
 
             String id = args.get(0);
@@ -128,7 +129,7 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
     public Response setOperatorForCaller(ChaincodeStub stub, List<String> args) {
         try {
             if (args.size() != 2) {
-                throw new Exception("Incorrect number of arguments, expecting 2");
+                throw new IllegalArgumentException(String.format(argumentMessage, 2));
             }
 
             String operator = args.get(0);
@@ -155,7 +156,7 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
     public Response isOperatorForCaller(ChaincodeStub stub, List<String> args) {
         try {
             if (args.size() != 2) {
-                throw new Exception("Incorrect number of arguments, expecting 2");
+                throw new IllegalArgumentException(String.format(argumentMessage, 2));
             }
 
             String owner = args.get(0);
@@ -173,7 +174,7 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
     public Response setApprovee(ChaincodeStub stub, List<String> args) {
         try {
             if (args.size() != 2) {
-                throw new Exception("Incorrect number of arguments, expecting 2");
+                throw new IllegalArgumentException(String.format(argumentMessage, 2));
             }
 
             String approvee = args.get(0);
@@ -199,7 +200,7 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
     public Response getApprovee(ChaincodeStub stub, List<String> args) {
         try {
             if (args.size() != 1) {
-                throw new Exception("Incorrect number of arguments, expecting 1");
+                throw new IllegalArgumentException(String.format(argumentMessage, 1));
             }
 
             String id = args.get(0);
