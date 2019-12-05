@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import kr.ac.postech.sslab.type.IType;
 import kr.ac.postech.sslab.type.Document;
 import kr.ac.postech.sslab.type.Signature;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class XAttrAdapter implements IXAttr {
@@ -29,7 +29,7 @@ public class XAttrAdapter implements IXAttr {
         this.xattr.assign(map);
     }
 
-    public void assign(ArrayList<String> args) {
+    public void assign(List<String> args) {
         this.xattr.assign(args);
     }
 

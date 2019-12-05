@@ -2,7 +2,7 @@ package kr.ac.postech.sslab.type;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +11,7 @@ public class Signature implements IType {
     private String hash;
 
     @Override
-    public void assign(ArrayList<String> args) {
+    public void assign(List<String> args) {
         this.activated = true;
         this.hash = args.get(0);
     }

@@ -1,7 +1,7 @@
 package kr.ac.postech.sslab.adapter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class XAttr implements IXAttr {
@@ -11,7 +11,7 @@ public class XAttr implements IXAttr {
         this.adapter = new XAttrAdapter(type);
         this.adapter.assign(map);
     }
-    public void assign(String type, ArrayList<String> args) {
+    public void assign(String type, List<String> args) {
         this.adapter = new XAttrAdapter(type);
         this.adapter.assign(args);
     }
