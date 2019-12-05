@@ -19,6 +19,9 @@ public class XAttrAdapter implements IXAttr {
             case "sig":
                 this.xattr = new Signature();
                 break;
+
+			default:
+				break;
         }
     }
 
