@@ -7,7 +7,7 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
 import java.util.List;
 
 public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
-	private final String argumentMessage = "Incorrect number of arguments, expecting %d";
+	private static final String argumentMessage = "Incorrect number of arguments, expecting %d";
     @Override
     public Response mint(ChaincodeStub stub, List<String> args) {
         try {
