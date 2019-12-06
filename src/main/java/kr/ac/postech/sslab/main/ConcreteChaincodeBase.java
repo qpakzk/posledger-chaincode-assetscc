@@ -1,7 +1,6 @@
 package kr.ac.postech.sslab.main;
 
 import kr.ac.postech.sslab.exception.NoMatchException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hyperledger.fabric.shim.ChaincodeBase;
@@ -23,7 +22,7 @@ public class ConcreteChaincodeBase extends ChaincodeBase {
 
     protected HashMap<String, HashMap<String, Boolean>> getOperatorsApproval() { return this.operatorsApproval; }
 
-    protected void setOperatorsApproval(ChaincodeStub stub, String owner, String operator, boolean approved) throws IOException, JsonProcessingException {
+    protected void setOperatorsApproval(ChaincodeStub stub, String owner, String operator, boolean approved) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
 
         String operatorsApprovalString = stub.getStringState(KEY);
