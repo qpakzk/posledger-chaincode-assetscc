@@ -15,6 +15,7 @@ public class ConcreteChaincodeBase extends ChaincodeBase {
     private HashMap<String, HashMap<String, Boolean>> operatorsApproval;
 	private static final String ARG_MESSAGE = "Incorrect number of arguments, expecting %d";
 	private static final String SUCCESS = "SUCCESS";
+	private static final String KEY = "operatorsApproval";
 
     public ConcreteChaincodeBase() {
         this.operatorsApproval = new HashMap<>();
@@ -25,7 +26,7 @@ public class ConcreteChaincodeBase extends ChaincodeBase {
     protected void setOperatorsApproval(ChaincodeStub stub, String owner, String operator, boolean approved) throws IOException, JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
 
-        String operatorsApproval = stub.getStringState("operatorsApproval");
+        String operatorsApproval = stub.getStringState(KEY);
         TypeReference type = new TypeReference<HashMap<String, HashMap<String, Boolean>>>() {};
         this.operatorsApproval = mapper.readValue(operatorsApproval, type);
 
@@ -41,7 +42,7 @@ public class ConcreteChaincodeBase extends ChaincodeBase {
         operatorMap.put(operator, approved);
         this.operatorsApproval.put(owner, operatorMap);
 
-        stub.putStringState("operatorsApproval", mapper.writeValueAsString(this.operatorsApproval));
+        stub.putStringState(KEY, mapper.writeValueAsString(this.operatorsApproval));
     }
 
     protected boolean isOperatorForOwner(String owner, String operator) {
@@ -70,9 +71,9 @@ public class ConcreteChaincodeBase extends ChaincodeBase {
 
             ObjectMapper mapper = new ObjectMapper();
 
-            String operatorsApproval = stub.getStringState("operatorsApproval");
+            String operatorsApproval = stub.getStringState(KEY);
             if (operatorsApproval.trim().length() == 0) {
-                stub.putStringState("operatorsApproval", mapper.writeValueAsString(this.operatorsApproval));
+                stub.putStringState(KEY, mapper.writeValueAsString(this.operatorsApproval));
             }
 
             return ResponseUtils.newSuccessResponse(SUCCESS);
