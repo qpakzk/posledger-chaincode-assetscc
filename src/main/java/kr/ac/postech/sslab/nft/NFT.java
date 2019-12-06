@@ -53,8 +53,9 @@ public class NFT {
         String approvee = (String) map.get("approvee");
 
         XAttr xattr = null;
-        if (map.containsKey("xattr")) {
-            Map<String, Object> xattrMap = (HashMap<String, Object>) map.get("xattr");
+        final String KEY = "xattr";
+        if (map.containsKey(KEY)) {
+            Map<String, Object> xattrMap = (HashMap<String, Object>) map.get(KEY);
             xattr = new XAttr();
             xattr.assign(type, xattrMap);
         }
