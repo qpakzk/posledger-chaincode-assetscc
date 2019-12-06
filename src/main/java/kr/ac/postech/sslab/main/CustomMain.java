@@ -15,11 +15,6 @@ public class CustomMain extends Main implements IEERC721, IXNFT {
 	private static final String NO_TYPE_MESSAGE = "No such token type exists";
 
     @Override
-    public Response init(ChaincodeStub stub) {
-        return super.init(stub);
-    }
-
-    @Override
     public Response invoke(ChaincodeStub stub) {
         try {
             String func = stub.getFunction();

@@ -15,11 +15,6 @@ public class Main extends ConcreteChaincodeBase implements IERC721, IBaseNFT {
     private BaseNFT nft = new BaseNFT();
 
     @Override
-    public Response init(ChaincodeStub stub) {
-        return super.init(stub);
-    }
-
-    @Override
     public Response invoke(ChaincodeStub stub) {
         try {
             String func = stub.getFunction();
