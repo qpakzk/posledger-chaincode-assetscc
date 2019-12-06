@@ -18,6 +18,14 @@ public class Document implements IType {
     private ArrayList<String> signers;
     private ArrayList<String> sigIds;
 
+	private static final String ACTIVATED_KEY = "activated";
+	private static final String PARENT_KEY = "parent";
+	private static final String CHILDREN_KEY = "children";
+	private static final String PAGES_KEY = "pages";
+	private static final String HASH_KEY = "hash";
+	private static final String SIGNERS_KEY = "signers";
+	private static final String SIGIDS_KEY = "sigIds";
+
     @Override
     public void assign(List<String> args) {
         this.activated = true;
@@ -31,35 +39,35 @@ public class Document implements IType {
 
     @Override
     public void assign(Map<String, Object> map) {
-        this.activated = (boolean) map.get("activated");
-        this.parent = (String) map.get("parent");
-        this.children = (ArrayList<String>) map.get("children");
-        this.pages = (int) map.get("pages");
-        this.hash = (String) map.get("hash");
-        this.signers = (ArrayList<String>) map.get("signers");
-        this.sigIds = (ArrayList<String>) map.get("sigIds");
+        this.activated = (boolean) map.get(ACTIVATED_KEY);
+        this.parent = (String) map.get(PARENT_KEY);
+        this.children = (ArrayList<String>) map.get(CHILDREN_KEY);
+        this.pages = (int) map.get(PAGES_KEY);
+        this.hash = (String) map.get(HASH_KEY);
+        this.signers = (ArrayList<String>) map.get(SIGNERS_KEY);
+        this.sigIds = (ArrayList<String>) map.get(SIGIDS_KEY);
     }
 
     @Override
     public void setXAttr(String index, String value) {
         switch (index) {
-            case "activated":
+            case ACTIVATED_KEY:
                 this.deactivate();
                 break;
 
-            case "parent":
+            case PARENT_KEY:
                 this.parent = value;
                 break;
 
-            case "children":
+            case CHILDREN_KEY:
                 this.children = this.toList(value);
                 break;
 
-            case "pages":
+            case PAGES_KEY:
                 this.pages = Integer.parseInt(value);
                 break;
 
-            case "sigIds":
+            case SIGIDS_KEY:
                 this.sigIds.add(value);
                 break;
 
@@ -71,25 +79,25 @@ public class Document implements IType {
     @Override
     public String getXAttr(String index) {
         switch (index) {
-            case "activated":
+            case ACTIVATED_KEY:
                 return Boolean.toString(this.activated);
 
-            case "parent":
+            case PARENT_KEY:
                 return this.parent;
 
-            case "children":
+            case CHILDREN_KEY:
                 return this.children.toString();
 
-            case "pages":
+            case PAGES_KEY:
                 return Integer.toString(this.pages);
 
-            case "hash":
+            case HASH_KEY:
                 return this.hash;
 
-            case "signers":
+            case SIGNERS_KEY:
                 return this.signers.toString();
 
-            case "sigIds":
+            case SIGIDS_KEY:
                 return this.sigIds.toString();
 
             default:
@@ -110,13 +118,13 @@ public class Document implements IType {
     @Override
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
-        map.put("activated", this.activated);
-        map.put("parent", this.parent);
-        map.put("children", this.children);
-        map.put("pages", this.pages);
-        map.put("hash", this.hash);
-        map.put("signers", this.signers);
-        map.put("sigIds", this.sigIds);
+        map.put(ACTIVATED_KEY, this.activated);
+        map.put(PARENT_KEY, this.parent);
+        map.put(CHILDREN_KEY, this.children);
+        map.put(PAGES_KEY, this.pages);
+        map.put(HASH_KEY, this.hash);
+        map.put(SIGNERS_KEY, this.signers);
+        map.put(SIGIDS_KEY, this.sigIds);
 
         return map;
     }
