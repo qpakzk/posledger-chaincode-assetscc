@@ -65,7 +65,7 @@ public class ConcreteChaincodeBase extends ChaincodeBase {
             }
 
             List<String> args = stub.getParameters();
-            if (args.size() != 0) {
+            if (!args.isEmpty()) {
                 throw new IllegalArgumentException(String.format(ARG_MESSAGE, 0));
             }
 
