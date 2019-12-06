@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DocNFT extends XNFT {
-	private final static String ARG_MESSAGE = "Incorrect number of arguments, expecting %d";
-	private final static String SUCCESS = "SUCCESS";
+	private static final String ARG_MESSAGE = "Incorrect number of arguments, expecting %d";
+	private static final String SUCCESS = "SUCCESS";
     @Override
     public Response mint(ChaincodeStub stub, List<String> args) {
         try {

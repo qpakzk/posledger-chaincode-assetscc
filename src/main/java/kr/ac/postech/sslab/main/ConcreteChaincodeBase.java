@@ -12,8 +12,8 @@ import java.util.List;
 
 public class ConcreteChaincodeBase extends ChaincodeBase {
     private HashMap<String, HashMap<String, Boolean>> operatorsApproval;
-	private final static String ARG_MESSAGE = "Incorrect number of arguments, expecting %d";
-	private final static String SUCCESS = "SUCCESS";
+	private static final String ARG_MESSAGE = "Incorrect number of arguments, expecting %d";
+	private static final String SUCCESS = "SUCCESS";
 
     public ConcreteChaincodeBase() {
         this.operatorsApproval = new HashMap<>();

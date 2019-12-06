@@ -14,8 +14,8 @@ import org.hyperledger.fabric.shim.ledger.KeyValue;
 import org.hyperledger.fabric.shim.ledger.QueryResultsIterator;
 
 public class EERC721 extends ERC721 implements IEERC721 {
-	private final static String ARG_MESSAGE = "Incorrect number of arguments, expecting %d";
-	private final static String SUCCESS = "SUCCESS";
+	private static final String ARG_MESSAGE = "Incorrect number of arguments, expecting %d";
+	private static final String SUCCESS = "SUCCESS";
 
 	@Override
 	public Response balanceOf(ChaincodeStub stub, List<String> args) {

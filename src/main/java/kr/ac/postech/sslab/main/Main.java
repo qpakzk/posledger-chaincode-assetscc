@@ -9,7 +9,6 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
 import java.util.*;
 
 public class Main extends ConcreteChaincodeBase implements IERC721, IBaseNFT {
-	private final static String SUCCESS = "SUCCESS";
     private ERC721 erc721 = new ERC721();
     private BaseNFT nft = new BaseNFT();
 
