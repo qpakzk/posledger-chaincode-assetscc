@@ -9,11 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DocNFT extends XNFT {
+	private final static String ARG_MESSAGE = "Incorrect number of arguments, expecting %d";
+	private final static String SUCCESS = "SUCCESS";
     @Override
     public Response mint(ChaincodeStub stub, List<String> args) {
         try {
             if (args.size() != 8) {
-                throw new Throwable("FAILURE");
+                throw new IllegalArgumentException(String.format(ARG_MESSAGE, 8));
             }
 
             String id = args.get(0);
@@ -27,7 +29,7 @@ public class DocNFT extends XNFT {
 
             String caller = Address.getMyAddress(stub);
             if (!caller.equals(owner))
-                throw new Throwable();
+                throw new Exception();
 
             XAttr xattr = new XAttr();
             ArrayList<String> params = new ArrayList<>();
@@ -42,9 +44,9 @@ public class DocNFT extends XNFT {
             NFT nft = new NFT();
             nft.mint(stub, id, type, owner, xattr, uri);
 
-            return newSuccessResponse("SUCCESS");
-        } catch (Throwable throwable) {
-            return newErrorResponse("FAILURE");
+            return newSuccessResponse(SUCCESS);
+        } catch (Exception e) {
+            return newErrorResponse(e.getMessage());
         }
     }
 }

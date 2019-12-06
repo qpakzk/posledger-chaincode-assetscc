@@ -14,6 +14,9 @@ import org.hyperledger.fabric.shim.ledger.KeyValue;
 import org.hyperledger.fabric.shim.ledger.QueryResultsIterator;
 
 public class EERC721 extends ERC721 implements IEERC721 {
+	private final static String ARG_MESSAGE = "Incorrect number of arguments, expecting %d";
+	private final static String SUCCESS = "SUCCESS";
+
 	@Override
 	public Response balanceOf(ChaincodeStub stub, List<String> args) {
 		try {
@@ -22,7 +25,7 @@ public class EERC721 extends ERC721 implements IEERC721 {
 			}
 
 			if (args.size() != 2) {
-				throw new Throwable("FAILURE");
+				throw new IllegalArgumentException(String.format(ARG_MESSAGE, 2));
 			}
 
 			String owner = args.get(0);
@@ -31,8 +34,8 @@ public class EERC721 extends ERC721 implements IEERC721 {
 			long ownedTokensCount = this.getBalance(stub, owner, type);
 
 			return newSuccessResponse(Long.toString(ownedTokensCount));
-		} catch (Throwable throwable) {
-			return newErrorResponse("FAILURE");
+		} catch (Exception e) {
+			return newErrorResponse(e.getMessage());
 		}
 	}
 
@@ -57,7 +60,7 @@ public class EERC721 extends ERC721 implements IEERC721 {
 	public Response divide(ChaincodeStub stub, List<String> args) {
 		try {
 			if (args.size() != 4) {
-				throw new Throwable("FAILURE");
+				throw new IllegalArgumentException(String.format(ARG_MESSAGE, 4));
 			}
 
 			String id = args.get(0);
@@ -68,7 +71,7 @@ public class EERC721 extends ERC721 implements IEERC721 {
 			String index = args.get(3);
 
 			if (newIds.length != 2 || values.length != 2) {
-				throw new Throwable();
+				throw new Exception();
 			}
 
 			NFT nft = NFT.read(stub, id);
@@ -77,7 +80,7 @@ public class EERC721 extends ERC721 implements IEERC721 {
 			String owner = nft.getOwner();
 
 			if ( !(caller.equals(owner) || this.isOperatorForOwner(owner, caller)) )
-				throw new Throwable();
+				throw new Exception();
 
 			NFT[] child = new NFT[2];
 
@@ -100,9 +103,9 @@ public class EERC721 extends ERC721 implements IEERC721 {
 			nft.setXAttr(stub, "activated", "false");
 			nft.setXAttr(stub, "children", newIds[0] + "," + newIds[1]);
 
-			return newSuccessResponse("SUCCESS");
-		} catch (Throwable throwable) {
-			return newErrorResponse("FAILURE");
+			return newSuccessResponse(SUCCESS);
+		} catch (Exception e) {
+			return newErrorResponse(e.getMessage());
 		}
 	}
 
@@ -110,7 +113,7 @@ public class EERC721 extends ERC721 implements IEERC721 {
     public Response deactivate(ChaincodeStub stub, List<String> args) {
 		try {
 			if (args.size() != 1) {
-				throw new Throwable("FAILURE");
+				throw new IllegalArgumentException(String.format(ARG_MESSAGE, 1));
 			}
 
 			String id = args.get(0);
@@ -121,13 +124,13 @@ public class EERC721 extends ERC721 implements IEERC721 {
 			String owner = nft.getOwner();
 
 			if ( !(caller.equals(owner) || this.isOperatorForOwner(owner, caller)) )
-				throw new Throwable();
+				throw new Exception();
 
 			nft.setXAttr(stub, "activated", "false");
 
-			return newSuccessResponse("SUCCESS");
-		} catch (Throwable throwable) {
-			return newErrorResponse("FAILURE");
+			return newSuccessResponse(SUCCESS);
+		} catch (Exception e) {
+			return newErrorResponse(e.getMessage());
 		}
 	}
 
@@ -135,7 +138,7 @@ public class EERC721 extends ERC721 implements IEERC721 {
     public Response query(ChaincodeStub stub, List<String> args) {
 		try {
 			if (args.size() != 1) {
-				throw new Throwable("FAILURE");
+				throw new IllegalArgumentException(String.format(ARG_MESSAGE, 1));
 			}
 
 			String id = args.get(0);
@@ -144,8 +147,8 @@ public class EERC721 extends ERC721 implements IEERC721 {
 
 			String query = nft.toJSONString();
 			return newSuccessResponse(query);
-		} catch (Throwable throwable) {
-			return newErrorResponse("FAILURE");
+		} catch (Exception e) {
+			return newErrorResponse(e.getMessage());
 		}
 	}
 
@@ -153,7 +156,7 @@ public class EERC721 extends ERC721 implements IEERC721 {
     public Response queryHistory(ChaincodeStub stub, List<String> args) {
 		try {
 			if (args.size() != 1) {
-				throw new Throwable("FAILURE");
+				throw new IllegalArgumentException(String.format(ARG_MESSAGE, 1));
 			}
 
 			String id = args.get(0);
@@ -165,8 +168,8 @@ public class EERC721 extends ERC721 implements IEERC721 {
 			}
 
 			return newSuccessResponse(histories.toString());
-		} catch (Throwable throwable) {
-			return newErrorResponse("FAILURE");
+		} catch (Exception e) {
+			return newErrorResponse(e.getMessage());
 		}
 	}
 }

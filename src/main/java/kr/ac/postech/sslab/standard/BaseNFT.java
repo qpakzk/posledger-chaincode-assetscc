@@ -8,6 +8,8 @@ import java.util.List;
 
 public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
 	private static final String ARG_MESSAGE = "Incorrect number of arguments, expecting %d";
+	private static final String SUCCESS = "SUCCESS";
+
     @Override
     public Response mint(ChaincodeStub stub, List<String> args) {
         try {
@@ -26,7 +28,7 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
 
             NFT nft = new NFT();
             nft.mint(stub, id, type, owner, null, null);
-            return newSuccessResponse("SUCCESS");
+            return newSuccessResponse(SUCCESS);
         } catch (Exception e) {
             return newErrorResponse(e.getMessage());
         }
@@ -51,7 +53,7 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
 
             nft.burn(stub, id);
 
-            return newSuccessResponse("SUCCESS");
+            return newSuccessResponse(SUCCESS);
         } catch (Exception e) {
             return newErrorResponse(e.getMessage());
         }
@@ -101,7 +103,7 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
 
             nft.setOwner(stub, receiver);
 
-            return newSuccessResponse("SUCCESS");
+            return newSuccessResponse(SUCCESS);
         } catch (Exception e) {
             return newErrorResponse(e.getMessage());
         }
@@ -146,7 +148,7 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
 
             this.setOperatorsApproval(stub, caller, operator, approved);
 
-            return newSuccessResponse("SUCCESS");
+            return newSuccessResponse(SUCCESS);
         } catch (Exception e) {
             return newErrorResponse(e.getMessage());
         }
@@ -190,7 +192,7 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
 
             nft.setApprovee(stub, approvee);
 
-            return newSuccessResponse("SUCCESS");
+            return newSuccessResponse(SUCCESS);
         } catch (Exception e) {
             return newErrorResponse(e.getMessage());
         }

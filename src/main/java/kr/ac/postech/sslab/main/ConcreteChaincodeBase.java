@@ -12,6 +12,8 @@ import java.util.List;
 
 public class ConcreteChaincodeBase extends ChaincodeBase {
     private HashMap<String, HashMap<String, Boolean>> operatorsApproval;
+	private final static String ARG_MESSAGE = "Incorrect number of arguments, expecting %d";
+	private final static String SUCCESS = "SUCCESS";
 
     public ConcreteChaincodeBase() {
         this.operatorsApproval = new HashMap<>();
@@ -57,12 +59,12 @@ public class ConcreteChaincodeBase extends ChaincodeBase {
             String func = stub.getFunction();
 
             if (!func.equals("init")) {
-                throw new Throwable("FAILURE");
+                throw new Exception();
             }
 
             List<String> args = stub.getParameters();
             if (args.size() != 0) {
-                throw new Throwable("FAILURE");
+                throw new IllegalArgumentException(String.format(ARG_MESSAGE, 0));
             }
 
             ObjectMapper mapper = new ObjectMapper();
@@ -72,14 +74,14 @@ public class ConcreteChaincodeBase extends ChaincodeBase {
                 stub.putStringState("operatorsApproval", mapper.writeValueAsString(this.operatorsApproval));
             }
 
-            return newSuccessResponse("SUCCESS");
-        } catch (Throwable throwable) {
-            return newErrorResponse("FAILURE");
+            return newSuccessResponse(SUCCESS);
+        } catch (Exception e) {
+            return newErrorResponse(e.getMessage());
         }
     }
 
     @Override
     public Response invoke(ChaincodeStub stub) {
-        return newSuccessResponse("SUCCESS");
+        return newSuccessResponse(SUCCESS);
     }
 }

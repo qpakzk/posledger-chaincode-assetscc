@@ -10,11 +10,14 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
 import java.util.List;
 
 public class XNFT extends BaseNFT implements IXNFT {
+	private final static String ARG_MESSAGE = "Incorrect number of arguments, expecting %d";
+	private final static String SUCCESS = "SUCCESS";
+
     @Override
     public Response setURI(ChaincodeStub stub, List<String> args) {
         try {
             if (args.size() != 3) {
-                throw new Throwable("FAILURE");
+                throw new IllegalArgumentException(String.format(ARG_MESSAGE, 3));
             }
 
             String id = args.get(0);
@@ -26,40 +29,44 @@ public class XNFT extends BaseNFT implements IXNFT {
             String caller = Address.getMyAddress(stub);
             String owner = nft.getOwner();
             if (!caller.equals(owner))
-                throw new Throwable();
+                throw new Exception();
 
 
             URI uri = nft.getURI();
             if (uri == null)
-                throw new Throwable();
+                throw new NullPointerException();
 
             nft.setURI(stub, index, value);
 
-            return newSuccessResponse("SUCCESS");
-        } catch (Throwable throwable) {
-            return newErrorResponse("FAILURE");
+            return newSuccessResponse(SUCCESS);
+        } catch (Exception e) {
+            return newErrorResponse(e.getMessage());
         }
     }
 
     @Override
     public Response getURI(ChaincodeStub stub, List<String> args) {
         try {
+            if (args.size() != 2) {
+                throw new IllegalArgumentException(String.format(ARG_MESSAGE, 2));
+            }
+
             String id = args.get(0);
             String index = args.get(1);
             NFT nft = NFT.read(stub, id);
 
             URI uri = nft.getURI();
             if (uri == null)
-                throw new Throwable();
+                throw new NullPointerException();
 
             String value = nft.getURI(index);
 
             if (value == null)
-                throw new Throwable();
+                throw new NullPointerException();
 
             return newSuccessResponse(value);
-        } catch (Throwable throwable) {
-            return newErrorResponse("FAILURE");
+        } catch (Exception e) {
+            return newErrorResponse(e.getMessage());
         }
     }
 
@@ -67,7 +74,7 @@ public class XNFT extends BaseNFT implements IXNFT {
     public Response setXAttr(ChaincodeStub stub, List<String> args) {
         try {
             if (args.size() != 3) {
-                throw new Throwable("FAILURE");
+                throw new IllegalArgumentException(String.format(ARG_MESSAGE, 3));
             }
 
             String id = args.get(0);
@@ -78,18 +85,18 @@ public class XNFT extends BaseNFT implements IXNFT {
 
             XAttr xattr = nft.getXAttr();
             if (xattr == null)
-                throw new Throwable();
+                throw new NullPointerException();
 
             String caller = Address.getMyAddress(stub);
             String owner = nft.getOwner();
             if (!caller.equals(owner))
-                throw new Throwable();
+                throw new Exception();
 
             nft.setXAttr(stub, index, value);
 
-            return newSuccessResponse("SUCCESS");
-        } catch (Throwable throwable) {
-            return newErrorResponse("FAILURE");
+            return newSuccessResponse(SUCCESS);
+        } catch (Exception e) {
+            return newErrorResponse(e.getMessage());
         }
     }
 
@@ -97,7 +104,7 @@ public class XNFT extends BaseNFT implements IXNFT {
     public Response getXAttr(ChaincodeStub stub, List<String> args) {
         try {
             if (args.size() != 2) {
-                throw new Throwable("FAILURE");
+                throw new IllegalArgumentException(String.format(ARG_MESSAGE, 2));
             }
 
             String id = args.get(0);
@@ -107,12 +114,12 @@ public class XNFT extends BaseNFT implements IXNFT {
 
             XAttr xattr = nft.getXAttr();
             if (xattr == null)
-                throw new Throwable();
+                throw new NullPointerException();
 
             String value = nft.getXAttr(index);
             return newSuccessResponse(value);
-        } catch (Throwable throwable) {
-            return newErrorResponse("FAILURE");
+        } catch (Exception e) {
+            return newErrorResponse(e.getMessage());
         }
     }
 }

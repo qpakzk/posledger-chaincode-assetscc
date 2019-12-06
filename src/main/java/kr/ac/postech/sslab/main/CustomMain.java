@@ -57,8 +57,8 @@ public class CustomMain extends Main implements IEERC721, IXNFT {
                     return super.invoke(stub);
             }
 
-        } catch (Throwable throwable) {
-            return newErrorResponse("FAILURE");
+        } catch (Exception e) {
+            return newErrorResponse(e.getMessage());
         }
     }
 
@@ -115,10 +115,10 @@ public class CustomMain extends Main implements IEERC721, IXNFT {
                     return this.sig.getURI(stub, args);
 
                 default:
-                    throw new Throwable("FAILURE");
+                    throw new Exception("FAILURE");
             }
-        } catch (Throwable throwable) {
-            return newErrorResponse("FAILURE");
+        } catch (Exception e) {
+            return newErrorResponse(e.getMessage());
         }
     }
 
@@ -135,10 +135,10 @@ public class CustomMain extends Main implements IEERC721, IXNFT {
                     return this.sig.setURI(stub, args);
 
                 default:
-                    throw new Throwable("FAILURE");
+                    throw new Exception("FAILURE");
             }
-        } catch (Throwable throwable) {
-            return newErrorResponse("FAILURE");
+        } catch (Exception e) {
+            return newErrorResponse(e.getMessage());
         }
     }
 
@@ -155,10 +155,10 @@ public class CustomMain extends Main implements IEERC721, IXNFT {
                     return this.sig.setXAttr(stub, args);
 
                 default:
-                    throw  new Throwable("FAILURE");
+                    throw  new Exception("FAILURE");
             }
-        } catch (Throwable throwable) {
-            return newErrorResponse("FAILURE");
+        } catch (Exception e) {
+            return newErrorResponse(e.getMessage());
         }
     }
 
@@ -175,10 +175,10 @@ public class CustomMain extends Main implements IEERC721, IXNFT {
                     return this.sig.getXAttr(stub, args);
 
                 default:
-                    throw  new Throwable("FAILURE");
+                    throw  new Exception("FAILURE");
             }
-        } catch (Throwable throwable) {
-            return newErrorResponse("FAILURE");
+        } catch (Exception e) {
+            return newErrorResponse(e.getMessage());
         }
     }
 
