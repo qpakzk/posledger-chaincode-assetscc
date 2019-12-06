@@ -24,10 +24,8 @@ public class Signature implements IType {
 
     @Override
     public void setXAttr(String index, String value) {
-        switch (index) {
-            case "activated":
-                this.deactivate();
-                break;
+        if (index.equals("activated")) {
+            this.deactivate();
         }
     }
 
@@ -39,9 +37,10 @@ public class Signature implements IType {
 
             case "hash":
                 return this.hash;
-        }
 
-        return null;
+            default:
+                return null;
+        }
     }
 
     @Override

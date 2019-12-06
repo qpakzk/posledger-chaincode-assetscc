@@ -127,6 +127,9 @@ public class NFT {
             case "hash":
                 this.uri.setHash(value);
                 break;
+
+            default:
+                break;
         }
 
         stub.putStringState(this.id, this.toJSONString());

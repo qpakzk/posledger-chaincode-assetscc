@@ -62,6 +62,9 @@ public class Document implements IType {
             case "sigIds":
                 this.sigIds.add(value);
                 break;
+
+            default:
+                break;
         }
     }
 
@@ -88,9 +91,10 @@ public class Document implements IType {
 
             case "sigIds":
                 return this.sigIds.toString();
-        }
 
-        return null;
+            default:
+                return null;
+        }
     }
 
     private ArrayList<String> toList(String string) {
