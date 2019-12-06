@@ -4,6 +4,7 @@ import kr.ac.postech.sslab.standard.BaseNFT;
 import kr.ac.postech.sslab.standard.ERC721;
 import kr.ac.postech.sslab.standard.IBaseNFT;
 import kr.ac.postech.sslab.standard.IERC721;
+import kr.ac.postech.sslab.exception.NoMatchException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ResponseUtils;
 
@@ -74,7 +75,7 @@ public class Main extends ConcreteChaincodeBase implements IERC721, IBaseNFT {
                     return this.getApprovee(stub, args);
 
                 default:
-                    throw new Exception("FAILURE");
+                    throw new NoMatchException("No such function exists");
             }
 
         } catch (Exception e) {

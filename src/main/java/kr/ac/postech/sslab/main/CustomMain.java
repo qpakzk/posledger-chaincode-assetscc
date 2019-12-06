@@ -2,6 +2,7 @@ package kr.ac.postech.sslab.main;
 
 import kr.ac.postech.sslab.extension.*;
 import kr.ac.postech.sslab.nft.NFT;
+import kr.ac.postech.sslab.exception.NoMatchException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ResponseUtils;
 import java.util.List;
@@ -10,6 +11,8 @@ public class CustomMain extends Main implements IEERC721, IXNFT {
     private EERC721 eerc721 = new EERC721();
     private DocNFT doc = new DocNFT();
     private SigNFT sig = new SigNFT();
+
+	private static final String NO_TYPE_MESSAGE = "No such token type exists";
 
     @Override
     public Response init(ChaincodeStub stub) {
@@ -116,7 +119,7 @@ public class CustomMain extends Main implements IEERC721, IXNFT {
                     return this.sig.getURI(stub, args);
 
                 default:
-                    throw new Exception("FAILURE");
+                    throw new NoMatchException(NO_TYPE_MESSAGE);
             }
         } catch (Exception e) {
             return ResponseUtils.newErrorResponse(e.getMessage());
@@ -136,7 +139,7 @@ public class CustomMain extends Main implements IEERC721, IXNFT {
                     return this.sig.setURI(stub, args);
 
                 default:
-                    throw new Exception("FAILURE");
+                    throw new NoMatchException(NO_TYPE_MESSAGE);
             }
         } catch (Exception e) {
             return ResponseUtils.newErrorResponse(e.getMessage());
@@ -156,7 +159,7 @@ public class CustomMain extends Main implements IEERC721, IXNFT {
                     return this.sig.setXAttr(stub, args);
 
                 default:
-                    throw  new Exception("FAILURE");
+                    throw new NoMatchException(NO_TYPE_MESSAGE);
             }
         } catch (Exception e) {
             return ResponseUtils.newErrorResponse(e.getMessage());
@@ -176,7 +179,7 @@ public class CustomMain extends Main implements IEERC721, IXNFT {
                     return this.sig.getXAttr(stub, args);
 
                 default:
-                    throw  new Exception("FAILURE");
+                    throw new NoMatchException(NO_TYPE_MESSAGE);
             }
         } catch (Exception e) {
             return ResponseUtils.newErrorResponse(e.getMessage());

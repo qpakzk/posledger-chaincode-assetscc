@@ -4,6 +4,7 @@ import kr.ac.postech.sslab.adapter.XAttr;
 import kr.ac.postech.sslab.nft.NFT;
 import kr.ac.postech.sslab.type.URI;
 import kr.ac.postech.sslab.user.Address;
+import kr.ac.postech.sslab.exception.NoMatchException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ResponseUtils;
 import java.io.IOException;
@@ -71,7 +72,7 @@ public class EERC721 extends ERC721 implements IEERC721 {
 			String index = args.get(3);
 
 			if (newIds.length != 2 || values.length != 2) {
-				throw new Exception();
+				throw new IndexOutOfBoundsException("Both array 'newIds' and 'values' should have only two elements");
 			}
 
 			NFT nft = NFT.read(stub, id);
@@ -80,7 +81,7 @@ public class EERC721 extends ERC721 implements IEERC721 {
 			String owner = nft.getOwner();
 
 			if ( !(caller.equals(owner) || this.isOperatorForOwner(owner, caller)) )
-				throw new Exception();
+				throw new NoMatchException("The caller should be an owner or an operator");
 
 			NFT[] child = new NFT[2];
 
@@ -124,7 +125,7 @@ public class EERC721 extends ERC721 implements IEERC721 {
 			String owner = nft.getOwner();
 
 			if ( !(caller.equals(owner) || this.isOperatorForOwner(owner, caller)) )
-				throw new Exception();
+				throw new NoMatchException("The caller should be an owner or an operator");
 
 			nft.setXAttr(stub, "activated", "false");
 

@@ -5,6 +5,7 @@ import kr.ac.postech.sslab.nft.NFT;
 import kr.ac.postech.sslab.standard.BaseNFT;
 import kr.ac.postech.sslab.type.URI;
 import kr.ac.postech.sslab.user.Address;
+import kr.ac.postech.sslab.exception.NoMatchException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ResponseUtils;
 
@@ -30,7 +31,7 @@ public class XNFT extends BaseNFT implements IXNFT {
             String caller = Address.getMyAddress(stub);
             String owner = nft.getOwner();
             if (!caller.equals(owner))
-                throw new Exception();
+				throw new NoMatchException("The caller should be an owner");
 
 
             URI uri = nft.getURI();
@@ -91,7 +92,7 @@ public class XNFT extends BaseNFT implements IXNFT {
             String caller = Address.getMyAddress(stub);
             String owner = nft.getOwner();
             if (!caller.equals(owner))
-                throw new Exception();
+				throw new NoMatchException("The caller should be an owner");
 
             nft.setXAttr(stub, index, value);
 

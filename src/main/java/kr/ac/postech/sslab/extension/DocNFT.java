@@ -4,6 +4,7 @@ import kr.ac.postech.sslab.adapter.XAttr;
 import kr.ac.postech.sslab.nft.NFT;
 import kr.ac.postech.sslab.type.URI;
 import kr.ac.postech.sslab.user.Address;
+import kr.ac.postech.sslab.exception.NoMatchException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ResponseUtils;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class DocNFT extends XNFT {
 
             String caller = Address.getMyAddress(stub);
             if (!caller.equals(owner))
-                throw new Exception();
+                throw new NoMatchException("The caller should be an owner");
 
             XAttr xattr = new XAttr();
             ArrayList<String> params = new ArrayList<>();

@@ -1,12 +1,12 @@
 package kr.ac.postech.sslab.main;
 
+import kr.ac.postech.sslab.exception.NoMatchException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hyperledger.fabric.shim.ChaincodeBase;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ResponseUtils;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +61,7 @@ public class ConcreteChaincodeBase extends ChaincodeBase {
             String func = stub.getFunction();
 
             if (!func.equals("init")) {
-                throw new Exception();
+                throw new NoMatchException("'init' function is only allowed");
             }
 
             List<String> args = stub.getParameters();

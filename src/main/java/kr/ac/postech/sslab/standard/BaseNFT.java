@@ -3,6 +3,7 @@ package kr.ac.postech.sslab.standard;
 import kr.ac.postech.sslab.main.ConcreteChaincodeBase;
 import kr.ac.postech.sslab.nft.NFT;
 import kr.ac.postech.sslab.user.Address;
+import kr.ac.postech.sslab.exception.NoMatchException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ResponseUtils;
 import java.util.List;
@@ -24,7 +25,7 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
 
             String caller = Address.getMyAddress(stub);
             if (!caller.equals(owner)) {
-                throw new Exception("The caller should be an owner");
+                throw new NoMatchException("The caller should be an owner");
             }
 
             NFT nft = new NFT();
@@ -49,7 +50,7 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
             String caller = Address.getMyAddress(stub);
             String owner = nft.getOwner();
             if (!caller.equals(owner)) {
-                throw new Exception("The caller should be an owner");
+                throw new NoMatchException("The caller should be an owner");
             }
 
             nft.burn(stub, id);
@@ -93,13 +94,13 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
 
             String owner = nft.getOwner();
             if (!sender.equals(owner)) {
-                throw new Exception("The sender should be an owner");
+                throw new NoMatchException("The sender should be an owner");
             }
 
             String caller = Address.getMyAddress(stub);
             String approvee = nft.getApprovee();
             if ( !(caller.equals(owner) || caller.equals(approvee) || this.isOperatorForOwner(owner, caller)) ) {
-                throw new Exception("The caller should be an owner or an operator");
+                throw new NoMatchException("The caller should be an owner or an operator");
             }
 
             nft.setOwner(stub, receiver);
@@ -140,11 +141,11 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
 
             String caller = Address.getMyAddress(stub);
             if (operator.equals(caller)) {
-                throw new Exception("The Caller should not be an operator");
+                throw new NoMatchException("The Caller should not be an operator");
             }
 
             if (this.getOperatorsApproval() == null) {
-                throw new Exception("OperatorsApproval does not exist");
+                throw new NullPointerException("OperatorsApproval does not exist");
             }
 
             this.setOperatorsApproval(stub, caller, operator, approved);
@@ -188,7 +189,7 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
             String caller = Address.getMyAddress(stub);
             String owner = nft.getOwner();
             if ( !(caller.equals(owner) || this.isOperatorForOwner(owner, caller)) ) {
-                throw new Exception("The caller should be an owner or an operator");
+                throw new NoMatchException("The caller should be an owner or an operator");
             }
 
             nft.setApprovee(stub, approvee);

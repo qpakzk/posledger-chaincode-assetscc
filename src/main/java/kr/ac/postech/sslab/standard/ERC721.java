@@ -9,12 +9,13 @@ import java.util.List;
 
 public class ERC721 extends ConcreteChaincodeBase implements IERC721 {
 	private BaseNFT baseNFT = new BaseNFT();
+	private static final String ARG_MESSAGE = "Incorrect number of arguments, expecting %d";
 
 	@Override
 	public Response balanceOf(ChaincodeStub stub, List<String> args) {
 		try {
 			if (args.size() != 1) {
-				throw new Exception("FAILURE");
+				throw new IllegalArgumentException(String.format(ARG_MESSAGE, 1));
 			}
 
 			String owner = args.get(0);
