@@ -1,6 +1,5 @@
 package kr.ac.postech.sslab.extension;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.ac.postech.sslab.adapter.XAttr;
 import kr.ac.postech.sslab.nft.NFT;
 import kr.ac.postech.sslab.type.URI;
