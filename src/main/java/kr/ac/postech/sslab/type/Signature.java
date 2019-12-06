@@ -10,6 +10,9 @@ public class Signature implements IType {
     private boolean activated;
     private String hash;
 
+	private static final String ACTIVATED_KEY = "activated";
+	private static final String HASH_KEY = "hash";
+
     @Override
     public void assign(List<String> args) {
         this.activated = true;
@@ -18,13 +21,13 @@ public class Signature implements IType {
 
     @Override
     public void assign(Map<String, Object> map) {
-        this.activated = (boolean) map.get("activated");
-        this.hash = (String) map.get("hash");
+        this.activated = (boolean) map.get(ACTIVATED_KEY);
+        this.hash = (String) map.get(HASH_KEY);
     }
 
     @Override
     public void setXAttr(String index, String value) {
-        if (index.equals("activated")) {
+        if (index.equals(ACTIVATED_KEY)) {
             this.deactivate();
         }
     }
@@ -32,10 +35,10 @@ public class Signature implements IType {
     @Override
     public String getXAttr(String index) {
         switch (index) {
-            case "activated":
+            case ACTIVATED_KEY:
                 return Boolean.toString(this.activated);
 
-            case "hash":
+            case HASH_KEY:
                 return this.hash;
 
             default:
@@ -52,8 +55,8 @@ public class Signature implements IType {
     @Override
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
-        map.put("activated", this.activated);
-        map.put("hash", this.hash);
+        map.put(ACTIVATED_KEY, this.activated);
+        map.put(HASH_KEY, this.hash);
 
         return map;
     }
