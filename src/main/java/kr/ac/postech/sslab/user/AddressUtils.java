@@ -5,6 +5,10 @@ import java.security.cert.Certificate;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 class AddressUtils {
+	private AddressUtils() {
+		throw new IllegalStateException("AddressUtils class");
+	}
+
     public static boolean isValidAddress(String address) {
         if (address == null || address.length() != 42) {
             return false;

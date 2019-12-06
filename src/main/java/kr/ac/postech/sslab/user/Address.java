@@ -13,6 +13,10 @@ import org.hyperledger.fabric.shim.ChaincodeException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 
 public class Address {
+	private Address() {
+		throw new IllegalStateException("Address class");
+	}
+
     public static String getMyAddress(ChaincodeStub stub) {
         return AddressUtils.getAddressFor(getMyCertificate(stub));
     }
