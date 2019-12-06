@@ -31,7 +31,7 @@ public class XNFT extends BaseNFT implements IXNFT {
             String caller = Address.getMyAddress(stub);
             String owner = nft.getOwner();
             if (!caller.equals(owner))
-				throw new NoMatchException("The caller should be an owner");
+                throw new NoMatchException("The caller should be an owner");
 
 
             URI uri = nft.getURI();
@@ -92,7 +92,7 @@ public class XNFT extends BaseNFT implements IXNFT {
             String caller = Address.getMyAddress(stub);
             String owner = nft.getOwner();
             if (!caller.equals(owner))
-				throw new NoMatchException("The caller should be an owner");
+                throw new NoMatchException("The caller should be an owner");
 
             nft.setXAttr(stub, index, value);
 
