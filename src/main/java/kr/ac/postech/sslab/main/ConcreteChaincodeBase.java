@@ -26,9 +26,9 @@ public class ConcreteChaincodeBase extends ChaincodeBase {
     protected void setOperatorsApproval(ChaincodeStub stub, String owner, String operator, boolean approved) throws IOException, JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
 
-        String operatorsApproval = stub.getStringState(KEY);
+        String operatorsApprovalString = stub.getStringState(KEY);
         TypeReference type = new TypeReference<HashMap<String, HashMap<String, Boolean>>>() {};
-        this.operatorsApproval = mapper.readValue(operatorsApproval, type);
+        this.operatorsApproval = mapper.readValue(operatorsApprovalString, type);
 
 
         HashMap<String, Boolean> operatorMap;
@@ -71,8 +71,8 @@ public class ConcreteChaincodeBase extends ChaincodeBase {
 
             ObjectMapper mapper = new ObjectMapper();
 
-            String operatorsApproval = stub.getStringState(KEY);
-            if (operatorsApproval.trim().length() == 0) {
+            String operatorsApprovalString = stub.getStringState(KEY);
+            if (operatorsApprovalString.trim().length() == 0) {
                 stub.putStringState(KEY, mapper.writeValueAsString(this.operatorsApproval));
             }
 
