@@ -6,6 +6,7 @@ import kr.ac.postech.sslab.standard.BaseNFT;
 import kr.ac.postech.sslab.type.URI;
 import kr.ac.postech.sslab.user.Address;
 import org.hyperledger.fabric.shim.ChaincodeStub;
+import org.hyperledger.fabric.shim.ResponseUtils;
 
 import java.util.List;
 
@@ -38,9 +39,9 @@ public class XNFT extends BaseNFT implements IXNFT {
 
             nft.setURI(stub, index, value);
 
-            return newSuccessResponse(SUCCESS);
+            return ResponseUtils.newSuccessResponse(SUCCESS);
         } catch (Exception e) {
-            return newErrorResponse(e.getMessage());
+            return ResponseUtils.newErrorResponse(e.getMessage());
         }
     }
 
@@ -64,9 +65,9 @@ public class XNFT extends BaseNFT implements IXNFT {
             if (value == null)
                 throw new NullPointerException();
 
-            return newSuccessResponse(value);
+            return ResponseUtils.newSuccessResponse(value);
         } catch (Exception e) {
-            return newErrorResponse(e.getMessage());
+            return ResponseUtils.newErrorResponse(e.getMessage());
         }
     }
 
@@ -94,9 +95,9 @@ public class XNFT extends BaseNFT implements IXNFT {
 
             nft.setXAttr(stub, index, value);
 
-            return newSuccessResponse(SUCCESS);
+            return ResponseUtils.newSuccessResponse(SUCCESS);
         } catch (Exception e) {
-            return newErrorResponse(e.getMessage());
+            return ResponseUtils.newErrorResponse(e.getMessage());
         }
     }
 
@@ -117,9 +118,9 @@ public class XNFT extends BaseNFT implements IXNFT {
                 throw new NullPointerException();
 
             String value = nft.getXAttr(index);
-            return newSuccessResponse(value);
+            return ResponseUtils.newSuccessResponse(value);
         } catch (Exception e) {
-            return newErrorResponse(e.getMessage());
+            return ResponseUtils.newErrorResponse(e.getMessage());
         }
     }
 }

@@ -4,6 +4,7 @@ import kr.ac.postech.sslab.main.ConcreteChaincodeBase;
 import kr.ac.postech.sslab.nft.NFT;
 import kr.ac.postech.sslab.user.Address;
 import org.hyperledger.fabric.shim.ChaincodeStub;
+import org.hyperledger.fabric.shim.ResponseUtils;
 import java.util.List;
 
 public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
@@ -28,9 +29,9 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
 
             NFT nft = new NFT();
             nft.mint(stub, id, type, owner, null, null);
-            return newSuccessResponse(SUCCESS);
+            return ResponseUtils.newSuccessResponse(SUCCESS);
         } catch (Exception e) {
-            return newErrorResponse(e.getMessage());
+            return ResponseUtils.newErrorResponse(e.getMessage());
         }
     }
 
@@ -53,9 +54,9 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
 
             nft.burn(stub, id);
 
-            return newSuccessResponse(SUCCESS);
+            return ResponseUtils.newSuccessResponse(SUCCESS);
         } catch (Exception e) {
-            return newErrorResponse(e.getMessage());
+            return ResponseUtils.newErrorResponse(e.getMessage());
         }
     }
 
@@ -71,9 +72,9 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
             NFT nft = NFT.read(stub, id);
             String type = nft.getType();
 
-            return newSuccessResponse(type);
+            return ResponseUtils.newSuccessResponse(type);
         } catch (Exception e) {
-            return newErrorResponse(e.getMessage());
+            return ResponseUtils.newErrorResponse(e.getMessage());
         }
     }
 
@@ -103,9 +104,9 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
 
             nft.setOwner(stub, receiver);
 
-            return newSuccessResponse(SUCCESS);
+            return ResponseUtils.newSuccessResponse(SUCCESS);
         } catch (Exception e) {
-            return newErrorResponse(e.getMessage());
+            return ResponseUtils.newErrorResponse(e.getMessage());
         }
     }
 
@@ -121,9 +122,9 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
             NFT nft = NFT.read(stub, id);
             String owner = nft.getOwner();
 
-            return newSuccessResponse(owner);
+            return ResponseUtils.newSuccessResponse(owner);
         } catch (Exception e) {
-            return newErrorResponse(e.getMessage());
+            return ResponseUtils.newErrorResponse(e.getMessage());
         }
     }
 
@@ -148,9 +149,9 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
 
             this.setOperatorsApproval(stub, caller, operator, approved);
 
-            return newSuccessResponse(SUCCESS);
+            return ResponseUtils.newSuccessResponse(SUCCESS);
         } catch (Exception e) {
-            return newErrorResponse(e.getMessage());
+            return ResponseUtils.newErrorResponse(e.getMessage());
         }
     }
 
@@ -166,9 +167,9 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
 
             boolean approved = this.isOperatorForOwner(owner, operator);
 
-            return newSuccessResponse(Boolean.toString(approved).toUpperCase());
+            return ResponseUtils.newSuccessResponse(Boolean.toString(approved).toUpperCase());
         } catch (Exception e) {
-            return newErrorResponse(e.getMessage());
+            return ResponseUtils.newErrorResponse(e.getMessage());
         }
     }
 
@@ -192,9 +193,9 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
 
             nft.setApprovee(stub, approvee);
 
-            return newSuccessResponse(SUCCESS);
+            return ResponseUtils.newSuccessResponse(SUCCESS);
         } catch (Exception e) {
-            return newErrorResponse(e.getMessage());
+            return ResponseUtils.newErrorResponse(e.getMessage());
         }
     }
 
@@ -210,9 +211,9 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
             NFT nft = NFT.read(stub, id);
             String approvee = nft.getApprovee();
 
-            return newSuccessResponse(approvee);
+            return ResponseUtils.newSuccessResponse(approvee);
         } catch (Exception e) {
-            return newErrorResponse(e.getMessage());
+            return ResponseUtils.newErrorResponse(e.getMessage());
         }
     }
 }

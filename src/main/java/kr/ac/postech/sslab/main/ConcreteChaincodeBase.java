@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hyperledger.fabric.shim.ChaincodeBase;
 import org.hyperledger.fabric.shim.ChaincodeStub;
+import org.hyperledger.fabric.shim.ResponseUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -74,14 +75,14 @@ public class ConcreteChaincodeBase extends ChaincodeBase {
                 stub.putStringState("operatorsApproval", mapper.writeValueAsString(this.operatorsApproval));
             }
 
-            return newSuccessResponse(SUCCESS);
+            return ResponseUtils.newSuccessResponse(SUCCESS);
         } catch (Exception e) {
-            return newErrorResponse(e.getMessage());
+            return ResponseUtils.newErrorResponse(e.getMessage());
         }
     }
 
     @Override
     public Response invoke(ChaincodeStub stub) {
-        return newSuccessResponse(SUCCESS);
+        return ResponseUtils.newSuccessResponse(SUCCESS);
     }
 }

@@ -5,6 +5,7 @@ import kr.ac.postech.sslab.nft.NFT;
 import kr.ac.postech.sslab.type.URI;
 import kr.ac.postech.sslab.user.Address;
 import org.hyperledger.fabric.shim.ChaincodeStub;
+import org.hyperledger.fabric.shim.ResponseUtils;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,9 +45,9 @@ public class DocNFT extends XNFT {
             NFT nft = new NFT();
             nft.mint(stub, id, type, owner, xattr, uri);
 
-            return newSuccessResponse(SUCCESS);
+            return ResponseUtils.newSuccessResponse(SUCCESS);
         } catch (Exception e) {
-            return newErrorResponse(e.getMessage());
+            return ResponseUtils.newErrorResponse(e.getMessage());
         }
     }
 }

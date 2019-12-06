@@ -6,6 +6,7 @@ import kr.ac.postech.sslab.nft.NFT;
 import kr.ac.postech.sslab.type.URI;
 import kr.ac.postech.sslab.user.Address;
 import org.hyperledger.fabric.shim.ChaincodeStub;
+import org.hyperledger.fabric.shim.ResponseUtils;
 import java.io.IOException;
 import java.util.*;
 import kr.ac.postech.sslab.standard.*;
@@ -33,9 +34,9 @@ public class EERC721 extends ERC721 implements IEERC721 {
 
 			long ownedTokensCount = this.getBalance(stub, owner, type);
 
-			return newSuccessResponse(Long.toString(ownedTokensCount));
+			return ResponseUtils.newSuccessResponse(Long.toString(ownedTokensCount));
 		} catch (Exception e) {
-			return newErrorResponse(e.getMessage());
+			return ResponseUtils.newErrorResponse(e.getMessage());
 		}
 	}
 
@@ -103,9 +104,9 @@ public class EERC721 extends ERC721 implements IEERC721 {
 			nft.setXAttr(stub, "activated", "false");
 			nft.setXAttr(stub, "children", newIds[0] + "," + newIds[1]);
 
-			return newSuccessResponse(SUCCESS);
+			return ResponseUtils.newSuccessResponse(SUCCESS);
 		} catch (Exception e) {
-			return newErrorResponse(e.getMessage());
+			return ResponseUtils.newErrorResponse(e.getMessage());
 		}
 	}
 
@@ -128,9 +129,9 @@ public class EERC721 extends ERC721 implements IEERC721 {
 
 			nft.setXAttr(stub, "activated", "false");
 
-			return newSuccessResponse(SUCCESS);
+			return ResponseUtils.newSuccessResponse(SUCCESS);
 		} catch (Exception e) {
-			return newErrorResponse(e.getMessage());
+			return ResponseUtils.newErrorResponse(e.getMessage());
 		}
 	}
 
@@ -146,9 +147,9 @@ public class EERC721 extends ERC721 implements IEERC721 {
 			NFT nft = NFT.read(stub, id);
 
 			String query = nft.toJSONString();
-			return newSuccessResponse(query);
+			return ResponseUtils.newSuccessResponse(query);
 		} catch (Exception e) {
-			return newErrorResponse(e.getMessage());
+			return ResponseUtils.newErrorResponse(e.getMessage());
 		}
 	}
 
@@ -167,9 +168,9 @@ public class EERC721 extends ERC721 implements IEERC721 {
 				histories.add(resultsIterator.iterator().next().getStringValue());
 			}
 
-			return newSuccessResponse(histories.toString());
+			return ResponseUtils.newSuccessResponse(histories.toString());
 		} catch (Exception e) {
-			return newErrorResponse(e.getMessage());
+			return ResponseUtils.newErrorResponse(e.getMessage());
 		}
 	}
 }

@@ -2,6 +2,7 @@ package kr.ac.postech.sslab.standard;
 
 import kr.ac.postech.sslab.main.ConcreteChaincodeBase;
 import org.hyperledger.fabric.shim.ChaincodeStub;
+import org.hyperledger.fabric.shim.ResponseUtils;
 import org.hyperledger.fabric.shim.ledger.KeyValue;
 import org.hyperledger.fabric.shim.ledger.QueryResultsIterator;
 import java.util.List;
@@ -19,9 +20,9 @@ public class ERC721 extends ConcreteChaincodeBase implements IERC721 {
 			String owner = args.get(0);
 			long ownedTokensCount = this.getBalance(stub, owner);
 
-			return newSuccessResponse(Long.toString(ownedTokensCount));
+			return ResponseUtils.newSuccessResponse(Long.toString(ownedTokensCount));
 		} catch (Exception e) {
-			return newErrorResponse(e.getMessage());
+			return ResponseUtils.newErrorResponse(e.getMessage());
 		}
 	}
 
