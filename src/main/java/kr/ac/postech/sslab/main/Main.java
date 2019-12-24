@@ -4,7 +4,6 @@ import kr.ac.postech.sslab.standard.BaseNFT;
 import kr.ac.postech.sslab.standard.ERC721;
 import kr.ac.postech.sslab.standard.IBaseNFT;
 import kr.ac.postech.sslab.standard.IERC721;
-import kr.ac.postech.sslab.exception.NoMatchException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 
 import java.util.*;
@@ -12,6 +11,8 @@ import java.util.*;
 public class Main extends ConcreteChaincodeBase implements IERC721, IBaseNFT {
     private ERC721 erc721 = new ERC721();
     private BaseNFT nft = new BaseNFT();
+
+    private static final String NO_TYPE_MESSAGE = "There is no such token type";
 
     @Override
     public Response invoke(ChaincodeStub stub) {
@@ -69,7 +70,7 @@ public class Main extends ConcreteChaincodeBase implements IERC721, IBaseNFT {
                     return this.getApprovee(stub, args);
 
                 default:
-                    throw new NoMatchException("No such function exists");
+                    return newErrorResponse(NO_TYPE_MESSAGE);
             }
 
         } catch (Exception e) {

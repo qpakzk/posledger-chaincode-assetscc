@@ -2,7 +2,6 @@ package kr.ac.postech.sslab.standard;
 
 import kr.ac.postech.sslab.main.ConcreteChaincodeBase;
 import kr.ac.postech.sslab.nft.NFT;
-import kr.ac.postech.sslab.exception.NoMatchException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import java.util.List;
 
@@ -80,7 +79,7 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
 
             String owner = nft.getOwner();
             if (!sender.equals(owner)) {
-                throw new NoMatchException("The sender should be an owner");
+                return newErrorResponse("The sender should be an owner");
             }
 
             nft.setOwner(stub, receiver);

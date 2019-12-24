@@ -2,7 +2,6 @@ package kr.ac.postech.sslab.main;
 
 import kr.ac.postech.sslab.extension.*;
 import kr.ac.postech.sslab.nft.NFT;
-import kr.ac.postech.sslab.exception.NoMatchException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import java.util.List;
 
@@ -11,7 +10,7 @@ public class CustomMain extends Main implements IEERC721, IXNFT {
     private DocNFT doc = new DocNFT();
     private SigNFT sig = new SigNFT();
 
-	private static final String NO_TYPE_MESSAGE = "No such token type exists";
+	private static final String NO_TYPE_MESSAGE = "There is no such token type";
 
     @Override
     public Response invoke(ChaincodeStub stub) {
@@ -113,7 +112,7 @@ public class CustomMain extends Main implements IEERC721, IXNFT {
                     return this.sig.getURI(stub, args);
 
                 default:
-                    throw new NoMatchException(NO_TYPE_MESSAGE);
+                    return newErrorResponse(NO_TYPE_MESSAGE);
             }
         } catch (Exception e) {
             return newErrorResponse(e.getMessage());
@@ -133,7 +132,7 @@ public class CustomMain extends Main implements IEERC721, IXNFT {
                     return this.sig.setURI(stub, args);
 
                 default:
-                    throw new NoMatchException(NO_TYPE_MESSAGE);
+                    return newErrorResponse(NO_TYPE_MESSAGE);
             }
         } catch (Exception e) {
             return newErrorResponse(e.getMessage());
@@ -153,7 +152,7 @@ public class CustomMain extends Main implements IEERC721, IXNFT {
                     return this.sig.setXAttr(stub, args);
 
                 default:
-                    throw new NoMatchException(NO_TYPE_MESSAGE);
+                    return newErrorResponse(NO_TYPE_MESSAGE);
             }
         } catch (Exception e) {
             return newErrorResponse(e.getMessage());
@@ -173,7 +172,7 @@ public class CustomMain extends Main implements IEERC721, IXNFT {
                     return this.sig.getXAttr(stub, args);
 
                 default:
-                    throw new NoMatchException(NO_TYPE_MESSAGE);
+                    return newErrorResponse(NO_TYPE_MESSAGE);
             }
         } catch (Exception e) {
             return newErrorResponse(e.getMessage());
