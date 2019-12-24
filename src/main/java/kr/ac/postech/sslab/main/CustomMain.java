@@ -4,7 +4,6 @@ import kr.ac.postech.sslab.extension.*;
 import kr.ac.postech.sslab.nft.NFT;
 import kr.ac.postech.sslab.exception.NoMatchException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
-import org.hyperledger.fabric.shim.ResponseUtils;
 import java.util.List;
 
 public class CustomMain extends Main implements IEERC721, IXNFT {
@@ -57,7 +56,7 @@ public class CustomMain extends Main implements IEERC721, IXNFT {
             }
 
         } catch (Exception e) {
-            return ResponseUtils.newErrorResponse(e.getMessage());
+            return newErrorResponse(e.getMessage());
         }
     }
 
@@ -117,7 +116,7 @@ public class CustomMain extends Main implements IEERC721, IXNFT {
                     throw new NoMatchException(NO_TYPE_MESSAGE);
             }
         } catch (Exception e) {
-            return ResponseUtils.newErrorResponse(e.getMessage());
+            return newErrorResponse(e.getMessage());
         }
     }
 
@@ -137,7 +136,7 @@ public class CustomMain extends Main implements IEERC721, IXNFT {
                     throw new NoMatchException(NO_TYPE_MESSAGE);
             }
         } catch (Exception e) {
-            return ResponseUtils.newErrorResponse(e.getMessage());
+            return newErrorResponse(e.getMessage());
         }
     }
 
@@ -157,7 +156,7 @@ public class CustomMain extends Main implements IEERC721, IXNFT {
                     throw new NoMatchException(NO_TYPE_MESSAGE);
             }
         } catch (Exception e) {
-            return ResponseUtils.newErrorResponse(e.getMessage());
+            return newErrorResponse(e.getMessage());
         }
     }
 
@@ -177,7 +176,7 @@ public class CustomMain extends Main implements IEERC721, IXNFT {
                     throw new NoMatchException(NO_TYPE_MESSAGE);
             }
         } catch (Exception e) {
-            return ResponseUtils.newErrorResponse(e.getMessage());
+            return newErrorResponse(e.getMessage());
         }
     }
 

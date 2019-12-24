@@ -6,7 +6,6 @@ import kr.ac.postech.sslab.standard.IBaseNFT;
 import kr.ac.postech.sslab.standard.IERC721;
 import kr.ac.postech.sslab.exception.NoMatchException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
-import org.hyperledger.fabric.shim.ResponseUtils;
 
 import java.util.*;
 
@@ -74,7 +73,7 @@ public class Main extends ConcreteChaincodeBase implements IERC721, IBaseNFT {
             }
 
         } catch (Exception e) {
-            return ResponseUtils.newErrorResponse(e.getMessage());
+            return newErrorResponse(e.getMessage());
         }
     }
 

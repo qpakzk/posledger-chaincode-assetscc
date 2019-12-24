@@ -3,10 +3,8 @@ package kr.ac.postech.sslab.extension;
 import kr.ac.postech.sslab.adapter.XAttr;
 import kr.ac.postech.sslab.nft.NFT;
 import kr.ac.postech.sslab.type.URI;
-import kr.ac.postech.sslab.user.Address;
 import kr.ac.postech.sslab.exception.NoMatchException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
-import org.hyperledger.fabric.shim.ResponseUtils;
 import java.io.IOException;
 import java.util.*;
 import kr.ac.postech.sslab.standard.*;
@@ -34,9 +32,9 @@ public class EERC721 extends ERC721 implements IEERC721 {
 
 			long ownedTokensCount = this.getBalance(stub, owner, type);
 
-			return ResponseUtils.newSuccessResponse(Long.toString(ownedTokensCount));
+			return newSuccessResponse(Long.toString(ownedTokensCount));
 		} catch (Exception e) {
-			return ResponseUtils.newErrorResponse(e.getMessage());
+			return newErrorResponse(e.getMessage());
 		}
 	}
 
@@ -76,13 +74,6 @@ public class EERC721 extends ERC721 implements IEERC721 {
 			}
 
 			NFT nft = NFT.read(stub, id);
-
-			String caller = Address.getMyAddress(stub);
-			String owner = nft.getOwner();
-
-			if ( !(caller.equals(owner) || this.isOperatorForOwner(owner, caller)) )
-				throw new NoMatchException("The caller should be an owner or an operator");
-
 			NFT[] child = new NFT[2];
 
 			for (int i = 0; i < 2; i++) {
@@ -104,9 +95,9 @@ public class EERC721 extends ERC721 implements IEERC721 {
 			nft.setXAttr(stub, "activated", "false");
 			nft.setXAttr(stub, "children", newIds[0] + "," + newIds[1]);
 
-			return ResponseUtils.newSuccessResponse(SUCCESS);
+			return newSuccessResponse(SUCCESS);
 		} catch (Exception e) {
-			return ResponseUtils.newErrorResponse(e.getMessage());
+			return newErrorResponse(e.getMessage());
 		}
 	}
 
@@ -120,18 +111,11 @@ public class EERC721 extends ERC721 implements IEERC721 {
 			String id = args.get(0);
 
 			NFT nft = NFT.read(stub, id);
-
-			String caller = Address.getMyAddress(stub);
-			String owner = nft.getOwner();
-
-			if ( !(caller.equals(owner) || this.isOperatorForOwner(owner, caller)) )
-				throw new NoMatchException("The caller should be an owner or an operator");
-
 			nft.setXAttr(stub, "activated", "false");
 
-			return ResponseUtils.newSuccessResponse(SUCCESS);
+			return newSuccessResponse(SUCCESS);
 		} catch (Exception e) {
-			return ResponseUtils.newErrorResponse(e.getMessage());
+			return newErrorResponse(e.getMessage());
 		}
 	}
 
@@ -147,9 +131,9 @@ public class EERC721 extends ERC721 implements IEERC721 {
 			NFT nft = NFT.read(stub, id);
 
 			String query = nft.toJSONString();
-			return ResponseUtils.newSuccessResponse(query);
+			return newSuccessResponse(query);
 		} catch (Exception e) {
-			return ResponseUtils.newErrorResponse(e.getMessage());
+			return newErrorResponse(e.getMessage());
 		}
 	}
 
@@ -168,9 +152,9 @@ public class EERC721 extends ERC721 implements IEERC721 {
 				histories.add(resultsIterator.iterator().next().getStringValue());
 			}
 
-			return ResponseUtils.newSuccessResponse(histories.toString());
+			return newSuccessResponse(histories.toString());
 		} catch (Exception e) {
-			return ResponseUtils.newErrorResponse(e.getMessage());
+			return newErrorResponse(e.getMessage());
 		}
 	}
 }

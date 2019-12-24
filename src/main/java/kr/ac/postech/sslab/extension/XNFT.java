@@ -4,10 +4,8 @@ import kr.ac.postech.sslab.adapter.XAttr;
 import kr.ac.postech.sslab.nft.NFT;
 import kr.ac.postech.sslab.standard.BaseNFT;
 import kr.ac.postech.sslab.type.URI;
-import kr.ac.postech.sslab.user.Address;
 import kr.ac.postech.sslab.exception.NoMatchException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
-import org.hyperledger.fabric.shim.ResponseUtils;
 
 import java.util.List;
 
@@ -27,22 +25,15 @@ public class XNFT extends BaseNFT implements IXNFT {
             String value = args.get(2);
 
             NFT nft = NFT.read(stub, id);
-
-            String caller = Address.getMyAddress(stub);
-            String owner = nft.getOwner();
-            if (!caller.equals(owner))
-                throw new NoMatchException("The caller should be an owner");
-
-
             URI uri = nft.getURI();
             if (uri == null)
                 throw new NullPointerException();
 
             nft.setURI(stub, index, value);
 
-            return ResponseUtils.newSuccessResponse(SUCCESS);
+            return newSuccessResponse(SUCCESS);
         } catch (Exception e) {
-            return ResponseUtils.newErrorResponse(e.getMessage());
+            return newErrorResponse(e.getMessage());
         }
     }
 
@@ -66,9 +57,9 @@ public class XNFT extends BaseNFT implements IXNFT {
             if (value == null)
                 throw new NullPointerException();
 
-            return ResponseUtils.newSuccessResponse(value);
+            return newSuccessResponse(value);
         } catch (Exception e) {
-            return ResponseUtils.newErrorResponse(e.getMessage());
+            return newErrorResponse(e.getMessage());
         }
     }
 
@@ -89,16 +80,11 @@ public class XNFT extends BaseNFT implements IXNFT {
             if (xattr == null)
                 throw new NullPointerException();
 
-            String caller = Address.getMyAddress(stub);
-            String owner = nft.getOwner();
-            if (!caller.equals(owner))
-                throw new NoMatchException("The caller should be an owner");
-
             nft.setXAttr(stub, index, value);
 
-            return ResponseUtils.newSuccessResponse(SUCCESS);
+            return newSuccessResponse(SUCCESS);
         } catch (Exception e) {
-            return ResponseUtils.newErrorResponse(e.getMessage());
+            return newErrorResponse(e.getMessage());
         }
     }
 
@@ -119,9 +105,9 @@ public class XNFT extends BaseNFT implements IXNFT {
                 throw new NullPointerException();
 
             String value = nft.getXAttr(index);
-            return ResponseUtils.newSuccessResponse(value);
+            return newSuccessResponse(value);
         } catch (Exception e) {
-            return ResponseUtils.newErrorResponse(e.getMessage());
+            return newErrorResponse(e.getMessage());
         }
     }
 }
