@@ -82,6 +82,7 @@ public class BaseNFT extends ConcreteChaincodeBase implements IBaseNFT {
                 return newErrorResponse("The sender should be an owner");
             }
 
+            nft.setApprovee(stub, "");
             nft.setOwner(stub, receiver);
 
             return newSuccessResponse(SUCCESS);
