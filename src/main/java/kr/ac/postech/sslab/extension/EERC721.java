@@ -55,6 +55,36 @@ public class EERC721 extends ERC721 implements IEERC721 {
 	}
 
 	@Override
+	public Response tokenIdsOf(ChaincodeStub stub, List<String> args) {
+		try {
+			if (args.size() != 1) {
+				throw new IllegalArgumentException(String.format(ARG_MESSAGE, 1));
+			}
+
+			String owner = args.get(0);
+
+			List<String> tokenIds = this.getTokenIds(stub, owner);
+			String result = tokenIds.toString();
+			return newSuccessResponse(result);
+		} catch (Exception e) {
+			return newErrorResponse(e.getMessage());
+		}
+	}
+
+	private List<String> getTokenIds(ChaincodeStub stub, String owner) throws IOException {
+		String query = "{\"selector\":{\"owner\":\"" + owner + "\"}}";
+
+		List<String> tokenIds = new ArrayList<>();
+		QueryResultsIterator<KeyValue> resultsIterator = stub.getQueryResult(query);
+		while(resultsIterator.iterator().hasNext()) {
+			String id = resultsIterator.iterator().next().getKey();
+			tokenIds.add(id);
+		}
+
+		return tokenIds;
+	}
+
+	@Override
 	public Response divide(ChaincodeStub stub, List<String> args) {
 		try {
 			if (args.size() != 4) {

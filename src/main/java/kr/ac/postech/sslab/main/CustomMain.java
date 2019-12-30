@@ -22,6 +22,9 @@ public class CustomMain extends Main implements IEERC721, IXNFT {
                 case "balanceOf":
                     return this.balanceOf(stub, args);
 
+                case "tokenIdsOf":
+                    return this.tokenIdsOf(stub, args);
+
                 case "divide":
                     return this.divide(stub, args);
 
@@ -62,6 +65,11 @@ public class CustomMain extends Main implements IEERC721, IXNFT {
     @Override
     public Response balanceOf(ChaincodeStub stub, List<String> args) {
         return this.eerc721.balanceOf(stub, args);
+    }
+
+    @Override
+    public Response tokenIdsOf(ChaincodeStub stub, List<String> args) {
+        return this.eerc721.tokenIdsOf(stub, args);
     }
 
     @Override
