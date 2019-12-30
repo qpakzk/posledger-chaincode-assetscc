@@ -12,7 +12,7 @@ public class Main extends ConcreteChaincodeBase implements IERC721, IBaseNFT {
     private ERC721 erc721 = new ERC721();
     private BaseNFT nft = new BaseNFT();
 
-    private static final String NO_TYPE_MESSAGE = "There is no such token type";
+    private static final String NO_FUNCTION_MESSAGE = "There is no such function";
 
     @Override
     public Response invoke(ChaincodeStub stub) {
@@ -70,7 +70,7 @@ public class Main extends ConcreteChaincodeBase implements IERC721, IBaseNFT {
                     return this.getApprovee(stub, args);
 
                 default:
-                    return newErrorResponse(NO_TYPE_MESSAGE);
+                    return newErrorResponse(NO_FUNCTION_MESSAGE);
             }
 
         } catch (Exception e) {
