@@ -4,7 +4,6 @@ import kr.ac.postech.sslab.adapter.XAttr;
 import kr.ac.postech.sslab.nft.NFT;
 import kr.ac.postech.sslab.type.URI;
 import org.hyperledger.fabric.shim.ChaincodeStub;
-import java.io.IOException;
 import java.util.*;
 import kr.ac.postech.sslab.standard.*;
 import org.hyperledger.fabric.shim.ledger.KeyModification;
@@ -14,6 +13,11 @@ import org.hyperledger.fabric.shim.ledger.QueryResultsIterator;
 public class EERC721 extends ERC721 implements IEERC721 {
 	private static final String ARG_MESSAGE = "Incorrect number of arguments, expecting %d";
 	private static final String SUCCESS = "SUCCESS";
+	private static final String DEACTIVATED_MESSAGE = "Token %s is deactivated";
+
+	private static final String ACTIVATED_KEY = "activated";
+	private static final String PARENT_KEY = "parent";
+	private static final String CHILDREN_KEY = "children";
 
 	@Override
 	public Response balanceOf(ChaincodeStub stub, List<String> args) {
@@ -29,7 +33,19 @@ public class EERC721 extends ERC721 implements IEERC721 {
 			String owner = args.get(0);
 			String type = args.get(1);
 
-			long ownedTokensCount = this.getBalance(stub, owner, type);
+			String query = "{\"selector\":{\"owner\":\"" + owner + "\"}}";
+
+			long ownedTokensCount = 0;
+			QueryResultsIterator<KeyValue> resultsIterator = stub.getQueryResult(query);
+			while(resultsIterator.iterator().hasNext()) {
+				String id = resultsIterator.iterator().next().getKey();
+				NFT nft = NFT.read(stub, id);
+				boolean activated = Boolean.parseBoolean(nft.getXAttr(ACTIVATED_KEY));
+
+				if (nft.getType().equals(type) && activated) {
+					ownedTokensCount++;
+				}
+			}
 
 			return newSuccessResponse(Long.toString(ownedTokensCount));
 		} catch (Exception e) {
@@ -37,51 +53,42 @@ public class EERC721 extends ERC721 implements IEERC721 {
 		}
 	}
 
-	private long getBalance(ChaincodeStub stub, String owner, String type) throws IOException {
-		String query = "{\"selector\":{\"owner\":\"" + owner + "\"}}";
-
-		long ownedTokensCount = 0;
-		QueryResultsIterator<KeyValue> resultsIterator = stub.getQueryResult(query);
-		while(resultsIterator.iterator().hasNext()) {
-			String id = resultsIterator.iterator().next().getKey();
-			NFT nft = NFT.read(stub, id);
-
-			if (nft.getType().equals(type)) {
-				ownedTokensCount++;
-			}
-		}
-
-		return ownedTokensCount;
-	}
-
 	@Override
 	public Response tokenIdsOf(ChaincodeStub stub, List<String> args) {
 		try {
-			if (args.size() != 1) {
-				throw new IllegalArgumentException(String.format(ARG_MESSAGE, 1));
+			String owner;
+			String type;
+			if (args.size() == 1) {
+				owner = args.get(0);
+				type = null;
+			}
+			else if (args.size() == 2) {
+				owner = args.get(0);
+				type = args.get(1);
+			}
+			else {
+				throw new IllegalArgumentException(String.format(ARG_MESSAGE + " or %d", 1, 2));
 			}
 
-			String owner = args.get(0);
+			String query = "{\"selector\":{\"owner\":\"" + owner + "\"}}";
 
-			List<String> tokenIds = this.getTokenIds(stub, owner);
+			List<String> tokenIds = new ArrayList<>();
+			QueryResultsIterator<KeyValue> resultsIterator = stub.getQueryResult(query);
+			while(resultsIterator.iterator().hasNext()) {
+				String id = resultsIterator.iterator().next().getKey();
+				NFT nft = NFT.read(stub, id);
+				boolean activated = Boolean.getBoolean(nft.getXAttr(ACTIVATED_KEY));
+
+				if (activated && (type == null || nft.getType().equals(type))) {
+						tokenIds.add(id);
+				}
+			}
+
 			String result = tokenIds.toString();
 			return newSuccessResponse(result);
 		} catch (Exception e) {
 			return newErrorResponse(e.getMessage());
 		}
-	}
-
-	private List<String> getTokenIds(ChaincodeStub stub, String owner) throws IOException {
-		String query = "{\"selector\":{\"owner\":\"" + owner + "\"}}";
-
-		List<String> tokenIds = new ArrayList<>();
-		QueryResultsIterator<KeyValue> resultsIterator = stub.getQueryResult(query);
-		while(resultsIterator.iterator().hasNext()) {
-			String id = resultsIterator.iterator().next().getKey();
-			tokenIds.add(id);
-		}
-
-		return tokenIds;
 	}
 
 	@Override
@@ -103,6 +110,12 @@ public class EERC721 extends ERC721 implements IEERC721 {
 			}
 
 			NFT nft = NFT.read(stub, id);
+			boolean activated = Boolean.parseBoolean(nft.getXAttr(ACTIVATED_KEY));
+
+			if (!activated) {
+				return newErrorResponse(String.format(DEACTIVATED_MESSAGE, id));
+			}
+
 			NFT[] child = new NFT[2];
 
 			for (int i = 0; i < 2; i++) {
@@ -118,11 +131,11 @@ public class EERC721 extends ERC721 implements IEERC721 {
 
 				child[i].mint(stub, newIds[i], nft.getType(), nft.getOwner(), xattr, uri);
 				child[i].setXAttr(stub, index, values[i]);
-				child[i].setXAttr(stub, "parent", nft.getId());
+				child[i].setXAttr(stub, PARENT_KEY, nft.getId());
 			}
 
-			nft.setXAttr(stub, "activated", "false");
-			nft.setXAttr(stub, "children", newIds[0] + "," + newIds[1]);
+			nft.setXAttr(stub, ACTIVATED_KEY, "false");
+			nft.setXAttr(stub, CHILDREN_KEY, newIds[0] + "," + newIds[1]);
 
 			return newSuccessResponse(SUCCESS);
 		} catch (Exception e) {
@@ -140,7 +153,7 @@ public class EERC721 extends ERC721 implements IEERC721 {
 			String id = args.get(0);
 
 			NFT nft = NFT.read(stub, id);
-			nft.setXAttr(stub, "activated", "false");
+			nft.setXAttr(stub, ACTIVATED_KEY, "false");
 
 			return newSuccessResponse(SUCCESS);
 		} catch (Exception e) {
