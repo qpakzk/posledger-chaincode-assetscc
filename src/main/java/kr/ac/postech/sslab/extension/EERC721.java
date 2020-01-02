@@ -50,7 +50,7 @@ public class EERC721 extends ERC721 implements IEERC721 {
 					activated = Boolean.parseBoolean(nft.getXAttr(ACTIVATED_KEY));
 				}
 
-				if (activated && nft.getType().equals(type)) {
+				if (activated && (type.equals("_") || type.equals(nft.getType()))) {
 					ownedTokensCount++;
 				}
 			}
@@ -67,7 +67,12 @@ public class EERC721 extends ERC721 implements IEERC721 {
 			return this.tokenIdsOfForAll(stub, args.get(0));
 		}
 		else if (args.size() == 2) {
-			return this.tokenIdsOfForType(stub, args.get(0), args.get(1));
+			if (args.get(1).equals("_")) {
+				return this.tokenIdsOfForAllActivated(stub, args.get(0));
+			}
+			else {
+				return this.tokenIdsOfForType(stub, args.get(0), args.get(1));
+			}
 		}
 		else {
 			throw new IllegalArgumentException(String.format(ARG_MESSAGE + " or %d", 1, 2));
@@ -75,6 +80,24 @@ public class EERC721 extends ERC721 implements IEERC721 {
 	}
 
 	private Response tokenIdsOfForAll(ChaincodeStub stub, String owner) {
+		try {
+			String query = "{\"selector\":{\"owner\":\"" + owner + "\"}}";
+
+			List<String> tokenIds = new ArrayList<>();
+			QueryResultsIterator<KeyValue> resultsIterator = stub.getQueryResult(query);
+			while(resultsIterator.iterator().hasNext()) {
+				String id = resultsIterator.iterator().next().getKey();
+				tokenIds.add(id);
+			}
+
+			String result = tokenIds.toString();
+			return newSuccessResponse(result);
+		} catch (Exception e) {
+			return newErrorResponse(e.getMessage());
+		}
+	}
+
+	private Response tokenIdsOfForAllActivated(ChaincodeStub stub, String owner) {
 		try {
 			String query = "{\"selector\":{\"owner\":\"" + owner + "\"}}";
 
