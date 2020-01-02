@@ -59,21 +59,19 @@ public class EERC721 extends ERC721 implements IEERC721 {
 
 	@Override
 	public Response tokenIdsOf(ChaincodeStub stub, List<String> args) {
-		try {
-			String owner;
-			String type;
-			if (args.size() == 1) {
-				owner = args.get(0);
-				type = null;
-			}
-			else if (args.size() == 2) {
-				owner = args.get(0);
-				type = args.get(1);
-			}
-			else {
-				throw new IllegalArgumentException(String.format(ARG_MESSAGE + " or %d", 1, 2));
-			}
+		if (args.size() == 1) {
+			return this.tokenIdsOfForAll(stub, args.get(0));
+		}
+		else if (args.size() == 2) {
+			return this.tokenIdsOfForType(stub, args.get(0), args.get(1));
+		}
+		else {
+			throw new IllegalArgumentException(String.format(ARG_MESSAGE + " or %d", 1, 2));
+		}
+	}
 
+	private Response tokenIdsOfForAll(ChaincodeStub stub, String owner) {
+		try {
 			String query = "{\"selector\":{\"owner\":\"" + owner + "\"}}";
 
 			List<String> tokenIds = new ArrayList<>();
@@ -82,12 +80,13 @@ public class EERC721 extends ERC721 implements IEERC721 {
 				String id = resultsIterator.iterator().next().getKey();
 				NFT nft = NFT.read(stub, id);
 
-				boolean activated = true;
-				if (!nft.getType().equals(BASE_TYPE)) {
-					activated = Boolean.getBoolean(nft.getXAttr(ACTIVATED_KEY));
-				}
-				if (activated && (type == null || nft.getType().equals(type))) {
+				if (nft.getType().equals(BASE_TYPE)) {
+					tokenIds.add(id);
+				} else {
+					boolean activated = Boolean.getBoolean(nft.getXAttr(ACTIVATED_KEY));
+					if (activated) {
 						tokenIds.add(id);
+					}
 				}
 			}
 
@@ -98,6 +97,32 @@ public class EERC721 extends ERC721 implements IEERC721 {
 		}
 	}
 
+	private Response tokenIdsOfForType(ChaincodeStub stub, String owner, String type) {
+		try {
+			String query = "{\"selector\":{\"owner\":\"" + owner + "\"," +
+											"\"type\":\"" + type + "\"}}";
+
+			List<String> tokenIds = new ArrayList<>();
+			QueryResultsIterator<KeyValue> resultsIterator = stub.getQueryResult(query);
+			boolean activated = true;
+			while(resultsIterator.iterator().hasNext()) {
+				String id = resultsIterator.iterator().next().getKey();
+				if (!type.equals(BASE_TYPE)) {
+					NFT nft = NFT.read(stub, id);
+					activated = Boolean.getBoolean(nft.getXAttr(ACTIVATED_KEY));
+				}
+
+				if (activated) {
+					tokenIds.add(id);
+				}
+			}
+
+			String result = tokenIds.toString();
+			return newSuccessResponse(result);
+		} catch (Exception e) {
+			return newErrorResponse(e.getMessage());
+		}
+	}
 	@Override
 	public Response divide(ChaincodeStub stub, List<String> args) {
 		try {
