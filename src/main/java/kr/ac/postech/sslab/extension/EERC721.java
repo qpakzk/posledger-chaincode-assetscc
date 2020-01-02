@@ -14,10 +14,11 @@ public class EERC721 extends ERC721 implements IEERC721 {
 	private static final String ARG_MESSAGE = "Incorrect number of arguments, expecting %d";
 	private static final String SUCCESS = "SUCCESS";
 	private static final String DEACTIVATED_MESSAGE = "Token %s is deactivated";
-
+	private static final String BASE_TYPE_ERROR_MESSAGE = "Function '%s' is not allowed for token type 'base'";
 	private static final String ACTIVATED_KEY = "activated";
 	private static final String PARENT_KEY = "parent";
 	private static final String CHILDREN_KEY = "children";
+	private static final String BASE_TYPE = "base";
 
 	@Override
 	public Response balanceOf(ChaincodeStub stub, List<String> args) {
@@ -27,7 +28,7 @@ public class EERC721 extends ERC721 implements IEERC721 {
 			}
 
 			if (args.size() != 2) {
-				throw new IllegalArgumentException(String.format(ARG_MESSAGE, 2));
+				throw new IllegalArgumentException(String.format(ARG_MESSAGE + " or %d", 1, 2));
 			}
 
 			String owner = args.get(0);
@@ -40,9 +41,12 @@ public class EERC721 extends ERC721 implements IEERC721 {
 			while(resultsIterator.iterator().hasNext()) {
 				String id = resultsIterator.iterator().next().getKey();
 				NFT nft = NFT.read(stub, id);
-				boolean activated = Boolean.parseBoolean(nft.getXAttr(ACTIVATED_KEY));
 
-				if (nft.getType().equals(type) && activated) {
+				boolean activated = true;
+				if (!nft.getType().equals(BASE_TYPE)) {
+					activated = Boolean.parseBoolean(nft.getXAttr(ACTIVATED_KEY));
+				}
+				if (activated && nft.getType().equals(type)) {
 					ownedTokensCount++;
 				}
 			}
@@ -77,8 +81,11 @@ public class EERC721 extends ERC721 implements IEERC721 {
 			while(resultsIterator.iterator().hasNext()) {
 				String id = resultsIterator.iterator().next().getKey();
 				NFT nft = NFT.read(stub, id);
-				boolean activated = Boolean.getBoolean(nft.getXAttr(ACTIVATED_KEY));
 
+				boolean activated = true;
+				if (!nft.getType().equals(BASE_TYPE)) {
+					activated = Boolean.getBoolean(nft.getXAttr(ACTIVATED_KEY));
+				}
 				if (activated && (type == null || nft.getType().equals(type))) {
 						tokenIds.add(id);
 				}
@@ -110,6 +117,10 @@ public class EERC721 extends ERC721 implements IEERC721 {
 			}
 
 			NFT nft = NFT.read(stub, id);
+			if (nft.getType().equals(BASE_TYPE)) {
+				return newErrorResponse(String.format(BASE_TYPE_ERROR_MESSAGE, "divide"));
+			}
+
 			boolean activated = Boolean.parseBoolean(nft.getXAttr(ACTIVATED_KEY));
 
 			if (!activated) {
@@ -153,6 +164,10 @@ public class EERC721 extends ERC721 implements IEERC721 {
 			String id = args.get(0);
 
 			NFT nft = NFT.read(stub, id);
+			if (nft.getType().equals(BASE_TYPE)) {
+				return newErrorResponse(String.format(BASE_TYPE_ERROR_MESSAGE, "deactivate"));
+			}
+
 			nft.setXAttr(stub, ACTIVATED_KEY, "false");
 
 			return newSuccessResponse(SUCCESS);
