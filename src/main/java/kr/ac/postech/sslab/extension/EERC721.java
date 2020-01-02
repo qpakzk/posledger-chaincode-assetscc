@@ -76,17 +76,19 @@ public class EERC721 extends ERC721 implements IEERC721 {
 
 			List<String> tokenIds = new ArrayList<>();
 			QueryResultsIterator<KeyValue> resultsIterator = stub.getQueryResult(query);
+			boolean activated;
 			while(resultsIterator.iterator().hasNext()) {
 				String id = resultsIterator.iterator().next().getKey();
 				NFT nft = NFT.read(stub, id);
 
 				if (nft.getType().equals(BASE_TYPE)) {
-					tokenIds.add(id);
+					activated = true;
 				} else {
-					boolean activated = Boolean.getBoolean(nft.getXAttr(ACTIVATED_KEY));
-					if (activated) {
-						tokenIds.add(id);
-					}
+					activated = Boolean.parseBoolean(nft.getXAttr(ACTIVATED_KEY));
+				}
+
+				if (activated) {
+					tokenIds.add(id);
 				}
 			}
 
@@ -104,12 +106,15 @@ public class EERC721 extends ERC721 implements IEERC721 {
 
 			List<String> tokenIds = new ArrayList<>();
 			QueryResultsIterator<KeyValue> resultsIterator = stub.getQueryResult(query);
-			boolean activated = true;
+			boolean activated;
 			while(resultsIterator.iterator().hasNext()) {
 				String id = resultsIterator.iterator().next().getKey();
-				if (!type.equals(BASE_TYPE)) {
+				if (type.equals(BASE_TYPE)) {
+					activated = true;
+				}
+				else {
 					NFT nft = NFT.read(stub, id);
-					activated = Boolean.getBoolean(nft.getXAttr(ACTIVATED_KEY));
+					activated = Boolean.parseBoolean(nft.getXAttr(ACTIVATED_KEY));
 				}
 
 				if (activated) {
