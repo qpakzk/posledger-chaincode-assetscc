@@ -42,10 +42,14 @@ public class EERC721 extends ERC721 implements IEERC721 {
 				String id = resultsIterator.iterator().next().getKey();
 				NFT nft = NFT.read(stub, id);
 
-				boolean activated = true;
-				if (!nft.getType().equals(BASE_TYPE)) {
+				boolean activated;
+				if (nft.getType().equals(BASE_TYPE)) {
+					activated = true;
+				}
+				else {
 					activated = Boolean.parseBoolean(nft.getXAttr(ACTIVATED_KEY));
 				}
+
 				if (activated && nft.getType().equals(type)) {
 					ownedTokensCount++;
 				}
