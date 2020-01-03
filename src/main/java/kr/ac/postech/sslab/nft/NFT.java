@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hyperledger.fabric.shim.ChaincodeStub;
-
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.HashMap;
@@ -128,7 +127,7 @@ public class NFT {
         return mapper.writeValueAsString(this.toMap());
     }
 
-    public Map<String, Object> toMap() throws JsonProcessingException {
+    public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
         map.put("id", this.tokenId);
         map.put("type", this.type);
@@ -136,11 +135,11 @@ public class NFT {
         map.put("approvee", this.approvee);
 
         if (this.xattr != null) {
-            map.put("xattr", mapper.writeValueAsString(xattr));
+            map.put("xattr", xattr);
         }
 
         if (this.uri != null) {
-            map.put("uri", mapper.writeValueAsString(uri));
+            map.put("uri", uri);
         }
 
         return map;
