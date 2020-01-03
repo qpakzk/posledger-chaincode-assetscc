@@ -17,7 +17,6 @@ public class CustomMain extends Main {
     @Override
     public Response invoke(ChaincodeStub stub) {
         try {
-            CustomChainCodeStub.setChaincodeStub(stub);
             String func = stub.getFunction();
             List<String> args = stub.getParameters();
             String response;
@@ -35,7 +34,7 @@ public class CustomMain extends Main {
 
                     String owner = args.get(0);
                     String type = args.get(1);
-                    BigInteger balance = EERC721.balanceOf(owner, type);
+                    BigInteger balance = EERC721.balanceOf(stub, owner, type);
                     response = balance.toString();
                     break;
                 }
@@ -48,7 +47,7 @@ public class CustomMain extends Main {
                         }
 
                         String owner = args.get(0);
-                        tokenIds = EERC721.tokenIdsOf(owner);
+                        tokenIds = EERC721.tokenIdsOf(stub, owner);
                     }
                     else if (args.size() == 2) {
                         if (isNullOrEmpty(args.get(0)) || isNullOrEmpty(args.get(1))) {
@@ -57,7 +56,7 @@ public class CustomMain extends Main {
 
                         String owner = args.get(0);
                         String type = args.get(1);
-                        tokenIds = EERC721.tokenIdsOf(owner, type);
+                        tokenIds = EERC721.tokenIdsOf(stub, owner, type);
                     }
                     else {
                         throw new IllegalArgumentException(String.format(ARG_MESSAGE + " or %d", 1, 2));
@@ -87,7 +86,7 @@ public class CustomMain extends Main {
                             .substring(1, args.get(2).length() - 1).split(", "));
 
                     String index = args.get(3);
-                    boolean result = EERC721.divide(tokenId, newIds, values, index);
+                    boolean result = EERC721.divide(stub, tokenId, newIds, values, index);
                     response = Boolean.toString(result);
                     break;
                 }
@@ -98,7 +97,7 @@ public class CustomMain extends Main {
                     }
 
                     BigInteger tokenId = new BigInteger(args.get(0));
-                    boolean result = EERC721.deactivate(tokenId);
+                    boolean result = EERC721.deactivate(stub, tokenId);
                     response = Boolean.toString(result);
                     break;
                 }
@@ -109,7 +108,7 @@ public class CustomMain extends Main {
                     }
 
                     BigInteger tokenId = new BigInteger(args.get(0));
-                    String query = EERC721.query(tokenId);
+                    String query = EERC721.query(stub, tokenId);
                     response = query;
                     break;
                 }
@@ -120,7 +119,7 @@ public class CustomMain extends Main {
                     }
 
                     BigInteger tokenId = new BigInteger(args.get(0));
-                    List<String> histories = EERC721.queryHistory(tokenId);
+                    List<String> histories = EERC721.queryHistory(stub, tokenId);
                     response = histories.toString();
                     break;
                 }
@@ -143,7 +142,7 @@ public class CustomMain extends Main {
                             mapper.readValue(args.get(3), new TypeReference<HashMap<String, Object>>(){});
                     Map<String, String> uri =
                             mapper.readValue(args.get(4), new TypeReference<HashMap<String, String>>(){});
-                    boolean result = XNFT.mint(tokenId, type, owner, xattr, uri);
+                    boolean result = XNFT.mint(stub, tokenId, type, owner, xattr, uri);
                     response = Boolean.toString(result);
                     break;
                 }
@@ -156,7 +155,7 @@ public class CustomMain extends Main {
                     BigInteger tokenId = new BigInteger(args.get(0));
                     String index = args.get(1);
                     String value = args.get(2);
-                    boolean result = XNFT.setURI(tokenId, index, value);
+                    boolean result = XNFT.setURI(stub, tokenId, index, value);
                     response = Boolean.toString(result);
                     break;
                 }
@@ -168,7 +167,7 @@ public class CustomMain extends Main {
                     }
                     BigInteger tokenId = new BigInteger(args.get(0));
                     String index = args.get(1);
-                    String value = XNFT.getURI(tokenId, index);
+                    String value = XNFT.getURI(stub, tokenId, index);
                     response = value;
                     break;
                 }
@@ -181,7 +180,7 @@ public class CustomMain extends Main {
                     BigInteger tokenId = new BigInteger(args.get(0));
                     String index = args.get(1);
                     Object value = args.get(2);
-                    boolean result = XNFT.setXAttr(tokenId, index, value);
+                    boolean result = XNFT.setXAttr(stub, tokenId, index, value);
                     response = Boolean.toString(result);
                     break;
                 }
@@ -193,7 +192,7 @@ public class CustomMain extends Main {
                     }
                     BigInteger tokenId = new BigInteger(args.get(0));
                     String index = args.get(1);
-                    Object value = XNFT.getXAttr(tokenId, index);
+                    Object value = XNFT.getXAttr(stub, tokenId, index);
                     response = (String) value;
                     break;
                 }

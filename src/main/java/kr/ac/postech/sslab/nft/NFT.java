@@ -3,8 +3,8 @@ package kr.ac.postech.sslab.nft;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.ac.postech.sslab.main.CustomChainCodeStub;
 import org.hyperledger.fabric.shim.ChaincodeStub;
+
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.HashMap;
@@ -12,7 +12,6 @@ import java.util.Map;
 
 
 public class NFT {
-    private static final ChaincodeStub stub = CustomChainCodeStub.getChaincodeStub();
     private static ObjectMapper mapper = new ObjectMapper();
 
     private BigInteger tokenId;
@@ -33,7 +32,7 @@ public class NFT {
         this.uri = uri;
     }
 
-    public boolean mint(BigInteger tokenId, String type, String owner, Map<String, Object> xattr, Map<String, String> uri) throws JsonProcessingException {
+    public boolean mint(ChaincodeStub stub, BigInteger tokenId, String type, String owner, Map<String, Object> xattr, Map<String, String> uri) throws JsonProcessingException {
         this.tokenId = tokenId;
         this.type = type;
         this.owner = owner;
@@ -45,7 +44,7 @@ public class NFT {
         return true;
     }
 
-    public static NFT read(BigInteger tokenId) throws IOException {
+    public static NFT read(ChaincodeStub stub, BigInteger tokenId) throws IOException {
         String json = stub.getStringState(tokenId.toString());
 
         Map<String, Object> map =
@@ -64,7 +63,7 @@ public class NFT {
         return new NFT(tokenId, type, owner, approvee, xattr, uri);
     }
 
-    public boolean burn(BigInteger tokenId) {
+    public boolean burn(ChaincodeStub stub, BigInteger tokenId) {
         stub.delState(tokenId.toString());
         return true;
     }
@@ -77,27 +76,30 @@ public class NFT {
         return this.type;
     }
 
-    public void setOwner( String owner) throws JsonProcessingException {
+    public boolean setOwner(ChaincodeStub stub, String owner) throws JsonProcessingException {
         this.owner = owner;
         stub.putStringState(this.tokenId.toString(), this.toJSONString());
+        return true;
     }
 
     public String getOwner() {
         return this.owner;
     }
 
-    public void setApprovee(String approvee) throws JsonProcessingException {
+    public boolean setApprovee(ChaincodeStub stub, String approvee) throws JsonProcessingException {
         this.approvee = approvee;
         stub.putStringState(this.tokenId.toString(), this.toJSONString());
+        return true;
     }
 
     public String getApprovee() {
         return this.approvee;
     }
 
-    public void setXAttr(String index, Object value) throws JsonProcessingException {
+    public boolean setXAttr(ChaincodeStub stub, String index, Object value) throws JsonProcessingException {
         xattr.put(index, value);
         stub.putStringState(this.tokenId.toString(), this.toJSONString());
+        return true;
     }
 
     public Object getXAttr(String index) {
@@ -108,9 +110,10 @@ public class NFT {
         return xattr;
     }
 
-    public void setURI(String index, String value) throws JsonProcessingException {
+    public boolean setURI(ChaincodeStub stub, String index, String value) throws JsonProcessingException {
         uri.put(index, value);
         stub.putStringState(this.tokenId.toString(), this.toJSONString());
+        return true;
     }
 
     public String getURI(String index) {

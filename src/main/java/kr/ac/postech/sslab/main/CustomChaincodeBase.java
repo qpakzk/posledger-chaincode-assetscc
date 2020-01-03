@@ -3,18 +3,22 @@ package kr.ac.postech.sslab.main;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hyperledger.fabric.shim.ChaincodeBase;
 import org.hyperledger.fabric.shim.ChaincodeStub;
-import java.util.List;
 
-abstract public class CustomChaincodeBase extends ChaincodeBase {
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class CustomChaincodeBase extends ChaincodeBase {
 	private static final String ARG_MESSAGE = "Incorrect number of arguments, expecting %d";
 	private static final String SUCCESS = "SUCCESS";
+
+    protected static Map<String, Map<String, Boolean>> operatorsApproval = new HashMap<>();
     private static final String OPERATORS_APPROVAL = "operatorsApproval";
 
     @Override
     public Response init(ChaincodeStub stub) {
 
         try {
-            CustomChainCodeStub.setChaincodeStub(stub);
             String func = stub.getFunction();
 
             if (!func.equals("init")) {
@@ -30,7 +34,7 @@ abstract public class CustomChaincodeBase extends ChaincodeBase {
 
             String operatorsApprovalString = stub.getStringState(OPERATORS_APPROVAL);
             if (operatorsApprovalString.trim().length() == 0) {
-                stub.putStringState(OPERATORS_APPROVAL, mapper.writeValueAsString(CustomChainCodeStub.getChaincodeStub()));
+                stub.putStringState(OPERATORS_APPROVAL, mapper.writeValueAsString(operatorsApproval));
             }
 
             return newSuccessResponse(SUCCESS);
@@ -40,5 +44,7 @@ abstract public class CustomChaincodeBase extends ChaincodeBase {
     }
 
     @Override
-    abstract public Response invoke(ChaincodeStub stub);
+    public Response invoke(ChaincodeStub stub) {
+        return newSuccessResponse();
+    }
 }

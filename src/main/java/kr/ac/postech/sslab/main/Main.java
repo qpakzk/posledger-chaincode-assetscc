@@ -15,7 +15,6 @@ public class Main extends CustomChaincodeBase {
     @Override
     public Response invoke(ChaincodeStub stub) {
         try {
-            CustomChainCodeStub.setChaincodeStub(stub);
             String func = stub.getFunction();
             List<String> args = stub.getParameters();
             String response;
@@ -27,7 +26,7 @@ public class Main extends CustomChaincodeBase {
                     }
 
                     String owner = args.get(0);
-                    BigInteger balance = ERC721.balanceOf(owner);
+                    BigInteger balance = ERC721.balanceOf(stub, owner);
                     response = balance.toString();
                     break;
                 }
@@ -39,7 +38,7 @@ public class Main extends CustomChaincodeBase {
 
                     BigInteger tokenId = new BigInteger(args.get(0));
 
-                    String owner = ERC721.ownerOf(tokenId);
+                    String owner = ERC721.ownerOf(stub, tokenId);
                     response = owner;
                     break;
                 }
@@ -54,7 +53,7 @@ public class Main extends CustomChaincodeBase {
                     String to = args.get(1);
                     BigInteger tokenId = new BigInteger(args.get(2));
 
-                    boolean result = ERC721.transferFrom(from, to, tokenId);
+                    boolean result = ERC721.transferFrom(stub, from, to, tokenId);
                     response = Boolean.toString(result);
                     break;
                 }
@@ -68,7 +67,7 @@ public class Main extends CustomChaincodeBase {
                     String approved = args.get(0);
                     BigInteger tokenId = new BigInteger(args.get(1));
 
-                    boolean result = ERC721.approve(approved, tokenId);
+                    boolean result = ERC721.approve(stub, approved, tokenId);
                     response = Boolean.toString(result);
                     break;
                 }
@@ -83,7 +82,7 @@ public class Main extends CustomChaincodeBase {
                     String operator = args.get(1);
                     Boolean approved = Boolean.parseBoolean(args.get(2));
 
-                    boolean result = ERC721.setApprovalForAll(caller, operator, approved);
+                    boolean result = ERC721.setApprovalForAll(stub, caller, operator, approved);
                     response = Boolean.toString(result);
                     break;
                 }
@@ -95,7 +94,7 @@ public class Main extends CustomChaincodeBase {
 
                     BigInteger tokenId = new BigInteger(args.get(0));
 
-                    String approved = ERC721.getApproved(tokenId);
+                    String approved = ERC721.getApproved(stub, tokenId);
                     response = approved;
                     break;
                 }
@@ -123,7 +122,7 @@ public class Main extends CustomChaincodeBase {
                     BigInteger tokenId = new BigInteger(args.get(0));
                     String owner = args.get(1);
 
-                    boolean result = BaseNFT.mint(tokenId, owner);
+                    boolean result = BaseNFT.mint(stub, tokenId, owner);
                     response = Boolean.toString(result);
                     break;
                 }
@@ -135,7 +134,7 @@ public class Main extends CustomChaincodeBase {
 
                     BigInteger tokenId = new BigInteger(args.get(0));
 
-                    boolean result = BaseNFT.burn(tokenId);
+                    boolean result = BaseNFT.burn(stub, tokenId);
                     response = Boolean.toString(result);
                     break;
                 }
@@ -147,7 +146,7 @@ public class Main extends CustomChaincodeBase {
 
                     BigInteger tokenId = new BigInteger(args.get(0));
 
-                    String type = BaseNFT.getType(tokenId);
+                    String type = BaseNFT.getType(stub, tokenId);
                     response = type;
                     break;
                 }
