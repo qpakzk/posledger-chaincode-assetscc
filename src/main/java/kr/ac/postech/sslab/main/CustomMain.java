@@ -1,187 +1,207 @@
 package kr.ac.postech.sslab.main;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.ac.postech.sslab.extension.*;
-import kr.ac.postech.sslab.nft.NFT;
 import org.hyperledger.fabric.shim.ChaincodeStub;
-import java.util.List;
 
-public class CustomMain extends Main implements IEERC721, IXNFT {
-    private EERC721 eerc721 = new EERC721();
-    private DocNFT doc = new DocNFT();
-    private SigNFT sig = new SigNFT();
+import java.math.BigInteger;
+import java.util.*;
 
-	private static final String NO_TYPE_MESSAGE = "There is no such token type";
+import static io.netty.util.internal.StringUtil.isNullOrEmpty;
+
+public class CustomMain extends Main {
+    private static final String ARG_MESSAGE = "Arguments must be exactly %d non-empty string(s)";
+	private static ObjectMapper mapper = new ObjectMapper();
 
     @Override
     public Response invoke(ChaincodeStub stub) {
         try {
+            CustomChainCodeStub.setChaincodeStub(stub);
             String func = stub.getFunction();
             List<String> args = stub.getParameters();
+            String response;
 
             switch (func) {
-                case "balanceOf":
-                    return this.balanceOf(stub, args);
+                case "balanceOf": {
+                    if (args.size() == 1) {
+                        return super.invoke(stub);
+                    }
 
-                case "tokenIdsOf":
-                    return this.tokenIdsOf(stub, args);
+                    if (args.size() != 2 || isNullOrEmpty(args.get(0))
+                    || isNullOrEmpty(args.get(1))) {
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE + " or %d", 1, 2));
+                    }
 
-                case "divide":
-                    return this.divide(stub, args);
+                    String owner = args.get(0);
+                    String type = args.get(1);
+                    BigInteger balance = EERC721.balanceOf(owner, type);
+                    response = balance.toString();
+                    break;
+                }
 
-                case "deactivate":
-                    return this.deactivate(stub, args);
+                case "tokenIdsOf": {
+                    List<BigInteger> tokenIds;
+                    if (args.size() == 1) {
+                        if (isNullOrEmpty(args.get(0))) {
+                            throw new IllegalArgumentException(String.format(ARG_MESSAGE, 1));
+                        }
 
-                case "query":
-                    return this.query(stub, args);
+                        String owner = args.get(0);
+                        tokenIds = EERC721.tokenIdsOf(owner);
+                    }
+                    else if (args.size() == 2) {
+                        if (isNullOrEmpty(args.get(0)) || isNullOrEmpty(args.get(1))) {
+                            throw new IllegalArgumentException(String.format(ARG_MESSAGE, 2));
+                        }
 
-                case "queryHistory":
-                    return this.queryHistory(stub, args);
+                        String owner = args.get(0);
+                        String type = args.get(1);
+                        tokenIds = EERC721.tokenIdsOf(owner, type);
+                    }
+                    else {
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE + " or %d", 1, 2));
+                    }
 
-                case "mint":
-                    return this.mint(stub, args);
+                    response = tokenIds.toString();
+                    break;
+                }
 
-                case "setURI":
-                    return this.setURI(stub, args);
+                case "divide": {
+                    if (args.size() != 4 || isNullOrEmpty(args.get(0))
+                            || isNullOrEmpty(args.get(1)) || isNullOrEmpty(args.get(2)) || isNullOrEmpty(args.get(3))) {
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 4));
+                    }
 
-                case  "getURI":
-                    return this.getURI(stub, args);
+                    BigInteger tokenId = new BigInteger(args.get(0));
 
-                case "setXAttr":
-                    return this.setXAttr(stub, args);
+                    List<String> newIdsStr = Arrays.asList(args.get(1)
+                            .substring(1, args.get(1).length() - 1).split(", "));
+                    List<BigInteger> newIds = new ArrayList<>();
+                    for (String newIdStr : newIdsStr) {
+                        BigInteger newId = new BigInteger(newIdStr);
+                        newIds.add(newId);
+                    }
 
+                    List<Object> values = Arrays.asList(args.get(2)
+                            .substring(1, args.get(2).length() - 1).split(", "));
 
-                case "getXAttr":
-                    return this.getXAttr(stub, args);
+                    String index = args.get(3);
+                    boolean result = EERC721.divide(tokenId, newIds, values, index);
+                    response = Boolean.toString(result);
+                    break;
+                }
 
+                case "deactivate": {
+                    if (args.size() != 1 || isNullOrEmpty(args.get(0))) {
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 1));
+                    }
+
+                    BigInteger tokenId = new BigInteger(args.get(0));
+                    boolean result = EERC721.deactivate(tokenId);
+                    response = Boolean.toString(result);
+                    break;
+                }
+
+                case "query": {
+                    if (args.size() != 1 || isNullOrEmpty(args.get(0))) {
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 1));
+                    }
+
+                    BigInteger tokenId = new BigInteger(args.get(0));
+                    String query = EERC721.query(tokenId);
+                    response = query;
+                    break;
+                }
+
+                case "queryHistory": {
+                    if (args.size() != 1 || isNullOrEmpty(args.get(0))) {
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 1));
+                    }
+
+                    BigInteger tokenId = new BigInteger(args.get(0));
+                    List<String> histories = EERC721.queryHistory(tokenId);
+                    response = histories.toString();
+                    break;
+                }
+
+                case "mint": {
+                    if (args.size() == 2) {
+                        return super.invoke(stub);
+                    }
+
+                    if (args.size() != 5 || isNullOrEmpty(args.get(0))
+                            || isNullOrEmpty(args.get(1)) || isNullOrEmpty(args.get(2))
+                            || isNullOrEmpty(args.get(3)) || isNullOrEmpty(args.get(4))) {
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE + " or %d", 2, 5));
+                    }
+
+                    BigInteger tokenId = new BigInteger(args.get(0));
+                    String type = args.get(1);
+                    String owner = args.get(2);
+                    Map<String, Object> xattr =
+                            mapper.readValue(args.get(3), new TypeReference<HashMap<String, Object>>(){});
+                    Map<String, String> uri =
+                            mapper.readValue(args.get(4), new TypeReference<HashMap<String, String>>(){});
+                    boolean result = XNFT.mint(tokenId, type, owner, xattr, uri);
+                    response = Boolean.toString(result);
+                    break;
+                }
+
+                case "setURI": {
+                    if (args.size() != 3 || isNullOrEmpty(args.get(0))
+                            || isNullOrEmpty(args.get(1)) || isNullOrEmpty(args.get(2))) {
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 3));
+                    }
+                    BigInteger tokenId = new BigInteger(args.get(0));
+                    String index = args.get(1);
+                    String value = args.get(2);
+                    boolean result = XNFT.setURI(tokenId, index, value);
+                    response = Boolean.toString(result);
+                    break;
+                }
+
+                case  "getURI": {
+                    if (args.size() != 2 || isNullOrEmpty(args.get(0))
+                            || isNullOrEmpty(args.get(1))) {
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 2));
+                    }
+                    BigInteger tokenId = new BigInteger(args.get(0));
+                    String index = args.get(1);
+                    String value = XNFT.getURI(tokenId, index);
+                    response = value;
+                    break;
+                }
+
+                case "setXAttr": {
+                    if (args.size() != 3 || isNullOrEmpty(args.get(0))
+                            || isNullOrEmpty(args.get(1)) || isNullOrEmpty(args.get(2))) {
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 3));
+                    }
+                    BigInteger tokenId = new BigInteger(args.get(0));
+                    String index = args.get(1);
+                    Object value = args.get(2);
+                    boolean result = XNFT.setXAttr(tokenId, index, value);
+                    response = Boolean.toString(result);
+                    break;
+                }
+
+                case "getXAttr": {
+                    if (args.size() != 2 || isNullOrEmpty(args.get(0))
+                            || isNullOrEmpty(args.get(1))) {
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 2));
+                    }
+                    BigInteger tokenId = new BigInteger(args.get(0));
+                    String index = args.get(1);
+                    Object value = XNFT.getXAttr(tokenId, index);
+                    response = (String) value;
+                    break;
+                }
                 default:
                     return super.invoke(stub);
             }
 
-        } catch (Exception e) {
-            return newErrorResponse(e.getMessage());
-        }
-    }
-
-    @Override
-    public Response balanceOf(ChaincodeStub stub, List<String> args) {
-        return this.eerc721.balanceOf(stub, args);
-    }
-
-    @Override
-    public Response tokenIdsOf(ChaincodeStub stub, List<String> args) {
-        return this.eerc721.tokenIdsOf(stub, args);
-    }
-
-    @Override
-    public Response divide(ChaincodeStub stub, List<String> args) {
-        return this.eerc721.divide(stub, args);
-    }
-
-    @Override
-    public Response deactivate(ChaincodeStub stub, List<String> args) {
-        return this.eerc721.deactivate(stub, args);
-    }
-
-    @Override
-    public Response query(ChaincodeStub stub, List<String> args) {
-        return this.eerc721.query(stub, args);
-    }
-
-    @Override
-    public Response queryHistory(ChaincodeStub stub, List<String> args) {
-        return this.eerc721.queryHistory(stub, args);
-    }
-
-    @Override
-    public Response mint(ChaincodeStub stub, List<String> args) {
-        String type = args.get(1).toLowerCase();
-        switch (type) {
-            case "doc":
-                return this.doc.mint(stub, args);
-
-            case "sig":
-                return this.sig.mint(stub, args);
-
-            default:
-                return super.mint(stub, args);
-        }
-    }
-
-    @Override
-    public Response getURI(ChaincodeStub stub, List<String> args) {
-        try {
-            String id = args.get(0).toLowerCase();
-            NFT nft = NFT.read(stub, id);
-            switch (nft.getType()) {
-                case "doc":
-                    return this.doc.getURI(stub, args);
-
-                case "sig":
-                    return this.sig.getURI(stub, args);
-
-                default:
-                    return newErrorResponse(NO_TYPE_MESSAGE);
-            }
-        } catch (Exception e) {
-            return newErrorResponse(e.getMessage());
-        }
-    }
-
-    @Override
-    public Response setURI(ChaincodeStub stub, List<String> args) {
-        try {
-            String id = args.get(0).toLowerCase();
-            NFT nft = NFT.read(stub, id);
-            switch (nft.getType()) {
-                case "doc":
-                    return this.doc.setURI(stub, args);
-
-                case "sig":
-                    return this.sig.setURI(stub, args);
-
-                default:
-                    return newErrorResponse(NO_TYPE_MESSAGE);
-            }
-        } catch (Exception e) {
-            return newErrorResponse(e.getMessage());
-        }
-    }
-
-    @Override
-    public Response setXAttr(ChaincodeStub stub, List<String> args) {
-        try {
-            String id = args.get(0).toLowerCase();
-            NFT nft = NFT.read(stub, id);
-            switch (nft.getType()) {
-                case "doc":
-                    return this.doc.setXAttr(stub, args);
-
-                case "sig":
-                    return this.sig.setXAttr(stub, args);
-
-                default:
-                    return newErrorResponse(NO_TYPE_MESSAGE);
-            }
-        } catch (Exception e) {
-            return newErrorResponse(e.getMessage());
-        }
-    }
-
-    @Override
-    public Response getXAttr(ChaincodeStub stub, List<String> args) {
-        try {
-            String id = args.get(0).toLowerCase();
-            NFT nft = NFT.read(stub, id);
-            switch (nft.getType()) {
-                case "doc":
-                    return this.doc.getXAttr(stub, args);
-
-                case "sig":
-                    return this.sig.getXAttr(stub, args);
-
-                default:
-                    return newErrorResponse(NO_TYPE_MESSAGE);
-            }
+            return newSuccessResponse(response);
         } catch (Exception e) {
             return newErrorResponse(e.getMessage());
         }

@@ -1,32 +1,22 @@
 package kr.ac.postech.sslab.standard;
 
-import kr.ac.postech.sslab.main.ConcreteChaincodeBase;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import kr.ac.postech.sslab.main.CustomChainCodeStub;
+import kr.ac.postech.sslab.nft.NFT;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ledger.KeyValue;
 import org.hyperledger.fabric.shim.ledger.QueryResultsIterator;
-import java.util.List;
+import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.Map;
 
-public class ERC721 extends ConcreteChaincodeBase implements IERC721 {
-	private BaseNFT baseNFT = new BaseNFT();
-	private static final String ARG_MESSAGE = "Incorrect number of arguments, expecting %d";
+public class ERC721 {
+	private static ChaincodeStub stub = CustomChainCodeStub.getChaincodeStub();
+	private static Map<String, Map<String, Boolean>> operatorsApproval = new HashMap<>();
+	private static final String OPERATORS_APPROVAL = "operatorsApproval";
 
-	@Override
-	public Response balanceOf(ChaincodeStub stub, List<String> args) {
-		try {
-			if (args.size() != 1) {
-				throw new IllegalArgumentException(String.format(ARG_MESSAGE, 1));
-			}
-
-			String owner = args.get(0);
-			long ownedTokensCount = this.getBalance(stub, owner);
-
-			return newSuccessResponse(Long.toString(ownedTokensCount));
-		} catch (Exception e) {
-			return newErrorResponse(e.getMessage());
-		}
-	}
-
-	private long getBalance(ChaincodeStub stub, String owner) {
+	public static BigInteger balanceOf(String owner) {
 		String query = "{\"selector\":{\"owner\":\"" + owner + "\"}}";
 
 		long ownedTokensCount = 0;
@@ -36,40 +26,72 @@ public class ERC721 extends ConcreteChaincodeBase implements IERC721 {
 			ownedTokensCount++;
 		}
 
-		return ownedTokensCount;
+		return BigInteger.valueOf(ownedTokensCount);
 	}
 
-	@Override
-	public Response ownerOf(ChaincodeStub stub, List<String> args) {
-		return this.baseNFT.getOwner(stub, args);
+	public static String ownerOf(BigInteger tokenId) throws Exception {
+		NFT nft = NFT.read(tokenId);
+		String owner = nft.getOwner();
+
+		return owner;
 	}
 
-	@Override
-	public Response transferFrom(ChaincodeStub stub, List<String> args) {
-		return this.baseNFT.setOwner(stub, args);
+	public static boolean transferFrom(String from, String to, BigInteger tokenId) throws Exception {
+			NFT nft = NFT.read(tokenId);
+
+			String owner = nft.getOwner();
+			if (!from.equals(owner)) {
+				return false;
+			}
+
+			nft.setApprovee("");
+			nft.setOwner(to);
+
+			return true;
 	}
 
-	@Override
-	public Response approve(ChaincodeStub stub, List<String> args) {
-		return this.baseNFT.setApprovee(stub, args);
-	}
-	
-	@Override
-	public Response setApprovalForAll(ChaincodeStub stub, List<String> args) {
-		return this.baseNFT.setOperatorForCaller(stub, args);
+	public static boolean approve(String approved, BigInteger tokenId) throws Exception {
+		NFT nft = NFT.read(tokenId);
+		nft.setApprovee(approved);
+
+		return true;
 	}
 
-	@Override
-    public Response getApproved(ChaincodeStub stub, List<String> args) {
-		return this.baseNFT.getApprovee(stub, args);
+	public static boolean setApprovalForAll(String caller, String operator, boolean approved) throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
+
+		String operatorsApprovalString = stub.getStringState(OPERATORS_APPROVAL);
+		operatorsApproval = mapper.readValue(operatorsApprovalString,
+				new TypeReference<HashMap<String, HashMap<String, Boolean>>>() {});
+
+		Map<String, Boolean> operatorMap;
+		if (operatorsApproval.containsKey(caller)) {
+			operatorMap = operatorsApproval.get(caller);
+		}
+		else {
+			operatorMap = new HashMap<>();
+		}
+
+		operatorMap.put(operator, approved);
+		operatorsApproval.put(caller, operatorMap);
+
+		stub.putStringState(OPERATORS_APPROVAL, mapper.writeValueAsString(operatorsApproval));
+		return true;
 	}
 
-	@Override
-	public Response isApprovedForAll(ChaincodeStub stub, List<String> args) {
-		return this.baseNFT.isOperatorForCaller(stub, args);
+    public static String getApproved(BigInteger tokenId) throws Exception {
+		NFT nft = NFT.read(tokenId);
+		String approved = nft.getApprovee();
+
+		return approved;
 	}
 
-	public Response mint(ChaincodeStub stub, List<String> args) {
-		return this.baseNFT.mint(stub, args);
+	public static boolean isApprovedForAll(String owner, String operator) {
+		if (operatorsApproval.containsKey(owner)) {
+			return operatorsApproval.get(owner).getOrDefault(operator, false);
+		}
+		else {
+			return false;
+		}
 	}
 }

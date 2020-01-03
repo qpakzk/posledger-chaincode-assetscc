@@ -3,26 +3,29 @@ package kr.ac.postech.sslab.nft;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.ac.postech.sslab.adapter.XAttr;
-import kr.ac.postech.sslab.type.URI;
+import kr.ac.postech.sslab.main.CustomChainCodeStub;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
 
 public class NFT {
-    private String id;
+    private static final ChaincodeStub stub = CustomChainCodeStub.getChaincodeStub();
+    private static ObjectMapper mapper = new ObjectMapper();
+
+    private BigInteger tokenId;
     private String type;
     private String owner;
     private String approvee;
-    private XAttr xattr;
-    private URI uri;
+    private Map<String, Object> xattr;
+    private Map<String, String> uri;
 
     public NFT() {}
 
-    private NFT(String id, String type, String owner, String approvee, XAttr xattr, URI uri) {
-        this.id = id;
+    private NFT(BigInteger tokenId, String type, String owner, String approvee, Map<String, Object> xattr, Map<String, String> uri) {
+        this.tokenId = tokenId;
         this.type = type;
         this.owner = owner;
         this.approvee = approvee;
@@ -30,20 +33,20 @@ public class NFT {
         this.uri = uri;
     }
 
-    public void mint(ChaincodeStub stub, String id, String type, String owner, XAttr xattr, URI uri) throws JsonProcessingException {
-        this.id = id;
+    public boolean mint(BigInteger tokenId, String type, String owner, Map<String, Object> xattr, Map<String, String> uri) throws JsonProcessingException {
+        this.tokenId = tokenId;
         this.type = type;
         this.owner = owner;
         this.approvee = "";
         this.xattr = xattr;
         this.uri = uri;
 
-        stub.putStringState(this.id, this.toJSONString());
+        stub.putStringState(this.tokenId.toString(), this.toJSONString());
+        return true;
     }
 
-    public static NFT read(ChaincodeStub stub, String id) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        String json = stub.getStringState(id);
+    public static NFT read(BigInteger tokenId) throws IOException {
+        String json = stub.getStringState(tokenId.toString());
 
         Map<String, Object> map =
                 mapper.readValue(json, new TypeReference<HashMap<String, Object>>(){});
@@ -52,129 +55,89 @@ public class NFT {
         String owner = (String) map.get("owner");
         String approvee = (String) map.get("approvee");
 
-        XAttr xattr = null;
-        final String KEY = "xattr";
-        if (map.containsKey(KEY)) {
-            Map<String, Object> xattrMap = (HashMap<String, Object>) map.get(KEY);
-            xattr = new XAttr();
-            xattr.assign(type, xattrMap);
-        }
+        Map<String, Object> xattr
+                = map.containsKey("xattr") ? (HashMap<String, Object>) map.get("xattr") : null;
 
-        URI uri = null;
-        if (map.containsKey("uri")) {
-            Map<String, String> uriMap = (HashMap<String, String>) map.get("uri");
-            uri = new URI();
-            uri.assign(uriMap);
-        }
+        Map<String, String> uri
+                = map.containsKey("uri") ? (HashMap<String, String>) map.get("uri") : null;
 
-        return new NFT(id, type, owner, approvee, xattr, uri);
+        return new NFT(tokenId, type, owner, approvee, xattr, uri);
     }
 
-    public void burn(ChaincodeStub stub, String id) {
-        stub.delState(id);
+    public boolean burn(BigInteger tokenId) {
+        stub.delState(tokenId.toString());
+        return true;
     }
 
-    public String getId() {
-        return this.id;
+    public BigInteger getId() {
+        return this.tokenId;
     }
 
     public String getType() {
         return this.type;
     }
 
-    public void setOwner(ChaincodeStub stub, String owner) throws JsonProcessingException {
+    public void setOwner( String owner) throws JsonProcessingException {
         this.owner = owner;
-        stub.putStringState(this.id, this.toJSONString());
+        stub.putStringState(this.tokenId.toString(), this.toJSONString());
     }
 
     public String getOwner() {
         return this.owner;
     }
 
-    public void setApprovee(ChaincodeStub stub, String approvee) throws JsonProcessingException {
+    public void setApprovee(String approvee) throws JsonProcessingException {
         this.approvee = approvee;
-        stub.putStringState(this.id, this.toJSONString());
+        stub.putStringState(this.tokenId.toString(), this.toJSONString());
     }
 
     public String getApprovee() {
         return this.approvee;
     }
 
-    public void setXAttr(ChaincodeStub stub, String index, String value) throws JsonProcessingException {
-        this.xattr.setXAttr(index, value);
-        stub.putStringState(this.id, this.toJSONString());
+    public void setXAttr(String index, Object value) throws JsonProcessingException {
+        xattr.put(index, value);
+        stub.putStringState(this.tokenId.toString(), this.toJSONString());
     }
 
-    public void setXAttr(ChaincodeStub stub, XAttr xattr) throws JsonProcessingException {
-        this.xattr = xattr;
-        stub.putStringState(this.id, this.toJSONString());
+    public Object getXAttr(String index) {
+        return xattr.get(index);
     }
 
-    public String getXAttr(String index) {
-        return this.xattr.getXAttr(index);
+    public Map<String, Object> getXAttr() {
+        return xattr;
     }
 
-    public XAttr getXAttr() {
-        return this.xattr;
-    }
-
-    public void setURI(ChaincodeStub stub, String index, String value) throws JsonProcessingException {
-        switch (index) {
-            case "path":
-                this.uri.setPath(value);
-                break;
-
-            case "hash":
-                this.uri.setHash(value);
-                break;
-
-            default:
-                break;
-        }
-
-        stub.putStringState(this.id, this.toJSONString());
-    }
-
-    public void setURI(ChaincodeStub stub, URI uri) throws JsonProcessingException {
-        this.uri = uri;
-        stub.putStringState(this.id, this.toJSONString());
+    public void setURI(String index, String value) throws JsonProcessingException {
+        uri.put(index, value);
+        stub.putStringState(this.tokenId.toString(), this.toJSONString());
     }
 
     public String getURI(String index) {
-        switch (index) {
-            case "path":
-                return this.uri.getPath();
-
-            case "hash":
-                return uri.getHash();
-
-            default:
-                return null;
-        }
+        return uri.get(index);
     }
 
-    public URI getURI() {
-        return this.uri;
+    public Map<String, String> getURI() {
+        return uri;
     }
 
     public String toJSONString() throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(this.toMap());
     }
 
-    public Map<String, Object> toMap() {
+    public Map<String, Object> toMap() throws JsonProcessingException {
         Map<String, Object> map = new HashMap<>();
-        map.put("id", this.id);
+        map.put("id", this.tokenId);
         map.put("type", this.type);
         map.put("owner", this.owner);
         map.put("approvee", this.approvee);
 
         if (this.xattr != null) {
-            map.put("xattr", this.xattr.toMap());
+            map.put("xattr", mapper.writeValueAsString(xattr));
         }
 
         if (this.uri != null) {
-            map.put("uri", this.uri.toMap());
+            map.put("uri", mapper.writeValueAsString(uri));
         }
 
         return map;
