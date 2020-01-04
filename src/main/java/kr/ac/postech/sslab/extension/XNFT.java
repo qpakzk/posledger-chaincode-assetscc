@@ -1,7 +1,10 @@
 package kr.ac.postech.sslab.extension;
 
 import kr.ac.postech.sslab.main.CustomChaincodeBase;
+import kr.ac.postech.sslab.main.CustomMain;
 import kr.ac.postech.sslab.nft.NFT;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 
 import java.math.BigInteger;
@@ -11,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 public class XNFT extends CustomChaincodeBase {
+    private static final Log LOG = LogFactory.getLog(CustomMain.class);
+
     private static final String INTEGER = "Integer";
     private static final String BIG_INTEGER = "BigInteger";
     private static final String DOUBLE = "Double";
@@ -28,7 +33,9 @@ public class XNFT extends CustomChaincodeBase {
     public static boolean mint(ChaincodeStub stub, BigInteger tokenId, String type, String owner, Map<String, Object> xattr, Map<String, String> uri) throws Exception {
         NFT nft = new NFT();
         boolean check1 = XType.initXAttr(type, xattr);
+        LOG.info("XNFT::mint:: XType.initXAttr returns" + check1);
         boolean check2 = XType.checkURI(uri);
+        LOG.info("XNFT::mint:: XType.checkURI returns" + check2);
         if (!(check1 && check2)) {
             return false;
         }

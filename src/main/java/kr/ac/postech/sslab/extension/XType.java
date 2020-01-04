@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.ac.postech.sslab.main.CustomChaincodeBase;
+import kr.ac.postech.sslab.main.CustomMain;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 
 import java.io.IOException;
@@ -11,6 +14,8 @@ import java.math.BigInteger;
 import java.util.*;
 
 public class XType extends CustomChaincodeBase {
+    private static final Log LOG = LogFactory.getLog(CustomMain.class);
+
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final String TOKEN_TYPES = "TOKEN_TYPES";
 
@@ -39,6 +44,7 @@ public class XType extends CustomChaincodeBase {
         final String LIST_BOOLEAN = "[Boolean]";
 
         if (!tokenTypes.containsKey(type)) {
+            LOG.info("XType::initXAttr:: No Token type in tokenTypes");
             return false;
         }
 
@@ -46,6 +52,7 @@ public class XType extends CustomChaincodeBase {
         if (xattr != null) {
             for (String key : xattr.keySet()) {
                 if (!attributes.containsKey(key)) {
+                    LOG.info("XType::initXAttr:: No attributes in xattr");
                     return false;
                 }
             }
@@ -54,6 +61,7 @@ public class XType extends CustomChaincodeBase {
                 if (!xattr.containsKey(key)) {
                     List<String> attr = attributes.get(key);
                     if (attr.size() != 2) {
+                        LOG.info("XType::initXAttr:: List attr should have two elements");
                         return false;
                     }
 
