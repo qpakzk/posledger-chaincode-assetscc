@@ -29,7 +29,7 @@ public class XType extends CustomChaincodeBase {
         return true;
     }
 
-    public static boolean initXAttr(String type, Map<String, Object> xattr) {
+    public static boolean initXAttr(ChaincodeStub stub, String type, Map<String, Object> xattr) throws IOException {
         final String INTEGER = "Integer";
         final String BIG_INTEGER = "BigInteger";
         final String DOUBLE = "Double";
@@ -43,6 +43,9 @@ public class XType extends CustomChaincodeBase {
         final String LIST_STRING = "[String]";
         final String LIST_BOOLEAN = "[Boolean]";
 
+        LOG.info("XType::initXAttr:: load tokenTypes");
+        String tokenTypesString = stub.getStringState(TOKEN_TYPES);
+        tokenTypes = mapper.readValue(tokenTypesString, new TypeReference<HashMap<String, Map<String, List<String>>>>() {});
         if (!tokenTypes.containsKey(type)) {
             LOG.info(String.format("XType::initXAttr:: No Token type %s in tokenTypes", type));
             return false;
