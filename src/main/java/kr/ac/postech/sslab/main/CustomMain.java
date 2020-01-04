@@ -3,6 +3,8 @@ package kr.ac.postech.sslab.main;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.ac.postech.sslab.extension.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 
 import java.math.BigInteger;
@@ -11,6 +13,8 @@ import java.util.*;
 import static io.netty.util.internal.StringUtil.isNullOrEmpty;
 
 public class CustomMain extends Main {
+    private static final Log LOG = LogFactory.getLog(CustomMain.class);
+
     private static final String ARG_MESSAGE = "Arguments must be exactly %d non-empty string(s)";
 	private static ObjectMapper mapper = new ObjectMapper();
 
@@ -132,7 +136,7 @@ public class CustomMain extends Main {
                     if (args.size() != 5 || isNullOrEmpty(args.get(0))
                             || isNullOrEmpty(args.get(1)) || isNullOrEmpty(args.get(2))
                             || isNullOrEmpty(args.get(3)) || isNullOrEmpty(args.get(4))) {
-                        throw new IllegalArgumentException(String.format(ARG_MESSAGE + " or %d", 2, 5));
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 5));
                     }
 
                     BigInteger tokenId = new BigInteger(args.get(0));
