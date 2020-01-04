@@ -33,9 +33,9 @@ public class XNFT extends CustomChaincodeBase {
     public static boolean mint(ChaincodeStub stub, BigInteger tokenId, String type, String owner, Map<String, Object> xattr, Map<String, String> uri) throws Exception {
         NFT nft = new NFT();
         boolean check1 = XType.initXAttr(type, xattr);
-        LOG.info("XNFT::mint:: XType.initXAttr returns" + check1);
+        LOG.info("XNFT::mint:: XType.initXAttr returns " + check1);
         boolean check2 = XType.checkURI(uri);
-        LOG.info("XNFT::mint:: XType.checkURI returns" + check2);
+        LOG.info("XNFT::mint:: XType.checkURI returns " + check2);
         if (!(check1 && check2)) {
             return false;
         }

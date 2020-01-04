@@ -44,7 +44,7 @@ public class XType extends CustomChaincodeBase {
         final String LIST_BOOLEAN = "[Boolean]";
 
         if (!tokenTypes.containsKey(type)) {
-            LOG.info("XType::initXAttr:: No Token type in tokenTypes");
+            LOG.info(String.format("XType::initXAttr:: No Token type %s in tokenTypes", type));
             return false;
         }
 
@@ -52,7 +52,7 @@ public class XType extends CustomChaincodeBase {
         if (xattr != null) {
             for (String key : xattr.keySet()) {
                 if (!attributes.containsKey(key)) {
-                    LOG.info("XType::initXAttr:: No attributes in xattr");
+                    LOG.info(String.format("XType::initXAttr:: No attribute %s in xattr", key));
                     return false;
                 }
             }
