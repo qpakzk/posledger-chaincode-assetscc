@@ -146,6 +146,8 @@ public class CustomMain extends Main {
                             mapper.readValue(args.get(3), new TypeReference<HashMap<String, Object>>(){});
                     Map<String, String> uri =
                             mapper.readValue(args.get(4), new TypeReference<HashMap<String, String>>(){});
+
+                    LOG.info("CustomMain::invoke:: call XNFT.mint");
                     boolean result = XNFT.mint(stub, tokenId, type, owner, xattr, uri);
                     response = Boolean.toString(result);
                     break;
@@ -237,6 +239,7 @@ public class CustomMain extends Main {
 
             return newSuccessResponse(response);
         } catch (Exception e) {
+            LOG.error("CustomMain::invoke:: invoke error");
             return newErrorResponse(e.getMessage());
         }
     }
