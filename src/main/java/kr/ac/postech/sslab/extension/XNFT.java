@@ -1,6 +1,5 @@
 package kr.ac.postech.sslab.extension;
 
-import javafx.util.Pair;
 import kr.ac.postech.sslab.main.CustomChaincodeBase;
 import kr.ac.postech.sslab.nft.NFT;
 import org.hyperledger.fabric.shim.ChaincodeStub;
@@ -67,8 +66,8 @@ public class XNFT extends CustomChaincodeBase {
             return false;
         }
 
-        Pair<String, Object> attr = tokenTypes.get(nft.getType()).get(index);
-        switch (attr.getKey()) {
+        List<String> attr = tokenTypes.get(nft.getType()).get(index);
+        switch (attr.get(0)) {
             case INTEGER:
                 nft.setXAttr(stub, index, Integer.parseInt(value));
                 break;
@@ -175,8 +174,8 @@ public class XNFT extends CustomChaincodeBase {
 
        Object value = nft.getXAttr(index);
 
-        Pair<String, Object> attr = tokenTypes.get(nft.getType()).get(index);
-        switch (attr.getKey()) {
+        List<String> attr = tokenTypes.get(nft.getType()).get(index);
+        switch (attr.get(0)) {
             case INTEGER:
                 return Integer.toString((int) value);
 

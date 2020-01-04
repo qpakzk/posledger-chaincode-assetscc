@@ -1,7 +1,6 @@
 package kr.ac.postech.sslab.main;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.util.Pair;
 import org.hyperledger.fabric.shim.ChaincodeBase;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 
@@ -17,7 +16,7 @@ public class CustomChaincodeBase extends ChaincodeBase {
     protected static Map<String, Map<String, Boolean>> operatorsApproval = new HashMap<>();
     private static final String OPERATORS_APPROVAL = "OPERATORS_APPROVAL";
 
-    protected static Map<String, Map<String, Pair<String, Object>>> tokenTypes = new HashMap<>();
+    protected static Map<String, Map<String, List<String>>> tokenTypes = new HashMap<>();
     private static final String TOKEN_TYPES = "TOKEN_TYPES";
 
     @Override

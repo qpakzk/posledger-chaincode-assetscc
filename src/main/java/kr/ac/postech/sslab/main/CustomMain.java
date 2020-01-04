@@ -2,7 +2,6 @@ package kr.ac.postech.sslab.main;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.util.Pair;
 import kr.ac.postech.sslab.extension.*;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 
@@ -223,7 +222,7 @@ public class CustomMain extends Main {
                     }
 
                     String type = args.get(0);
-                    Map<String, Pair<String, Object>> map = XType.getTokenType(type);
+                    Map<String, List<String>> map = XType.getTokenType(type);
                     response = mapper.writeValueAsString(map);
                     break;
                 }

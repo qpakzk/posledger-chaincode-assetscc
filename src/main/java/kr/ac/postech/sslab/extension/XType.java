@@ -3,24 +3,20 @@ package kr.ac.postech.sslab.extension;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.util.Pair;
 import kr.ac.postech.sslab.main.CustomChaincodeBase;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class XType extends CustomChaincodeBase {
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final String TOKEN_TYPES = "TOKEN_TYPES";
 
     public static boolean registerTokenType(ChaincodeStub stub, String type, String json) throws IOException {
-        Map<String, Pair<String, Object>> attributes
-                = mapper.readValue(json, new TypeReference<HashMap<String, Pair<String, Object>>>(){});
+        Map<String, List<String>> attributes
+                = mapper.readValue(json, new TypeReference<HashMap<String, List<String>>>(){});
 
         tokenTypes.put(type, attributes);
 
@@ -46,7 +42,7 @@ public class XType extends CustomChaincodeBase {
             return false;
         }
 
-        Map<String, Pair<String, Object>> attributes = tokenTypes.get(type);
+        Map<String, List<String>> attributes = tokenTypes.get(type);
         if (xattr != null) {
             for (String key : xattr.keySet()) {
                 if (!attributes.containsKey(key)) {
@@ -56,77 +52,111 @@ public class XType extends CustomChaincodeBase {
 
             for (String key : attributes.keySet()) {
                 if (!xattr.containsKey(key)) {
-                    Pair<String, Object> attr = attributes.get(key);
-                    switch (attr.getKey()) {
+                    List<String> attr = attributes.get(key);
+                    if (attr.size() != 2) {
+                        return false;
+                    }
+
+                    switch (attr.get(0)) {
                         case INTEGER: {
-                            int value = (int) attr.getValue();
+                            int value = Integer.parseInt(attr.get(1));
                             xattr.put(key, value);
                             break;
                         }
 
                         case BIG_INTEGER: {
-                            BigInteger value = (BigInteger) attr.getValue();
+                            BigInteger value = new BigInteger(attr.get(1));
                             xattr.put(key, value);
                             break;
                         }
 
                         case DOUBLE: {
-                            double value = (double) attr.getValue();
+                            double value = Double.parseDouble(attr.get(1));
                             xattr.put(key, value);
                             break;
                         }
 
                         case BYTE: {
-                            byte value = (byte) attr.getValue();
+                            byte value = Byte.parseByte(attr.get(1));
                             xattr.put(key, value);
                             break;
                         }
 
                         case STRING: {
-                            String value = (String) attr.getValue();
+                            String value = attr.get(1);
                             xattr.put(key, value);
                             break;
                         }
 
                         case BOOLEAN: {
-                            boolean value = (boolean) attr.getValue();
+                            boolean value = Boolean.parseBoolean(attr.get(1));
                             xattr.put(key, value);
                             break;
                         }
 
                         case LIST_INTEGER: {
-                            List<Integer> value = (ArrayList<Integer>) attr.getValue();
-                            xattr.put(key, value);
+                            List<String> values1 = toList(attr.get(1));
+                            List<Integer> values2 = new ArrayList<>();
+                            for (String value1 : values1) {
+                                int value2 = Integer.parseInt(value1);
+                                values2.add(value2);
+                            }
+
+                            xattr.put(key, values2);
                             break;
                         }
 
                         case LIST_BIG_INTEGER: {
-                            List<BigInteger> value = (ArrayList<BigInteger>) attr.getValue();
-                            xattr.put(key, value);
+                            List<String> values1 = toList(attr.get(1));
+                            List<BigInteger> values2 = new ArrayList<>();
+                            for (String value1 : values1) {
+                                BigInteger value2 = new BigInteger(value1);
+                                values2.add(value2);
+                            }
+
+                            xattr.put(key, values2);
                             break;
                         }
 
                         case LIST_DOUBLE: {
-                            List<Double> value = (ArrayList<Double>) attr.getValue();
-                            xattr.put(key, value);
+                            List<String> values1 = toList(attr.get(1));
+                            List<Double> values2 = new ArrayList<>();
+                            for (String value1 : values1) {
+                                double value2 = Double.parseDouble(value1);
+                                values2.add(value2);
+                            }
+
+                            xattr.put(key, values2);
                             break;
                         }
 
                         case LIST_BYTE: {
-                            List<Byte> value = (ArrayList<Byte>) attr.getValue();
-                            xattr.put(key, value);
+                            List<String> values1 = toList(attr.get(1));
+                            List<Byte> values2 = new ArrayList<>();
+                            for (String value1 : values1) {
+                                byte value2 = Byte.parseByte(value1);
+                                values2.add(value2);
+                            }
+
+                            xattr.put(key, values2);
                             break;
                         }
 
                         case LIST_STRING: {
-                            List<String> value = (List<String>) attr.getValue();
-                            xattr.put(key, value);
+                            List<String> values = toList(attr.get(1));
+                            xattr.put(key, values);
                             break;
                         }
 
                         case LIST_BOOLEAN: {
-                            List<Boolean> value = (List<Boolean>) attr.getValue();
-                            xattr.put(key, value);
+                            List<String> values1 = toList(attr.get(1));
+                            List<Boolean> values2 = new ArrayList<>();
+                            for (String value1 : values1) {
+                                boolean value2 = Boolean.parseBoolean(value1);
+                                values2.add(value2);
+                            }
+
+                            xattr.put(key, values2);
                             break;
                         }
                     }
@@ -140,7 +170,7 @@ public class XType extends CustomChaincodeBase {
         return new ArrayList<>(tokenTypes.keySet());
     }
 
-    public static Map<String, Pair<String, Object>> getTokenType(String type) {
+    public static Map<String, List<String>> getTokenType(String type) {
         return tokenTypes.get(type);
     }
 
@@ -153,8 +183,11 @@ public class XType extends CustomChaincodeBase {
         return true;
     }
 
-
-    private static String toJSONString(Map<String, Map<String, Pair<String, Object>>> map) throws JsonProcessingException {
+    private static String toJSONString(Map<String, Map<String, List<String>>> map) throws JsonProcessingException {
         return mapper.writeValueAsString(map);
+    }
+
+    private static List<String> toList(String value) {
+        return Arrays.asList(value.substring(1, value.length() - 1).split(", "));
     }
 }
