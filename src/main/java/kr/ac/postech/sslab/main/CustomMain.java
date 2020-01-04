@@ -2,6 +2,7 @@ package kr.ac.postech.sslab.main;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.util.Pair;
 import kr.ac.postech.sslab.extension.*;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 
@@ -179,7 +180,7 @@ public class CustomMain extends Main {
                     }
                     BigInteger tokenId = new BigInteger(args.get(0));
                     String index = args.get(1);
-                    Object value = args.get(2);
+                    String value = args.get(2);
                     boolean result = XNFT.setXAttr(stub, tokenId, index, value);
                     response = Boolean.toString(result);
                     break;
@@ -196,6 +197,37 @@ public class CustomMain extends Main {
                     response = (String) value;
                     break;
                 }
+
+                case "registerTokenType": {
+                    if (args.size() != 2 || isNullOrEmpty(args.get(0))
+                            || isNullOrEmpty(args.get(1))) {
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 2));
+                    }
+
+                    String type = args.get(0);
+                    String json = args.get(1);
+                    boolean result = XType.registerTokenType(stub, type, json);
+                    response = Boolean.toString(result);
+                    break;
+                }
+
+                case "tokenTypesOf": {
+                    List<String> tokenTypes = XType.tokenTypesOf();
+                    response = tokenTypes.toString();
+                    break;
+                }
+
+                case "getTokenType": {
+                    if (args.size() != 1 || isNullOrEmpty(args.get(0))) {
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 1));
+                    }
+
+                    String type = args.get(0);
+                    Map<String, Pair<String, Object>> map = XType.getTokenType(type);
+                    response = mapper.writeValueAsString(map);
+                    break;
+                }
+
                 default:
                     return super.invoke(stub);
             }
