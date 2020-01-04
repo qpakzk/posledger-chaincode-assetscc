@@ -1,5 +1,6 @@
 package kr.ac.postech.sslab.main;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hyperledger.fabric.shim.ChaincodeBase;
 import org.hyperledger.fabric.shim.ChaincodeStub;
@@ -38,10 +39,16 @@ public class CustomChaincodeBase extends ChaincodeBase {
             if (operatorsApprovalString.trim().length() == 0) {
                 stub.putStringState(OPERATORS_APPROVAL, mapper.writeValueAsString(operatorsApproval));
             }
+            else {
+                operatorsApproval = mapper.readValue(operatorsApprovalString, new TypeReference<HashMap<String, Map<String, Boolean>>>(){});
+            }
 
             String tokenTypesString = stub.getStringState(TOKEN_TYPES);
             if (tokenTypesString.trim().length() == 0) {
                 stub.putStringState(TOKEN_TYPES, mapper.writeValueAsString(tokenTypes));
+            }
+            else {
+                tokenTypes = mapper.readValue(tokenTypesString, new TypeReference<HashMap<String, Map<String, List<String>>>>() {});
             }
 
             return newSuccessResponse(SUCCESS);
