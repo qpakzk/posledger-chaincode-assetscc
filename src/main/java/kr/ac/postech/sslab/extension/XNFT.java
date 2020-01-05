@@ -204,32 +204,32 @@ public class XNFT extends CustomChaincodeBase {
 
             case LIST_INTEGER: {
                 List<Integer> list = (List<Integer>) value;
-                return list.toString();
+                return list != null ? list.toString() : null;
             }
 
             case LIST_BIG_INTEGER: {
                 List<BigInteger> list = (List<BigInteger>) value;
-                return list.toString();
+                return list != null ? list.toString() : null;
             }
 
             case LIST_DOUBLE: {
                 List<Double> list = (List<Double>) value;
-                return list.toString();
+                return list != null ? list.toString() : null;
             }
 
             case LIST_BYTE: {
                 List<Byte> list = (List<Byte>) value;
-                return list.toString();
+                return list != null ? list.toString() : null;
             }
 
             case LIST_STRING: {
                 List<String> list = (List<String>) value;
-                return list.toString();
+                return list != null ? list.toString() : null;
             }
 
             case LIST_BOOLEAN: {
                 List<Boolean> list = (List<Boolean>) value;
-                return list.toString();
+                return list != null ? list.toString() : null;
             }
             default:
                 return null;
