@@ -2,6 +2,8 @@ package kr.ac.postech.sslab.main;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hyperledger.fabric.shim.ChaincodeBase;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 
@@ -10,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 public class CustomChaincodeBase extends ChaincodeBase {
+    private static final Log LOG = LogFactory.getLog(CustomChaincodeBase.class);
+
 	private static final String ARG_MESSAGE = "Incorrect number of arguments, expecting %d";
 	private static final String SUCCESS = "SUCCESS";
 
@@ -40,6 +44,7 @@ public class CustomChaincodeBase extends ChaincodeBase {
                 stub.putStringState(OPERATORS_APPROVAL, mapper.writeValueAsString(operatorsApproval));
             }
             else {
+                LOG.info("CustomChaincodeBase::init [operatorsApproval] " + operatorsApprovalString);
                 operatorsApproval = mapper.readValue(operatorsApprovalString, new TypeReference<HashMap<String, Map<String, Boolean>>>(){});
             }
 
@@ -48,6 +53,7 @@ public class CustomChaincodeBase extends ChaincodeBase {
                 stub.putStringState(TOKEN_TYPES, mapper.writeValueAsString(tokenTypes));
             }
             else {
+                LOG.info("CustomChaincodeBase::init [tokenTypes] " + tokenTypesString);
                 tokenTypes = mapper.readValue(tokenTypesString, new TypeReference<HashMap<String, Map<String, List<String>>>>() {});
             }
 

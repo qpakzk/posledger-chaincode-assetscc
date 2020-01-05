@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.ac.postech.sslab.main.CustomChaincodeBase;
-import kr.ac.postech.sslab.main.CustomMain;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hyperledger.fabric.shim.ChaincodeStub;
@@ -14,7 +13,7 @@ import java.math.BigInteger;
 import java.util.*;
 
 public class XType extends CustomChaincodeBase {
-    private static final Log LOG = LogFactory.getLog(CustomMain.class);
+    private static final Log LOG = LogFactory.getLog(XType.class);
 
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final String TOKEN_TYPES = "TOKEN_TYPES";
@@ -45,6 +44,7 @@ public class XType extends CustomChaincodeBase {
 
         LOG.info("XType::initXAttr:: load tokenTypes");
         String tokenTypesString = stub.getStringState(TOKEN_TYPES);
+        LOG.info("XType::initXAttr:: [tokenTypes] " + tokenTypesString);
         tokenTypes = mapper.readValue(tokenTypesString, new TypeReference<HashMap<String, Map<String, List<String>>>>() {});
         if (!tokenTypes.containsKey(type)) {
             LOG.info(String.format("XType::initXAttr:: No Token type %s in tokenTypes", type));

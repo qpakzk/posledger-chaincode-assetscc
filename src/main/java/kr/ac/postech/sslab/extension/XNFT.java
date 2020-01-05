@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public class XNFT extends CustomChaincodeBase {
-    private static final Log LOG = LogFactory.getLog(CustomMain.class);
+    private static final Log LOG = LogFactory.getLog(XNFT.class);
 
     private static final String INTEGER = "Integer";
     private static final String BIG_INTEGER = "BigInteger";
