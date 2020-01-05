@@ -204,6 +204,26 @@ public class XType extends CustomChaincodeBase {
         return true;
     }
 
+    public static boolean addXAttrForEERC721(Map<String, Object> xattr) {
+        final String PARENT_KEY = "parent";
+        final String CHILDREN_KEY = "children";
+        final String ACTIVATED_KEY = "activated";
+
+        if (!xattr.containsKey(PARENT_KEY)) {
+            xattr.put(PARENT_KEY, "");
+        }
+
+        if (!xattr.containsKey(CHILDREN_KEY)) {
+            xattr.put(CHILDREN_KEY, new ArrayList<String>());
+        }
+
+        if (!xattr.containsKey(ACTIVATED_KEY)) {
+            xattr.put(ACTIVATED_KEY, true);
+        }
+
+        return true;
+    }
+
     public static List<String> tokenTypesOf() {
         return new ArrayList<>(tokenTypes.keySet());
     }

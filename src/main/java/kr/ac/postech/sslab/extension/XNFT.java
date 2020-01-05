@@ -1,7 +1,6 @@
 package kr.ac.postech.sslab.extension;
 
 import kr.ac.postech.sslab.main.CustomChaincodeBase;
-import kr.ac.postech.sslab.main.CustomMain;
 import kr.ac.postech.sslab.nft.NFT;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,6 +39,7 @@ public class XNFT extends CustomChaincodeBase {
             return false;
         }
 
+        XType.addXAttrForEERC721(xattr);
         boolean result = nft.mint(stub, tokenId, type, owner, xattr, uri);
         return result;
     }
