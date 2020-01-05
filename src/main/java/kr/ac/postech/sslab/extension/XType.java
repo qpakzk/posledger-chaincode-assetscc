@@ -28,7 +28,7 @@ public class XType extends CustomChaincodeBase {
         return true;
     }
 
-    public static boolean initXAttr(ChaincodeStub stub, String type, Map<String, Object> xattr) throws IOException {
+    public static boolean initXAttr(String type, Map<String, Object> xattr) {
         final String INTEGER = "Integer";
         final String BIG_INTEGER = "BigInteger";
         final String DOUBLE = "Double";
@@ -42,10 +42,6 @@ public class XType extends CustomChaincodeBase {
         final String LIST_STRING = "[String]";
         final String LIST_BOOLEAN = "[Boolean]";
 
-        LOG.info("XType::initXAttr:: load tokenTypes");
-        String tokenTypesString = stub.getStringState(TOKEN_TYPES);
-        LOG.info("XType::initXAttr:: [tokenTypes] " + tokenTypesString);
-        tokenTypes = mapper.readValue(tokenTypesString, new TypeReference<HashMap<String, Map<String, List<String>>>>() {});
         if (!tokenTypes.containsKey(type)) {
             LOG.info(String.format("XType::initXAttr:: No Token type %s in tokenTypes", type));
             return false;
@@ -106,11 +102,17 @@ public class XType extends CustomChaincodeBase {
                         }
 
                         case LIST_INTEGER: {
-                            List<String> values1 = toList(attr.get(1));
-                            List<Integer> values2 = new ArrayList<>();
-                            for (String value1 : values1) {
-                                int value2 = Integer.parseInt(value1);
-                                values2.add(value2);
+                            List<Integer> values2;
+                            if (attr.get(1) != null) {
+                                List<String> values1 = toList(attr.get(1));
+                                values2 = new ArrayList<>();
+                                for (String value1 : values1) {
+                                    int value2 = Integer.parseInt(value1);
+                                    values2.add(value2);
+                                }
+                            }
+                            else {
+                                values2 = null;
                             }
 
                             xattr.put(key, values2);
@@ -118,11 +120,17 @@ public class XType extends CustomChaincodeBase {
                         }
 
                         case LIST_BIG_INTEGER: {
-                            List<String> values1 = toList(attr.get(1));
-                            List<BigInteger> values2 = new ArrayList<>();
-                            for (String value1 : values1) {
-                                BigInteger value2 = new BigInteger(value1);
-                                values2.add(value2);
+                            List<BigInteger> values2;
+                            if (attr.get(1) != null) {
+                                List<String> values1 = toList(attr.get(1));
+                                values2 = new ArrayList<>();
+                                for (String value1 : values1) {
+                                    BigInteger value2 = new BigInteger(value1);
+                                    values2.add(value2);
+                                }
+                            }
+                            else {
+                                values2 = null;
                             }
 
                             xattr.put(key, values2);
@@ -130,11 +138,17 @@ public class XType extends CustomChaincodeBase {
                         }
 
                         case LIST_DOUBLE: {
-                            List<String> values1 = toList(attr.get(1));
-                            List<Double> values2 = new ArrayList<>();
-                            for (String value1 : values1) {
-                                double value2 = Double.parseDouble(value1);
-                                values2.add(value2);
+                            List<Double> values2;
+                            if (attr.get(1) != null) {
+                                List<String> values1 = toList(attr.get(1));
+                                values2 = new ArrayList<>();
+                                for (String value1 : values1) {
+                                    double value2 = Double.parseDouble(value1);
+                                    values2.add(value2);
+                                }
+                            }
+                            else {
+                                values2 = null;
                             }
 
                             xattr.put(key, values2);
@@ -142,11 +156,17 @@ public class XType extends CustomChaincodeBase {
                         }
 
                         case LIST_BYTE: {
-                            List<String> values1 = toList(attr.get(1));
-                            List<Byte> values2 = new ArrayList<>();
-                            for (String value1 : values1) {
-                                byte value2 = Byte.parseByte(value1);
-                                values2.add(value2);
+                            List<Byte> values2;
+                            if (attr.get(1) != null) {
+                                List<String> values1 = toList(attr.get(1));
+                                values2 = new ArrayList<>();
+                                for (String value1 : values1) {
+                                    byte value2 = Byte.parseByte(value1);
+                                    values2.add(value2);
+                                }
+                            }
+                            else {
+                                values2 = null;
                             }
 
                             xattr.put(key, values2);
@@ -154,17 +174,24 @@ public class XType extends CustomChaincodeBase {
                         }
 
                         case LIST_STRING: {
-                            List<String> values = toList(attr.get(1));
+                            List<String> values
+                                    = attr.get(1) != null ? toList(attr.get(1)) : null;
                             xattr.put(key, values);
                             break;
                         }
 
                         case LIST_BOOLEAN: {
-                            List<String> values1 = toList(attr.get(1));
-                            List<Boolean> values2 = new ArrayList<>();
-                            for (String value1 : values1) {
-                                boolean value2 = Boolean.parseBoolean(value1);
-                                values2.add(value2);
+                            List<Boolean> values2;
+                            if (attr.get(1) != null) {
+                                List<String> values1 = toList(attr.get(1));
+                                values2 = new ArrayList<>();
+                                for (String value1 : values1) {
+                                    boolean value2 = Boolean.parseBoolean(value1);
+                                    values2.add(value2);
+                                }
+                            }
+                            else {
+                                values2 = null;
                             }
 
                             xattr.put(key, values2);
