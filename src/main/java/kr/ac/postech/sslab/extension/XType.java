@@ -28,6 +28,14 @@ public class XType extends CustomChaincodeBase {
         return true;
     }
 
+    public static List<String> tokenTypesOf() {
+        return new ArrayList<>(tokenTypes.keySet());
+    }
+
+    public static Map<String, List<String>> getTokenType(String type) {
+        return tokenTypes.get(type);
+    }
+
     public static boolean initXAttr(String type, Map<String, Object> xattr) {
         final String INTEGER = "Integer";
         final String BIG_INTEGER = "BigInteger";
@@ -210,7 +218,7 @@ public class XType extends CustomChaincodeBase {
         final String ACTIVATED_KEY = "activated";
 
         if (!xattr.containsKey(PARENT_KEY)) {
-            xattr.put(PARENT_KEY, "");
+            xattr.put(PARENT_KEY, BigInteger.valueOf(-1));
         }
 
         if (!xattr.containsKey(CHILDREN_KEY)) {
@@ -222,14 +230,6 @@ public class XType extends CustomChaincodeBase {
         }
 
         return true;
-    }
-
-    public static List<String> tokenTypesOf() {
-        return new ArrayList<>(tokenTypes.keySet());
-    }
-
-    public static Map<String, List<String>> getTokenType(String type) {
-        return tokenTypes.get(type);
     }
 
     public static boolean checkURI(Map<String, String> uri) {
