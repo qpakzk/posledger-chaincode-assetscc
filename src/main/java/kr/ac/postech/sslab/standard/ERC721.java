@@ -13,9 +13,9 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ERC721 extends CustomChaincodeBase {
-	private static final String OPERATORS_APPROVAL = "OPERATORS_APPROVAL";
+import static kr.ac.postech.sslab.constant.Key.OPERATORS_APPROVAL;
 
+public class ERC721 extends CustomChaincodeBase {
 	private static final String QUERY_OWNER = "{\"selector\":{\"owner\":\"%s\"}}";
 
 	public static BigInteger balanceOf(ChaincodeStub stub, String owner) {

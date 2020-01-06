@@ -9,6 +9,8 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
+import static kr.ac.postech.sslab.constant.Key.*;
+
 
 public class NFT {
     private static ObjectMapper mapper = new ObjectMapper();
@@ -19,13 +21,6 @@ public class NFT {
     private String approvee;
     private Map<String, Object> xattr;
     private Map<String, String> uri;
-
-    private static final String ID_KEY = "id";
-    private static final String TYPE_KEY = "type";
-    private static final String OWNER_KEY = "owner";
-    private static final String APPROVEE_KEY = "approvee";
-    private static final String XATTR_KEY = "xattr";
-    private static final String URI_KEY = "uri";
 
     public NFT() {}
 

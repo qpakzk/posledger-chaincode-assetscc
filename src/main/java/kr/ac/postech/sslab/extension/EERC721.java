@@ -17,15 +17,13 @@ import org.hyperledger.fabric.shim.ledger.KeyValue;
 import org.hyperledger.fabric.shim.ledger.QueryResultsIterator;
 
 import static kr.ac.postech.sslab.constant.DataType.*;
+import static kr.ac.postech.sslab.constant.Key.*;
 
 public class EERC721 extends CustomChaincodeBase {
 	private static final Log LOG = LogFactory.getLog(EERC721.class);
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 	private static final String DEACTIVATED_MESSAGE = "Deactivated token";
 	private static final String BASE_TYPE_ERROR_MESSAGE = "Function '%s' is not allowed for token type 'base'";
-	private static final String ACTIVATED_KEY = "activated";
-	private static final String PARENT_KEY = "parent";
-	private static final String CHILDREN_KEY = "children";
 	private static final String BASE_TYPE = "base";
 
 	private static final String QUERY_OWNER = "{\"selector\":{\"owner\":\"%s\"}}";

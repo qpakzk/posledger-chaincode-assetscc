@@ -13,12 +13,12 @@ import java.math.BigInteger;
 import java.util.*;
 
 import static kr.ac.postech.sslab.constant.DataType.*;
+import static kr.ac.postech.sslab.constant.Key.TOKEN_TYPES;
 
 public class XType extends CustomChaincodeBase {
     private static final Log LOG = LogFactory.getLog(XType.class);
 
     private static final ObjectMapper mapper = new ObjectMapper();
-    private static final String TOKEN_TYPES = "TOKEN_TYPES";
 
     public static boolean registerTokenType(ChaincodeStub stub, String type, String json) throws IOException {
         Map<String, List<String>> attributes

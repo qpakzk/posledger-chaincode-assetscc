@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static kr.ac.postech.sslab.constant.Key.OPERATORS_APPROVAL;
+import static kr.ac.postech.sslab.constant.Key.TOKEN_TYPES;
+
 public class CustomChaincodeBase extends ChaincodeBase {
     private static final Log LOG = LogFactory.getLog(CustomChaincodeBase.class);
 
@@ -19,10 +22,8 @@ public class CustomChaincodeBase extends ChaincodeBase {
 
 	private static ObjectMapper mapper = new ObjectMapper();
     protected static Map<String, Map<String, Boolean>> operatorsApproval = new HashMap<>();
-    private static final String OPERATORS_APPROVAL = "OPERATORS_APPROVAL";
 
     protected static Map<String, Map<String, List<String>>> tokenTypes = new HashMap<>();
-    private static final String TOKEN_TYPES = "TOKEN_TYPES";
 
     @Override
     public Response init(ChaincodeStub stub) {
