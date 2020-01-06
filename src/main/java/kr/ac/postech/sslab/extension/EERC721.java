@@ -179,8 +179,6 @@ public class EERC721 extends CustomChaincodeBase {
 					return false;
 			}
 
-			child.setXAttr(stub, index, values.get(i));
-
 			child.setXAttr(stub, PARENT_KEY, nft.getId());
 			children.add(child);
 		}
