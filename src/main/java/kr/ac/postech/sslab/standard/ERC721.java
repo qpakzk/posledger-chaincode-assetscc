@@ -16,8 +16,10 @@ import java.util.Map;
 public class ERC721 extends CustomChaincodeBase {
 	private static final String OPERATORS_APPROVAL = "OPERATORS_APPROVAL";
 
+	private static final String QUERY_OWNER = "{\"selector\":{\"owner\":\"%s\"}}";
+
 	public static BigInteger balanceOf(ChaincodeStub stub, String owner) {
-		String query = "{\"selector\":{\"owner\":\"" + owner + "\"}}";
+		String query = String.format(QUERY_OWNER, owner);
 
 		long ownedTokensCount = 0;
 		QueryResultsIterator<KeyValue> resultsIterator = stub.getQueryResult(query);

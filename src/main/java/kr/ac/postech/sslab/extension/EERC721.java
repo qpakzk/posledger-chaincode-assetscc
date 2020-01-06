@@ -32,8 +32,10 @@ public class EERC721 extends CustomChaincodeBase {
 	private static final String BYTE = "Byte";
 	private static final String STRING = "String";
 
+	private static final String QUERY_OWNER = "{\"selector\":{\"owner\":\"%s\"}}";
+
 	public static BigInteger balanceOf(ChaincodeStub stub, String owner, String type) throws IOException {
-		String query = "{\"selector\":{\"owner\":\"" + owner + "\"}}";
+		String query = String.format(QUERY_OWNER, owner);
 
 		long ownedTokensCount = 0;
 		QueryResultsIterator<KeyValue> resultsIterator = stub.getQueryResult(query);
@@ -58,7 +60,7 @@ public class EERC721 extends CustomChaincodeBase {
 	}
 
 	public static List<BigInteger> tokenIdsOf(ChaincodeStub stub, String owner) {
-		String query = "{\"selector\":{\"owner\":\"" + owner + "\"}}";
+		String query = String.format(QUERY_OWNER, owner);
 
 		List<BigInteger> tokenIds = new ArrayList<>();
 		QueryResultsIterator<KeyValue> resultsIterator = stub.getQueryResult(query);
@@ -76,7 +78,7 @@ public class EERC721 extends CustomChaincodeBase {
 		List<BigInteger> tokenIds = new ArrayList<>();
 		boolean activated;
 		if (type.equals("_")) {
-			query = "{\"selector\":{\"owner\":\"" + owner + "\"}}";
+			query = String.format(QUERY_OWNER, owner);
 
 			resultsIterator = stub.getQueryResult(query);
 			while(resultsIterator.iterator().hasNext()) {
