@@ -1,11 +1,13 @@
 package kr.ac.postech.sslab.extension;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import kr.ac.postech.sslab.main.CustomChaincodeBase;
 import kr.ac.postech.sslab.nft.NFT;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +31,7 @@ public class XNFT extends CustomChaincodeBase {
     private static final String LIST_BOOLEAN = "[Boolean]";
 
 
-    public static boolean mint(ChaincodeStub stub, BigInteger tokenId, String type, String owner, Map<String, Object> xattr, Map<String, String> uri) throws Exception {
+    public static boolean mint(ChaincodeStub stub, BigInteger tokenId, String type, String owner, Map<String, Object> xattr, Map<String, String> uri) throws JsonProcessingException {
         NFT nft = new NFT();
         boolean check1 = XType.initXAttr(type, xattr);
         LOG.info("XNFT::mint:: XType.initXAttr returns " + check1);
@@ -44,7 +46,7 @@ public class XNFT extends CustomChaincodeBase {
         return result;
     }
 
-    public static boolean setURI(ChaincodeStub stub, BigInteger tokenId, String index, String value) throws Exception {
+    public static boolean setURI(ChaincodeStub stub, BigInteger tokenId, String index, String value) throws IOException {
         NFT nft = NFT.read(stub, tokenId);
         Map<String, String> uri = nft.getURI();
         if (!uri.containsKey(index)) {
@@ -55,7 +57,7 @@ public class XNFT extends CustomChaincodeBase {
         return true;
     }
 
-    public static String getURI(ChaincodeStub stub, BigInteger tokenId, String index) throws Exception {
+    public static String getURI(ChaincodeStub stub, BigInteger tokenId, String index) throws IOException {
         NFT nft = NFT.read(stub, tokenId);
         Map<String, String> uri = nft.getURI();
         if (!uri.containsKey(index)) {
@@ -66,7 +68,7 @@ public class XNFT extends CustomChaincodeBase {
         return value;
     }
 
-    public static boolean setXAttr(ChaincodeStub stub, BigInteger tokenId, String index, String value) throws Exception {
+    public static boolean setXAttr(ChaincodeStub stub, BigInteger tokenId, String index, String value) throws JsonProcessingException {
         NFT nft = NFT.read(stub, tokenId);
         Map<String, Object> xattr = nft.getXAttr();
         if (!xattr.containsKey(index)) {
@@ -173,7 +175,7 @@ public class XNFT extends CustomChaincodeBase {
     }
 
     @SuppressWarnings("unchecked")
-    public static String getXAttr(ChaincodeStub stub, BigInteger tokenId, String index) throws Exception {
+    public static String getXAttr(ChaincodeStub stub, BigInteger tokenId, String index) throws IOException {
         NFT nft = NFT.read(stub, tokenId);
         Map<String, Object> xattr = nft.getXAttr();
         if (!xattr.containsKey(index)) {
