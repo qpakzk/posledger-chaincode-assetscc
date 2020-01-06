@@ -16,6 +16,8 @@ import org.hyperledger.fabric.shim.ledger.KeyModification;
 import org.hyperledger.fabric.shim.ledger.KeyValue;
 import org.hyperledger.fabric.shim.ledger.QueryResultsIterator;
 
+import static kr.ac.postech.sslab.constant.DataType.*;
+
 public class EERC721 extends CustomChaincodeBase {
 	private static final Log LOG = LogFactory.getLog(EERC721.class);
 	private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -25,12 +27,6 @@ public class EERC721 extends CustomChaincodeBase {
 	private static final String PARENT_KEY = "parent";
 	private static final String CHILDREN_KEY = "children";
 	private static final String BASE_TYPE = "base";
-
-	private static final String INTEGER = "Integer";
-	private static final String BIG_INTEGER = "BigInteger";
-	private static final String DOUBLE = "Double";
-	private static final String BYTE = "Byte";
-	private static final String STRING = "String";
 
 	private static final String QUERY_OWNER = "{\"selector\":{\"owner\":\"%s\"}}";
 

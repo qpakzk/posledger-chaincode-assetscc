@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.*;
 
+import static kr.ac.postech.sslab.constant.DataType.*;
+
 public class XType extends CustomChaincodeBase {
     private static final Log LOG = LogFactory.getLog(XType.class);
 
@@ -37,19 +39,6 @@ public class XType extends CustomChaincodeBase {
     }
 
     public static boolean initXAttr(String type, Map<String, Object> xattr) {
-        final String INTEGER = "Integer";
-        final String BIG_INTEGER = "BigInteger";
-        final String DOUBLE = "Double";
-        final String BYTE = "Byte";
-        final String STRING = "String";
-        final String BOOLEAN = "Boolean";
-        final String LIST_INTEGER = "[Integer]";
-        final String LIST_BIG_INTEGER = "[BigInteger]";
-        final String LIST_DOUBLE = "[Double]";
-        final String LIST_BYTE = "[Byte]";
-        final String LIST_STRING = "[String]";
-        final String LIST_BOOLEAN = "[Boolean]";
-
         if (!tokenTypes.containsKey(type)) {
             LOG.info(String.format("XType::initXAttr:: No Token type %s in tokenTypes", type));
             return false;

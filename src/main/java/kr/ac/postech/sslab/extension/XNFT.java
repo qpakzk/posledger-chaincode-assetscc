@@ -14,22 +14,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static kr.ac.postech.sslab.constant.DataType.*;
+
 public class XNFT extends CustomChaincodeBase {
     private static final Log LOG = LogFactory.getLog(XNFT.class);
-
-    private static final String INTEGER = "Integer";
-    private static final String BIG_INTEGER = "BigInteger";
-    private static final String DOUBLE = "Double";
-    private static final String BYTE = "Byte";
-    private static final String STRING = "String";
-    private static final String BOOLEAN = "Boolean";
-    private static final String LIST_INTEGER = "[Integer]";
-    private static final String LIST_BIG_INTEGER = "[BigInteger]";
-    private static final String LIST_DOUBLE = "[Double]";
-    private static final String LIST_BYTE = "[Byte]";
-    private static final String LIST_STRING = "[String]";
-    private static final String LIST_BOOLEAN = "[Boolean]";
-
 
     public static boolean mint(ChaincodeStub stub, BigInteger tokenId, String type, String owner, Map<String, Object> xattr, Map<String, String> uri) throws JsonProcessingException {
         NFT nft = new NFT();
