@@ -64,9 +64,10 @@ public class XType extends CustomChaincodeBase {
                 }
             }
 
-            for (String key : attributes.keySet()) {
-                if (!xattr.containsKey(key)) {
-                    List<String> attr = attributes.get(key);
+            for (Map.Entry<String, List<String>> entry : attributes.entrySet()) {
+
+                if (!xattr.containsKey(entry.getKey())) {
+                    List<String> attr = entry.getValue();
                     if (attr.size() != 2) {
                         LOG.info("XType::initXAttr:: List attr should have two elements");
                         return false;
@@ -75,37 +76,37 @@ public class XType extends CustomChaincodeBase {
                     switch (attr.get(0)) {
                         case INTEGER: {
                             int value = Integer.parseInt(attr.get(1));
-                            xattr.put(key, value);
+                            xattr.put(entry.getKey(), value);
                             break;
                         }
 
                         case BIG_INTEGER: {
                             BigInteger value = new BigInteger(attr.get(1));
-                            xattr.put(key, value);
+                            xattr.put(entry.getKey(), value);
                             break;
                         }
 
                         case DOUBLE: {
                             double value = Double.parseDouble(attr.get(1));
-                            xattr.put(key, value);
+                            xattr.put(entry.getKey(), value);
                             break;
                         }
 
                         case BYTE: {
                             byte value = Byte.parseByte(attr.get(1));
-                            xattr.put(key, value);
+                            xattr.put(entry.getKey(), value);
                             break;
                         }
 
                         case STRING: {
                             String value = attr.get(1);
-                            xattr.put(key, value);
+                            xattr.put(entry.getKey(), value);
                             break;
                         }
 
                         case BOOLEAN: {
                             boolean value = Boolean.parseBoolean(attr.get(1));
-                            xattr.put(key, value);
+                            xattr.put(entry.getKey(), value);
                             break;
                         }
 
@@ -123,7 +124,7 @@ public class XType extends CustomChaincodeBase {
                                 values2 = null;
                             }
 
-                            xattr.put(key, values2);
+                            xattr.put(entry.getKey(), values2);
                             break;
                         }
 
@@ -141,7 +142,7 @@ public class XType extends CustomChaincodeBase {
                                 values2 = null;
                             }
 
-                            xattr.put(key, values2);
+                            xattr.put(entry.getKey(), values2);
                             break;
                         }
 
@@ -159,7 +160,7 @@ public class XType extends CustomChaincodeBase {
                                 values2 = null;
                             }
 
-                            xattr.put(key, values2);
+                            xattr.put(entry.getKey(), values2);
                             break;
                         }
 
@@ -177,14 +178,14 @@ public class XType extends CustomChaincodeBase {
                                 values2 = null;
                             }
 
-                            xattr.put(key, values2);
+                            xattr.put(entry.getKey(), values2);
                             break;
                         }
 
                         case LIST_STRING: {
                             List<String> values
                                     = attr.get(1) != null ? toList(attr.get(1)) : null;
-                            xattr.put(key, values);
+                            xattr.put(entry.getKey(), values);
                             break;
                         }
 
@@ -202,7 +203,7 @@ public class XType extends CustomChaincodeBase {
                                 values2 = null;
                             }
 
-                            xattr.put(key, values2);
+                            xattr.put(entry.getKey(), values2);
                             break;
                         }
                     }
