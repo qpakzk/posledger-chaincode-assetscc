@@ -68,7 +68,7 @@ public class XNFT extends CustomChaincodeBase {
         return value;
     }
 
-    public static boolean setXAttr(ChaincodeStub stub, BigInteger tokenId, String index, String value) throws JsonProcessingException {
+    public static boolean setXAttr(ChaincodeStub stub, BigInteger tokenId, String index, String value) throws IOException {
         NFT nft = NFT.read(stub, tokenId);
         Map<String, Object> xattr = nft.getXAttr();
         if (!xattr.containsKey(index)) {
