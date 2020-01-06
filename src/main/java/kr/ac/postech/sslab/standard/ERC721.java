@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ERC721 extends CustomChaincodeBase {
-	private static final String OPERATORS_APPROVAL = "operatorsApproval";
+	private static final String OPERATORS_APPROVAL = "OPERATORS_APPROVAL";
 
 	public static BigInteger balanceOf(ChaincodeStub stub, String owner) {
 		String query = "{\"selector\":{\"owner\":\"" + owner + "\"}}";
