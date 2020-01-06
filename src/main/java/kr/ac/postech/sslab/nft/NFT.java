@@ -20,6 +20,13 @@ public class NFT {
     private Map<String, Object> xattr;
     private Map<String, String> uri;
 
+    private static final String ID_KEY = "id";
+    private static final String TYPE_KEY = "type";
+    private static final String OWNER_KEY = "owner";
+    private static final String APPROVEE_KEY = "approvee";
+    private static final String XATTR_KEY = "xattr";
+    private static final String URI_KEY = "uri";
+
     public NFT() {}
 
     private NFT(BigInteger tokenId, String type, String owner, String approvee, Map<String, Object> xattr, Map<String, String> uri) {
@@ -50,15 +57,15 @@ public class NFT {
         Map<String, Object> map =
                 mapper.readValue(json, new TypeReference<HashMap<String, Object>>(){});
 
-        String type = (String) map.get("type");
-        String owner = (String) map.get("owner");
-        String approvee = (String) map.get("approvee");
+        String type = (String) map.get(TYPE_KEY);
+        String owner = (String) map.get(OWNER_KEY);
+        String approvee = (String) map.get(APPROVEE_KEY);
 
         Map<String, Object> xattr
-                = map.containsKey("xattr") ? (HashMap<String, Object>) map.get("xattr") : null;
+                = map.containsKey(XATTR_KEY) ? (HashMap<String, Object>) map.get(XATTR_KEY) : null;
 
         Map<String, String> uri
-                = map.containsKey("uri") ? (HashMap<String, String>) map.get("uri") : null;
+                = map.containsKey(URI_KEY) ? (HashMap<String, String>) map.get(URI_KEY) : null;
 
         return new NFT(tokenId, type, owner, approvee, xattr, uri);
     }
@@ -130,17 +137,17 @@ public class NFT {
 
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
-        map.put("id", this.tokenId);
-        map.put("type", this.type);
-        map.put("owner", this.owner);
-        map.put("approvee", this.approvee);
+        map.put(ID_KEY, this.tokenId);
+        map.put(TYPE_KEY, this.type);
+        map.put(OWNER_KEY, this.owner);
+        map.put(APPROVEE_KEY, this.approvee);
 
         if (this.xattr != null) {
-            map.put("xattr", xattr);
+            map.put(XATTR_KEY, xattr);
         }
 
         if (this.uri != null) {
-            map.put("uri", uri);
+            map.put(URI_KEY, uri);
         }
 
         return map;
