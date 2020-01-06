@@ -1,11 +1,14 @@
 package kr.ac.postech.sslab.standard;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.ac.postech.sslab.main.CustomChaincodeBase;
 import kr.ac.postech.sslab.nft.NFT;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ledger.KeyValue;
 import org.hyperledger.fabric.shim.ledger.QueryResultsIterator;
+
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,12 +29,12 @@ public class ERC721 extends CustomChaincodeBase {
 		return BigInteger.valueOf(ownedTokensCount);
 	}
 
-	public static String ownerOf(ChaincodeStub stub, BigInteger tokenId) throws Exception {
+	public static String ownerOf(ChaincodeStub stub, BigInteger tokenId) throws IOException {
 		NFT nft = NFT.read(stub, tokenId);
 		return nft.getOwner();
 	}
 
-	public static boolean transferFrom(ChaincodeStub stub, String from, String to, BigInteger tokenId) throws Exception {
+	public static boolean transferFrom(ChaincodeStub stub, String from, String to, BigInteger tokenId) throws IOException {
 			NFT nft = NFT.read(stub, tokenId);
 
 			String owner = nft.getOwner();
@@ -44,12 +47,12 @@ public class ERC721 extends CustomChaincodeBase {
 			return true;
 	}
 
-	public static boolean approve(ChaincodeStub stub, String approved, BigInteger tokenId) throws Exception {
+	public static boolean approve(ChaincodeStub stub, String approved, BigInteger tokenId) throws IOException {
 		NFT nft = NFT.read(stub, tokenId);
 		return nft.setApprovee(stub, approved);
 	}
 
-	public static boolean setApprovalForAll(ChaincodeStub stub, String caller, String operator, boolean approved) throws Exception {
+	public static boolean setApprovalForAll(ChaincodeStub stub, String caller, String operator, boolean approved) throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 
 		Map<String, Boolean> operatorMap;
@@ -67,7 +70,7 @@ public class ERC721 extends CustomChaincodeBase {
 		return true;
 	}
 
-    public static String getApproved(ChaincodeStub stub, BigInteger tokenId) throws Exception {
+    public static String getApproved(ChaincodeStub stub, BigInteger tokenId) throws IOException {
 		NFT nft = NFT.read(stub, tokenId);
 		return nft.getApprovee();
 	}
