@@ -1,6 +1,8 @@
 package kr.ac.postech.sslab.constant;
 
 public final class Key {
+    private Key() {}
+
     public static final String OPERATORS_APPROVAL = "OPERATORS_APPROVAL";
     public static final String TOKEN_TYPES = "TOKEN_TYPES";
 

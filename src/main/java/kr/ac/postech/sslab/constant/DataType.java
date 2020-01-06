@@ -1,6 +1,8 @@
 package kr.ac.postech.sslab.constant;
 
 public final class DataType {
+    private DataType() {}
+
     public static final String INTEGER = "Integer";
     public static final String BIG_INTEGER = "BigInteger";
     public static final String DOUBLE = "Double";

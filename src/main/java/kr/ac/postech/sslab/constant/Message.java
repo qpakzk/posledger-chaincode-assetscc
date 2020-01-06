@@ -1,6 +1,8 @@
 package kr.ac.postech.sslab.constant;
 
 public final class Message {
+    private Message() {}
+
     public static final String ARG_MESSAGE = "The argument(s) must be exactly %s non-empty string(s)";
 
     public static final String NO_FUNCTION_MESSAGE = "There is no such function";
