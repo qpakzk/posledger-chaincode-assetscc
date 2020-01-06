@@ -1,5 +1,7 @@
 package kr.ac.postech.sslab.extension;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.ac.postech.sslab.main.CustomChaincodeBase;
 import kr.ac.postech.sslab.nft.NFT;
 import java.math.BigInteger;
@@ -10,6 +12,7 @@ import org.hyperledger.fabric.shim.ledger.KeyValue;
 import org.hyperledger.fabric.shim.ledger.QueryResultsIterator;
 
 public class EERC721 extends CustomChaincodeBase {
+	private static final ObjectMapper objectMapper = new ObjectMapper();
 	private static final String DEACTIVATED_MESSAGE = "Deactivated token";
 	private static final String BASE_TYPE_ERROR_MESSAGE = "Function '%s' is not allowed for token type 'base'";
 	private static final String ACTIVATED_KEY = "activated";
@@ -119,8 +122,11 @@ public class EERC721 extends CustomChaincodeBase {
 
 		List<NFT> children = new ArrayList<>();
 		for (int i = 0; i < 2; i++) {
-			Map<String, Object> xattr = nft.getXAttr();
-			Map<String, String> uri = nft.getURI();
+			String xattrJson = objectMapper.writeValueAsString(nft.getXAttr());
+			Map<String, Object> xattr = objectMapper.readValue(xattrJson, new TypeReference<HashMap<String, Object>>() {});
+
+			String uriJson = objectMapper.writeValueAsString(nft.getURI());
+			Map<String, String> uri = objectMapper.readValue(uriJson, new TypeReference<HashMap<String, String>>() {});
 
 			NFT child = new NFT();
 			child.mint(stub, newIds.get(i), nft.getType(), nft.getOwner(), xattr, uri);
