@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.ac.postech.sslab.main.CustomChaincodeBase;
 import kr.ac.postech.sslab.nft.NFT;
+
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.*;
 
@@ -30,7 +32,7 @@ public class EERC721 extends CustomChaincodeBase {
 	private static final String BYTE = "Byte";
 	private static final String STRING = "String";
 
-	public static BigInteger balanceOf(ChaincodeStub stub, String owner, String type) throws Exception {
+	public static BigInteger balanceOf(ChaincodeStub stub, String owner, String type) throws IOException {
 		String query = "{\"selector\":{\"owner\":\"" + owner + "\"}}";
 
 		long ownedTokensCount = 0;
@@ -68,7 +70,7 @@ public class EERC721 extends CustomChaincodeBase {
 		return tokenIds;
 	}
 
-	public static List<BigInteger> tokenIdsOf(ChaincodeStub stub, String owner, String type) throws Exception {
+	public static List<BigInteger> tokenIdsOf(ChaincodeStub stub, String owner, String type) throws IOException {
 		String query;
 		QueryResultsIterator<KeyValue> resultsIterator;
 		List<BigInteger> tokenIds = new ArrayList<>();
@@ -198,7 +200,7 @@ public class EERC721 extends CustomChaincodeBase {
 		return nft.setXAttr(stub, ACTIVATED_KEY, false);
 	}
 
-    public static String query(ChaincodeStub stub, BigInteger tokenId) throws Exception {
+    public static String query(ChaincodeStub stub, BigInteger tokenId) throws IOException {
 		NFT nft = NFT.read(stub, tokenId);
 		return nft.toJSONString();
 	}
