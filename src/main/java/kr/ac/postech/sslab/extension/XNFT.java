@@ -172,6 +172,7 @@ public class XNFT extends CustomChaincodeBase {
         return true;
     }
 
+    @SuppressWarnings("unchecked")
     public static String getXAttr(ChaincodeStub stub, BigInteger tokenId, String index) throws Exception {
         NFT nft = NFT.read(stub, tokenId);
         Map<String, Object> xattr = nft.getXAttr();

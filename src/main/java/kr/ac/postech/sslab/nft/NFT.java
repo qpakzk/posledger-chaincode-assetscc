@@ -43,6 +43,7 @@ public class NFT {
         return true;
     }
 
+    @SuppressWarnings("unchecked")
     public static NFT read(ChaincodeStub stub, BigInteger tokenId) throws IOException {
         String json = stub.getStringState(tokenId.toString());
 
