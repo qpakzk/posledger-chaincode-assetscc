@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 
 public class BaseNFT {
+    private BaseNFT() {}
+
     public static boolean mint(ChaincodeStub stub, BigInteger tokenId, String owner) throws JsonProcessingException {
         NFT nft = new NFT();
         String type = "base";
