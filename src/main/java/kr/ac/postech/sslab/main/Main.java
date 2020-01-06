@@ -7,6 +7,7 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
 import static io.netty.util.internal.StringUtil.isNullOrEmpty;
 import static kr.ac.postech.sslab.constant.Message.ARG_MESSAGE;
 import static kr.ac.postech.sslab.constant.Message.NO_FUNCTION_MESSAGE;
+import static kr.ac.postech.sslab.constant.Function.*;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -22,43 +23,43 @@ public class Main extends CustomChaincodeBase {
             String response;
 
             switch (func) {
-                case "balanceOf":
+                case BALANCE_OF_FUNCTION_NAME:
                     response = balanceOf(stub, args);
                     break;
 
-                case "ownerOf":
+                case OWNER_OF_FUNCTION_NAME:
                     response = ownerOf(stub, args);
                     break;
 
-                case "transferFrom":
+                case TRANSFER_FROM_FUNCTION_NAME:
                     response = transferFrom(stub, args);
                     break;
 
-                case "approve":
+                case APPROVE_FUNCTION_NAME:
                     response = approve(stub, args);
                     break;
 
-                case "setApprovalForAll":
+                case SET_APPROVAL_FOR_ALL_FUNCTION_NAME:
                     response = setApprovalForAll(stub, args);
                     break;
 
-                case "getApproved":
+                case GET_APPROVED_FUNCTION_NAME:
                     response = getApproved(stub, args);
                     break;
 
-                case "isApprovedForAll":
+                case IS_APPROVED_FOR_ALL_FUNCTION_NAME:
                     response = isApprovedForAll(args);
                     break;
 
-                case "mint":
+                case MINT_FUNCTION_NAME:
                     response = mint(stub, args);
                     break;
 
-                case "burn":
+                case BURN_FUNCTION_NAME:
                     response = burn(stub, args);
                     break;
 
-                case "getType":
+                case GET_TYPE_FUNCTION_NAME:
                     response = getType(stub, args);
                     break;
 
