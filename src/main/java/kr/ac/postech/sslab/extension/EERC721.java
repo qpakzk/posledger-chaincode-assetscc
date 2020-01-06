@@ -18,12 +18,14 @@ import org.hyperledger.fabric.shim.ledger.QueryResultsIterator;
 
 import static kr.ac.postech.sslab.constant.DataType.*;
 import static kr.ac.postech.sslab.constant.Key.*;
+import static kr.ac.postech.sslab.constant.Message.BASE_TYPE_ERROR_MESSAGE;
+import static kr.ac.postech.sslab.constant.Message.DEACTIVATED_MESSAGE;
 
 public class EERC721 extends CustomChaincodeBase {
-	private static final Log LOG = LogFactory.getLog(EERC721.class);
 	private static final ObjectMapper objectMapper = new ObjectMapper();
-	private static final String DEACTIVATED_MESSAGE = "Deactivated token";
-	private static final String BASE_TYPE_ERROR_MESSAGE = "Function '%s' is not allowed for token type 'base'";
+
+	private static final Log LOG = LogFactory.getLog(EERC721.class);
+
 	private static final String BASE_TYPE = "base";
 
 	private static final String QUERY_OWNER = "{\"selector\":{\"owner\":\"%s\"}}";
@@ -120,7 +122,7 @@ public class EERC721 extends CustomChaincodeBase {
 
 		NFT nft = NFT.read(stub, tokenId);
 		if (nft.getType().equals(BASE_TYPE)) {
-			LOG.error(String.format(BASE_TYPE_ERROR_MESSAGE, "divide"));
+			LOG.error(BASE_TYPE_ERROR_MESSAGE);
 			return false;
 		}
 
@@ -193,7 +195,7 @@ public class EERC721 extends CustomChaincodeBase {
     public static boolean deactivate(ChaincodeStub stub, BigInteger tokenId) throws IOException {
 		NFT nft = NFT.read(stub, tokenId);
 		if (nft.getType().equals(BASE_TYPE)) {
-			LOG.error(String.format(BASE_TYPE_ERROR_MESSAGE, "deactivate"));
+			LOG.error(BASE_TYPE_ERROR_MESSAGE);
 			return false;
 		}
 

@@ -4,14 +4,14 @@ import kr.ac.postech.sslab.standard.BaseNFT;
 import kr.ac.postech.sslab.standard.ERC721;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import static io.netty.util.internal.StringUtil.isNullOrEmpty;
+import static kr.ac.postech.sslab.constant.Message.ARG_MESSAGE;
+import static kr.ac.postech.sslab.constant.Message.NO_FUNCTION_MESSAGE;
 
 import java.math.BigInteger;
 import java.util.*;
 
-public class Main extends CustomChaincodeBase {
-    private static final String ARG_MESSAGE = "Arguments must be exactly %d non-empty string(s)";
-    private static final String NO_FUNCTION_MESSAGE = "There is no such function";
 
+public class Main extends CustomChaincodeBase {
     @Override
     public Response invoke(ChaincodeStub stub) {
         try {
@@ -22,7 +22,7 @@ public class Main extends CustomChaincodeBase {
             switch (func) {
                 case "balanceOf": {
                     if (args.size() != 1 || isNullOrEmpty(args.get(0))) {
-                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 1));
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, "1"));
                     }
 
                     String owner = args.get(0);
@@ -33,7 +33,7 @@ public class Main extends CustomChaincodeBase {
 
                 case "ownerOf": {
                     if (args.size() != 1 || isNullOrEmpty(args.get(0))) {
-                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 1));
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, "1"));
                     }
 
                     BigInteger tokenId = new BigInteger(args.get(0));
@@ -46,7 +46,7 @@ public class Main extends CustomChaincodeBase {
                 case "transferFrom": {
                     if (args.size() != 3 || isNullOrEmpty(args.get(0))
                             || isNullOrEmpty(args.get(1)) || isNullOrEmpty(args.get(2))) {
-                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 3));
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, "3"));
                     }
 
                     String from = args.get(0);
@@ -61,7 +61,7 @@ public class Main extends CustomChaincodeBase {
                 case "approve": {
                     if (args.size() != 2 || isNullOrEmpty(args.get(0))
                             || isNullOrEmpty(args.get(1))) {
-                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 2));
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, "2"));
                     }
 
                     String approved = args.get(0);
@@ -75,7 +75,7 @@ public class Main extends CustomChaincodeBase {
                 case "setApprovalForAll": {
                     if (args.size() != 3 || isNullOrEmpty(args.get(0))
                             || isNullOrEmpty(args.get(1)) || isNullOrEmpty(args.get(2))) {
-                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 3));
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, "3"));
                     }
 
                     String caller = args.get(0);
@@ -89,7 +89,7 @@ public class Main extends CustomChaincodeBase {
 
                 case "getApproved": {
                     if (args.size() != 1 || isNullOrEmpty(args.get(0))) {
-                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 1));
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, "1"));
                     }
 
                     BigInteger tokenId = new BigInteger(args.get(0));
@@ -102,7 +102,7 @@ public class Main extends CustomChaincodeBase {
                 case "isApprovedForAll": {
                     if (args.size() != 2 || isNullOrEmpty(args.get(0))
                             || isNullOrEmpty(args.get(1))) {
-                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 2));
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, "2"));
                     }
 
                     String owner = args.get(0);
@@ -116,7 +116,7 @@ public class Main extends CustomChaincodeBase {
                 case "mint": {
                     if (args.size() != 2 || isNullOrEmpty(args.get(0))
                             || isNullOrEmpty(args.get(1))) {
-                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 2));
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, "2"));
                     }
 
                     BigInteger tokenId = new BigInteger(args.get(0));
@@ -129,7 +129,7 @@ public class Main extends CustomChaincodeBase {
 
                 case "burn": {
                     if (args.size() != 1 || isNullOrEmpty(args.get(0))) {
-                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 1));
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, "1"));
                     }
 
                     BigInteger tokenId = new BigInteger(args.get(0));
@@ -141,7 +141,7 @@ public class Main extends CustomChaincodeBase {
 
                 case "getType": {
                     if (args.size() != 1 || isNullOrEmpty(args.get(0))) {
-                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 1));
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, "1"));
                     }
 
                     BigInteger tokenId = new BigInteger(args.get(0));

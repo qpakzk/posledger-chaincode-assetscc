@@ -9,13 +9,12 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
 
 import java.math.BigInteger;
 import java.util.*;
-
+import static kr.ac.postech.sslab.constant.Message.ARG_MESSAGE;
 import static io.netty.util.internal.StringUtil.isNullOrEmpty;
 
 public class CustomMain extends Main {
     private static final Log LOG = LogFactory.getLog(CustomMain.class);
 
-    private static final String ARG_MESSAGE = "Arguments must be exactly %d non-empty string(s)";
 	private static ObjectMapper mapper = new ObjectMapper();
 
     @Override
@@ -33,7 +32,7 @@ public class CustomMain extends Main {
 
                     if (args.size() != 2 || isNullOrEmpty(args.get(0))
                     || isNullOrEmpty(args.get(1))) {
-                        throw new IllegalArgumentException(String.format(ARG_MESSAGE + " or %d", 1, 2));
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE + "1 or 2"));
                     }
 
                     String owner = args.get(0);
@@ -47,7 +46,7 @@ public class CustomMain extends Main {
                     List<BigInteger> tokenIds;
                     if (args.size() == 1) {
                         if (isNullOrEmpty(args.get(0))) {
-                            throw new IllegalArgumentException(String.format(ARG_MESSAGE, 1));
+                            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "1"));
                         }
 
                         String owner = args.get(0);
@@ -55,7 +54,7 @@ public class CustomMain extends Main {
                     }
                     else if (args.size() == 2) {
                         if (isNullOrEmpty(args.get(0)) || isNullOrEmpty(args.get(1))) {
-                            throw new IllegalArgumentException(String.format(ARG_MESSAGE, 2));
+                            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "2"));
                         }
 
                         String owner = args.get(0);
@@ -63,7 +62,7 @@ public class CustomMain extends Main {
                         tokenIds = EERC721.tokenIdsOf(stub, owner, type);
                     }
                     else {
-                        throw new IllegalArgumentException(String.format(ARG_MESSAGE + " or %d", 1, 2));
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE + "1 or 2"));
                     }
 
                     response = tokenIds.toString();
@@ -73,7 +72,7 @@ public class CustomMain extends Main {
                 case "divide": {
                     if (args.size() != 4 || isNullOrEmpty(args.get(0))
                             || isNullOrEmpty(args.get(1)) || isNullOrEmpty(args.get(2)) || isNullOrEmpty(args.get(3))) {
-                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 4));
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, "4"));
                     }
 
                     BigInteger tokenId = new BigInteger(args.get(0));
@@ -97,7 +96,7 @@ public class CustomMain extends Main {
 
                 case "deactivate": {
                     if (args.size() != 1 || isNullOrEmpty(args.get(0))) {
-                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 1));
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, "1"));
                     }
 
                     BigInteger tokenId = new BigInteger(args.get(0));
@@ -108,7 +107,7 @@ public class CustomMain extends Main {
 
                 case "query": {
                     if (args.size() != 1 || isNullOrEmpty(args.get(0))) {
-                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 1));
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, "1"));
                     }
 
                     BigInteger tokenId = new BigInteger(args.get(0));
@@ -119,7 +118,7 @@ public class CustomMain extends Main {
 
                 case "queryHistory": {
                     if (args.size() != 1 || isNullOrEmpty(args.get(0))) {
-                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 1));
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, "1"));
                     }
 
                     BigInteger tokenId = new BigInteger(args.get(0));
@@ -136,7 +135,7 @@ public class CustomMain extends Main {
                     if (args.size() != 5 || isNullOrEmpty(args.get(0))
                             || isNullOrEmpty(args.get(1)) || isNullOrEmpty(args.get(2))
                             || isNullOrEmpty(args.get(3)) || isNullOrEmpty(args.get(4))) {
-                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 5));
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, "5"));
                     }
 
                     BigInteger tokenId = new BigInteger(args.get(0));
@@ -156,7 +155,7 @@ public class CustomMain extends Main {
                 case "setURI": {
                     if (args.size() != 3 || isNullOrEmpty(args.get(0))
                             || isNullOrEmpty(args.get(1)) || isNullOrEmpty(args.get(2))) {
-                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 3));
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, "3"));
                     }
                     BigInteger tokenId = new BigInteger(args.get(0));
                     String index = args.get(1);
@@ -169,7 +168,7 @@ public class CustomMain extends Main {
                 case  "getURI": {
                     if (args.size() != 2 || isNullOrEmpty(args.get(0))
                             || isNullOrEmpty(args.get(1))) {
-                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 2));
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, "2"));
                     }
                     BigInteger tokenId = new BigInteger(args.get(0));
                     String index = args.get(1);
@@ -181,7 +180,7 @@ public class CustomMain extends Main {
                 case "setXAttr": {
                     if (args.size() != 3 || isNullOrEmpty(args.get(0))
                             || isNullOrEmpty(args.get(1)) || isNullOrEmpty(args.get(2))) {
-                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 3));
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, "3"));
                     }
                     BigInteger tokenId = new BigInteger(args.get(0));
                     String index = args.get(1);
@@ -194,7 +193,7 @@ public class CustomMain extends Main {
                 case "getXAttr": {
                     if (args.size() != 2 || isNullOrEmpty(args.get(0))
                             || isNullOrEmpty(args.get(1))) {
-                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 2));
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, "2"));
                     }
                     BigInteger tokenId = new BigInteger(args.get(0));
                     String index = args.get(1);
@@ -206,7 +205,7 @@ public class CustomMain extends Main {
                 case "registerTokenType": {
                     if (args.size() != 2 || isNullOrEmpty(args.get(0))
                             || isNullOrEmpty(args.get(1))) {
-                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 2));
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, "2"));
                     }
 
                     String type = args.get(0);
@@ -224,7 +223,7 @@ public class CustomMain extends Main {
 
                 case "getTokenType": {
                     if (args.size() != 1 || isNullOrEmpty(args.get(0))) {
-                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, 1));
+                        throw new IllegalArgumentException(String.format(ARG_MESSAGE, "1"));
                     }
 
                     String type = args.get(0);

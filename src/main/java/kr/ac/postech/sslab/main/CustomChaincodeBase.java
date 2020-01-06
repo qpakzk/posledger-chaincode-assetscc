@@ -13,14 +13,13 @@ import java.util.Map;
 
 import static kr.ac.postech.sslab.constant.Key.OPERATORS_APPROVAL;
 import static kr.ac.postech.sslab.constant.Key.TOKEN_TYPES;
+import static kr.ac.postech.sslab.constant.Message.ARG_MESSAGE;
 
 public class CustomChaincodeBase extends ChaincodeBase {
     private static final Log LOG = LogFactory.getLog(CustomChaincodeBase.class);
 
-	private static final String ARG_MESSAGE = "Incorrect number of arguments, expecting %d";
-	private static final String SUCCESS = "SUCCESS";
-
 	private static ObjectMapper mapper = new ObjectMapper();
+
     protected static Map<String, Map<String, Boolean>> operatorsApproval = new HashMap<>();
 
     protected static Map<String, Map<String, List<String>>> tokenTypes = new HashMap<>();
@@ -37,7 +36,7 @@ public class CustomChaincodeBase extends ChaincodeBase {
 
             List<String> args = stub.getParameters();
             if (!args.isEmpty()) {
-                throw new IllegalArgumentException(String.format(ARG_MESSAGE, 0));
+                throw new IllegalArgumentException(String.format(ARG_MESSAGE, "0"));
             }
 
             String operatorsApprovalString = stub.getStringState(OPERATORS_APPROVAL);
@@ -58,7 +57,7 @@ public class CustomChaincodeBase extends ChaincodeBase {
                 tokenTypes = mapper.readValue(tokenTypesString, new TypeReference<HashMap<String, Map<String, List<String>>>>() {});
             }
 
-            return newSuccessResponse(SUCCESS);
+            return newSuccessResponse();
         } catch (Exception e) {
             return newErrorResponse(e.getMessage());
         }
