@@ -53,10 +53,6 @@ public class ERC721 extends CustomChaincodeBase {
 	public static boolean setApprovalForAll(ChaincodeStub stub, String caller, String operator, boolean approved) throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 
-		String operatorsApprovalString = stub.getStringState(OPERATORS_APPROVAL);
-		operatorsApproval = mapper.readValue(operatorsApprovalString,
-				new TypeReference<HashMap<String, HashMap<String, Boolean>>>() {});
-
 		Map<String, Boolean> operatorMap;
 		if (operatorsApproval.containsKey(caller)) {
 			operatorMap = operatorsApproval.get(caller);
