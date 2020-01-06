@@ -6,12 +6,16 @@ import kr.ac.postech.sslab.main.CustomChaincodeBase;
 import kr.ac.postech.sslab.nft.NFT;
 import java.math.BigInteger;
 import java.util.*;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ledger.KeyModification;
 import org.hyperledger.fabric.shim.ledger.KeyValue;
 import org.hyperledger.fabric.shim.ledger.QueryResultsIterator;
 
 public class EERC721 extends CustomChaincodeBase {
+	private static final Log LOG = LogFactory.getLog(EERC721.class);
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 	private static final String DEACTIVATED_MESSAGE = "Deactivated token";
 	private static final String BASE_TYPE_ERROR_MESSAGE = "Function '%s' is not allowed for token type 'base'";
@@ -19,6 +23,12 @@ public class EERC721 extends CustomChaincodeBase {
 	private static final String PARENT_KEY = "parent";
 	private static final String CHILDREN_KEY = "children";
 	private static final String BASE_TYPE = "base";
+
+	private static final String INTEGER = "Integer";
+	private static final String BIG_INTEGER = "BigInteger";
+	private static final String DOUBLE = "Double";
+	private static final String BYTE = "Byte";
+	private static final String STRING = "String";
 
 	public static BigInteger balanceOf(ChaincodeStub stub, String owner, String type) throws Exception {
 		String query = "{\"selector\":{\"owner\":\"" + owner + "\"}}";
@@ -104,7 +114,7 @@ public class EERC721 extends CustomChaincodeBase {
 		return tokenIds;
 	}
 
-	public static boolean divide(ChaincodeStub stub, BigInteger tokenId, List<BigInteger> newIds, List<Object> values, String index) throws Exception {
+	public static boolean divide(ChaincodeStub stub, BigInteger tokenId, List<BigInteger> newIds, List<String> values, String index) throws Exception {
 		if (newIds.size() != 2 || values.size() != 2) {
 			throw new IndexOutOfBoundsException("Both array 'newIds' and 'values' should have only two elements");
 		}
@@ -130,7 +140,47 @@ public class EERC721 extends CustomChaincodeBase {
 
 			NFT child = new NFT();
 			child.mint(stub, newIds.get(i), nft.getType(), nft.getOwner(), xattr, uri);
+
+			Map<String, List<String>> tokenType = XType.getTokenType(nft.getType());
+			String dataType = tokenType.get(index).get(0);
+			switch (dataType) {
+				case INTEGER: {
+					int value = Integer.parseInt(values.get(i));
+					child.setXAttr(stub, index, value);
+					break;
+				}
+
+				case BIG_INTEGER: {
+					BigInteger value = new BigInteger(values.get(1));
+					child.setXAttr(stub, index, value);
+					break;
+				}
+
+				case DOUBLE: {
+					double value = Double.parseDouble(values.get(1));
+					child.setXAttr(stub, index, value);
+					break;
+				}
+
+				case BYTE: {
+					byte value = Byte.parseByte(values.get(1));
+					child.setXAttr(stub, index, value);
+					break;
+				}
+
+				case STRING: {
+					String value = values.get(1);
+					child.setXAttr(stub, index, value);
+					break;
+				}
+
+				default:
+					LOG.error("No such data type");
+					return false;
+			}
+
 			child.setXAttr(stub, index, values.get(i));
+
 			child.setXAttr(stub, PARENT_KEY, nft.getId());
 			children.add(child);
 		}

@@ -86,7 +86,7 @@ public class CustomMain extends Main {
                         newIds.add(newId);
                     }
 
-                    List<Object> values = Arrays.asList(args.get(2)
+                    List<String> values = Arrays.asList(args.get(2)
                             .substring(1, args.get(2).length() - 1).split(", "));
 
                     String index = args.get(3);
