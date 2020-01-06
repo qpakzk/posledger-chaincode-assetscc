@@ -116,20 +116,23 @@ public class EERC721 extends CustomChaincodeBase {
 		return tokenIds;
 	}
 
-	public static boolean divide(ChaincodeStub stub, BigInteger tokenId, List<BigInteger> newIds, List<String> values, String index) throws Exception {
+	public static boolean divide(ChaincodeStub stub, BigInteger tokenId, List<BigInteger> newIds, List<String> values, String index)
+			throws IndexOutOfBoundsException, IOException {
 		if (newIds.size() != 2 || values.size() != 2) {
 			throw new IndexOutOfBoundsException("Both array 'newIds' and 'values' should have only two elements");
 		}
 
 		NFT nft = NFT.read(stub, tokenId);
 		if (nft.getType().equals(BASE_TYPE)) {
-			throw new Exception(String.format(BASE_TYPE_ERROR_MESSAGE, "divide"));
+			LOG.error(String.format(BASE_TYPE_ERROR_MESSAGE, "divide"));
+			return false;
 		}
 
 		boolean activated = (boolean) nft.getXAttr(ACTIVATED_KEY);
 
 		if (!activated) {
-			throw new Exception(DEACTIVATED_MESSAGE);
+			LOG.error(DEACTIVATED_MESSAGE);
+			return false;
 		}
 
 		List<NFT> children = new ArrayList<>();
@@ -191,10 +194,11 @@ public class EERC721 extends CustomChaincodeBase {
 		return true;
 	}
 
-    public static boolean deactivate(ChaincodeStub stub, BigInteger tokenId) throws Exception {
+    public static boolean deactivate(ChaincodeStub stub, BigInteger tokenId) throws IOException {
 		NFT nft = NFT.read(stub, tokenId);
 		if (nft.getType().equals(BASE_TYPE)) {
-			throw new Exception(String.format(BASE_TYPE_ERROR_MESSAGE, "deactivate"));
+			LOG.error(String.format(BASE_TYPE_ERROR_MESSAGE, "deactivate"));
+			return false;
 		}
 
 		return nft.setXAttr(stub, ACTIVATED_KEY, false);
