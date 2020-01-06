@@ -152,7 +152,7 @@ public class Main extends CustomChaincodeBase {
                 }
 
                 default:
-                    throw new Exception(NO_FUNCTION_MESSAGE);
+                    return newErrorResponse(NO_FUNCTION_MESSAGE);
             }
 
             return newSuccessResponse(response);
