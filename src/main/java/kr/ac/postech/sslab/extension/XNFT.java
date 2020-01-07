@@ -11,8 +11,6 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -137,9 +135,5 @@ public class XNFT extends CustomChaincodeBase {
             default:
                 return null;
         }
-    }
-
-    private static List<String> toList(String value) {
-        return Arrays.asList(value.substring(1, value.length() - 1).split(", "));
     }
 }
