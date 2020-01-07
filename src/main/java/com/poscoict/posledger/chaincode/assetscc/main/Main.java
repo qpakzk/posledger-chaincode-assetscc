@@ -1,13 +1,12 @@
-package kr.ac.postech.sslab.main;
+package com.poscoict.posledger.chaincode.assetscc.main;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import kr.ac.postech.sslab.standard.BaseNFT;
-import kr.ac.postech.sslab.standard.ERC721;
+import com.poscoict.posledger.chaincode.assetscc.constant.Function;
+import com.poscoict.posledger.chaincode.assetscc.constant.Message;
+import com.poscoict.posledger.chaincode.assetscc.standard.BaseNFT;
+import com.poscoict.posledger.chaincode.assetscc.standard.ERC721;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import static io.netty.util.internal.StringUtil.isNullOrEmpty;
-import static kr.ac.postech.sslab.constant.Message.ARG_MESSAGE;
-import static kr.ac.postech.sslab.constant.Message.NO_FUNCTION_MESSAGE;
-import static kr.ac.postech.sslab.constant.Function.*;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -23,48 +22,48 @@ public class Main extends CustomChaincodeBase {
             String response;
 
             switch (func) {
-                case BALANCE_OF_FUNCTION_NAME:
+                case Function.BALANCE_OF_FUNCTION_NAME:
                     response = balanceOf(stub, args);
                     break;
 
-                case OWNER_OF_FUNCTION_NAME:
+                case Function.OWNER_OF_FUNCTION_NAME:
                     response = ownerOf(stub, args);
                     break;
 
-                case TRANSFER_FROM_FUNCTION_NAME:
+                case Function.TRANSFER_FROM_FUNCTION_NAME:
                     response = transferFrom(stub, args);
                     break;
 
-                case APPROVE_FUNCTION_NAME:
+                case Function.APPROVE_FUNCTION_NAME:
                     response = approve(stub, args);
                     break;
 
-                case SET_APPROVAL_FOR_ALL_FUNCTION_NAME:
+                case Function.SET_APPROVAL_FOR_ALL_FUNCTION_NAME:
                     response = setApprovalForAll(stub, args);
                     break;
 
-                case GET_APPROVED_FUNCTION_NAME:
+                case Function.GET_APPROVED_FUNCTION_NAME:
                     response = getApproved(stub, args);
                     break;
 
-                case IS_APPROVED_FOR_ALL_FUNCTION_NAME:
+                case Function.IS_APPROVED_FOR_ALL_FUNCTION_NAME:
                     response = isApprovedForAll(args);
                     break;
 
-                case MINT_FUNCTION_NAME:
+                case Function.MINT_FUNCTION_NAME:
                     response = mint(stub, args);
                     break;
 
-                case BURN_FUNCTION_NAME:
+                case Function.BURN_FUNCTION_NAME:
                     response = burn(stub, args);
                     break;
 
-                case GET_TYPE_FUNCTION_NAME:
+                case Function.GET_TYPE_FUNCTION_NAME:
                     response = getType(stub, args);
                     break;
 
                 default:
-                    return newErrorResponse(NO_FUNCTION_MESSAGE);
+                    return newErrorResponse(Message.NO_FUNCTION_MESSAGE);
             }
 
             return newSuccessResponse(response);
@@ -75,7 +74,7 @@ public class Main extends CustomChaincodeBase {
 
     private String balanceOf(ChaincodeStub stub, List<String> args) {
         if (args.size() != 1 || isNullOrEmpty(args.get(0))) {
-            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "1"));
+            throw new IllegalArgumentException(String.format(Message.ARG_MESSAGE, "1"));
         }
 
         String owner = args.get(0);
@@ -85,7 +84,7 @@ public class Main extends CustomChaincodeBase {
 
     private String ownerOf(ChaincodeStub stub, List<String> args) throws IOException {
         if (args.size() != 1 || isNullOrEmpty(args.get(0))) {
-            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "1"));
+            throw new IllegalArgumentException(String.format(Message.ARG_MESSAGE, "1"));
         }
 
         BigInteger tokenId = new BigInteger(args.get(0));
@@ -96,7 +95,7 @@ public class Main extends CustomChaincodeBase {
     private String transferFrom(ChaincodeStub stub, List<String> args) throws IOException {
         if (args.size() != 3 || isNullOrEmpty(args.get(0))
                 || isNullOrEmpty(args.get(1)) || isNullOrEmpty(args.get(2))) {
-            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "3"));
+            throw new IllegalArgumentException(String.format(Message.ARG_MESSAGE, "3"));
         }
 
         String from = args.get(0);
@@ -109,7 +108,7 @@ public class Main extends CustomChaincodeBase {
     private String approve(ChaincodeStub stub, List<String> args) throws IOException {
         if (args.size() != 2 || isNullOrEmpty(args.get(0))
                 || isNullOrEmpty(args.get(1))) {
-            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "2"));
+            throw new IllegalArgumentException(String.format(Message.ARG_MESSAGE, "2"));
         }
 
         String approved = args.get(0);
@@ -121,7 +120,7 @@ public class Main extends CustomChaincodeBase {
     private String setApprovalForAll(ChaincodeStub stub, List<String> args) throws JsonProcessingException {
         if (args.size() != 3 || isNullOrEmpty(args.get(0))
                 || isNullOrEmpty(args.get(1)) || isNullOrEmpty(args.get(2))) {
-            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "3"));
+            throw new IllegalArgumentException(String.format(Message.ARG_MESSAGE, "3"));
         }
 
         String caller = args.get(0);
@@ -133,7 +132,7 @@ public class Main extends CustomChaincodeBase {
 
     private String getApproved(ChaincodeStub stub, List<String> args) throws IOException {
         if (args.size() != 1 || isNullOrEmpty(args.get(0))) {
-            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "1"));
+            throw new IllegalArgumentException(String.format(Message.ARG_MESSAGE, "1"));
         }
 
         BigInteger tokenId = new BigInteger(args.get(0));
@@ -144,7 +143,7 @@ public class Main extends CustomChaincodeBase {
     private String isApprovedForAll(List<String> args) {
         if (args.size() != 2 || isNullOrEmpty(args.get(0))
                 || isNullOrEmpty(args.get(1))) {
-            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "2"));
+            throw new IllegalArgumentException(String.format(Message.ARG_MESSAGE, "2"));
         }
 
         String owner = args.get(0);
@@ -156,7 +155,7 @@ public class Main extends CustomChaincodeBase {
     private String mint(ChaincodeStub stub, List<String> args) throws JsonProcessingException {
         if (args.size() != 2 || isNullOrEmpty(args.get(0))
                 || isNullOrEmpty(args.get(1))) {
-            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "2"));
+            throw new IllegalArgumentException(String.format(Message.ARG_MESSAGE, "2"));
         }
 
         BigInteger tokenId = new BigInteger(args.get(0));
@@ -167,7 +166,7 @@ public class Main extends CustomChaincodeBase {
 
     private String burn(ChaincodeStub stub, List<String> args) throws IOException {
         if (args.size() != 1 || isNullOrEmpty(args.get(0))) {
-            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "1"));
+            throw new IllegalArgumentException(String.format(Message.ARG_MESSAGE, "1"));
         }
 
         BigInteger tokenId = new BigInteger(args.get(0));
@@ -177,7 +176,7 @@ public class Main extends CustomChaincodeBase {
 
     private String getType(ChaincodeStub stub, List<String> args) throws IOException {
         if (args.size() != 1 || isNullOrEmpty(args.get(0))) {
-            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "1"));
+            throw new IllegalArgumentException(String.format(Message.ARG_MESSAGE, "1"));
         }
 
         BigInteger tokenId = new BigInteger(args.get(0));

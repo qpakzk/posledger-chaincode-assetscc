@@ -1,25 +1,23 @@
-package kr.ac.postech.sslab.extension;
+package com.poscoict.posledger.chaincode.assetscc.extension;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.ac.postech.sslab.main.CustomChaincodeBase;
-import kr.ac.postech.sslab.structure.NFT;
+import com.poscoict.posledger.chaincode.assetscc.constant.Key;
+import com.poscoict.posledger.chaincode.assetscc.constant.Message;
+import com.poscoict.posledger.chaincode.assetscc.main.CustomChaincodeBase;
+import com.poscoict.posledger.chaincode.assetscc.structure.NFT;
+import com.poscoict.posledger.chaincode.assetscc.util.DataTypeConversion;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.*;
 
-import kr.ac.postech.sslab.util.DataTypeConversion;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ledger.KeyModification;
 import org.hyperledger.fabric.shim.ledger.KeyValue;
 import org.hyperledger.fabric.shim.ledger.QueryResultsIterator;
-
-import static kr.ac.postech.sslab.constant.Key.*;
-import static kr.ac.postech.sslab.constant.Message.BASE_TYPE_ERROR_MESSAGE;
-import static kr.ac.postech.sslab.constant.Message.DEACTIVATED_MESSAGE;
 
 public class EERC721 extends CustomChaincodeBase {
 	private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -44,7 +42,7 @@ public class EERC721 extends CustomChaincodeBase {
 				activated = true;
 			}
 			else {
-				activated = (boolean) nft.getXAttr(ACTIVATED_KEY);
+				activated = (boolean) nft.getXAttr(Key.ACTIVATED_KEY);
 			}
 
 			if (activated && (type.equals("_") || type.equals(nft.getType()))) {
@@ -92,7 +90,7 @@ public class EERC721 extends CustomChaincodeBase {
 			if (nft.getType().equals(BASE_TYPE)) {
 				activated = true;
 			} else {
-				activated = (boolean) nft.getXAttr(ACTIVATED_KEY);
+				activated = (boolean) nft.getXAttr(Key.ACTIVATED_KEY);
 			}
 
 			if (activated) {
@@ -118,7 +116,7 @@ public class EERC721 extends CustomChaincodeBase {
 				activated = true;
 			} else {
 				NFT nft = NFT.read(stub, tokenId);
-				activated = (boolean) nft.getXAttr(ACTIVATED_KEY);
+				activated = (boolean) nft.getXAttr(Key.ACTIVATED_KEY);
 			}
 
 			if (activated) {
@@ -137,14 +135,14 @@ public class EERC721 extends CustomChaincodeBase {
 
 		NFT nft = NFT.read(stub, tokenId);
 		if (nft.getType().equals(BASE_TYPE)) {
-			LOG.error(BASE_TYPE_ERROR_MESSAGE);
+			LOG.error(Message.BASE_TYPE_ERROR_MESSAGE);
 			return false;
 		}
 
-		boolean activated = (boolean) nft.getXAttr(ACTIVATED_KEY);
+		boolean activated = (boolean) nft.getXAttr(Key.ACTIVATED_KEY);
 
 		if (!activated) {
-			LOG.error(DEACTIVATED_MESSAGE);
+			LOG.error(Message.DEACTIVATED_MESSAGE);
 			return false;
 		}
 
@@ -165,11 +163,11 @@ public class EERC721 extends CustomChaincodeBase {
 			}
 
 			child.setXAttr(stub, index, value);
-			child.setXAttr(stub, PARENT_KEY, nft.getId());
+			child.setXAttr(stub, Key.PARENT_KEY, nft.getId());
 		}
 
-		nft.setXAttr(stub, ACTIVATED_KEY, false);
-		nft.setXAttr(stub, CHILDREN_KEY, newIds);
+		nft.setXAttr(stub, Key.ACTIVATED_KEY, false);
+		nft.setXAttr(stub, Key.CHILDREN_KEY, newIds);
 
 		return true;
 	}
@@ -177,11 +175,11 @@ public class EERC721 extends CustomChaincodeBase {
     public static boolean deactivate(ChaincodeStub stub, BigInteger tokenId) throws IOException {
 		NFT nft = NFT.read(stub, tokenId);
 		if (nft.getType().equals(BASE_TYPE)) {
-			LOG.error(BASE_TYPE_ERROR_MESSAGE);
+			LOG.error(Message.BASE_TYPE_ERROR_MESSAGE);
 			return false;
 		}
 
-		return nft.setXAttr(stub, ACTIVATED_KEY, false);
+		return nft.setXAttr(stub, Key.ACTIVATED_KEY, false);
 	}
 
     public static String query(ChaincodeStub stub, BigInteger tokenId) throws IOException {

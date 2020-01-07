@@ -1,15 +1,14 @@
-package kr.ac.postech.sslab.structure;
+package com.poscoict.posledger.chaincode.assetscc.structure;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.poscoict.posledger.chaincode.assetscc.constant.Key;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
-
-import static kr.ac.postech.sslab.constant.Key.*;
 
 
 public class NFT {
@@ -52,15 +51,15 @@ public class NFT {
         Map<String, Object> map =
                 mapper.readValue(json, new TypeReference<HashMap<String, Object>>(){});
 
-        String type = (String) map.get(TYPE_KEY);
-        String owner = (String) map.get(OWNER_KEY);
-        String approvee = (String) map.get(APPROVEE_KEY);
+        String type = (String) map.get(Key.TYPE_KEY);
+        String owner = (String) map.get(Key.OWNER_KEY);
+        String approvee = (String) map.get(Key.APPROVEE_KEY);
 
         Map<String, Object> xattr
-                = map.containsKey(XATTR_KEY) ? (HashMap<String, Object>) map.get(XATTR_KEY) : null;
+                = map.containsKey(Key.XATTR_KEY) ? (HashMap<String, Object>) map.get(Key.XATTR_KEY) : null;
 
         Map<String, String> uri
-                = map.containsKey(URI_KEY) ? (HashMap<String, String>) map.get(URI_KEY) : null;
+                = map.containsKey(Key.URI_KEY) ? (HashMap<String, String>) map.get(Key.URI_KEY) : null;
 
         return new NFT(tokenId, type, owner, approvee, xattr, uri);
     }
@@ -132,17 +131,17 @@ public class NFT {
 
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
-        map.put(ID_KEY, this.tokenId);
-        map.put(TYPE_KEY, this.type);
-        map.put(OWNER_KEY, this.owner);
-        map.put(APPROVEE_KEY, this.approvee);
+        map.put(Key.ID_KEY, this.tokenId);
+        map.put(Key.TYPE_KEY, this.type);
+        map.put(Key.OWNER_KEY, this.owner);
+        map.put(Key.APPROVEE_KEY, this.approvee);
 
         if (this.xattr != null) {
-            map.put(XATTR_KEY, xattr);
+            map.put(Key.XATTR_KEY, xattr);
         }
 
         if (this.uri != null) {
-            map.put(URI_KEY, uri);
+            map.put(Key.URI_KEY, uri);
         }
 
         return map;

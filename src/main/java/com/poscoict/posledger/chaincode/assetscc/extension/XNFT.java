@@ -1,10 +1,12 @@
-package kr.ac.postech.sslab.extension;
+package com.poscoict.posledger.chaincode.assetscc.extension;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import kr.ac.postech.sslab.main.CustomChaincodeBase;
-import kr.ac.postech.sslab.structure.NFT;
-import kr.ac.postech.sslab.structure.TokenTypes;
-import kr.ac.postech.sslab.util.DataTypeConversion;
+import com.poscoict.posledger.chaincode.assetscc.constant.DataType;
+import com.poscoict.posledger.chaincode.assetscc.constant.Message;
+import com.poscoict.posledger.chaincode.assetscc.main.CustomChaincodeBase;
+import com.poscoict.posledger.chaincode.assetscc.structure.NFT;
+import com.poscoict.posledger.chaincode.assetscc.structure.TokenTypes;
+import com.poscoict.posledger.chaincode.assetscc.util.DataTypeConversion;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hyperledger.fabric.shim.ChaincodeStub;
@@ -13,9 +15,6 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
-
-import static kr.ac.postech.sslab.constant.DataType.*;
-import static kr.ac.postech.sslab.constant.Message.NO_DATA_TYPE_MESSAGE;
 
 public class XNFT extends CustomChaincodeBase {
     private static final Log LOG = LogFactory.getLog(XNFT.class);
@@ -85,51 +84,51 @@ public class XNFT extends CustomChaincodeBase {
 
         List<String> attr = TokenTypes.getTokenTypes().get(nft.getType()).get(index);
         switch (attr.get(0)) {
-            case INTEGER:
+            case DataType.INTEGER:
                 return Integer.toString((int) value);
 
-            case BIG_INTEGER:
+            case DataType.BIG_INTEGER:
                 BigInteger bigInteger = (BigInteger) value;
                 return bigInteger.toString();
 
-            case DOUBLE:
+            case DataType.DOUBLE:
                 return Double.toString((double) value);
 
-            case BYTE:
+            case DataType.BYTE:
                 return Byte.toString((byte) value);
 
-            case STRING:
+            case DataType.STRING:
                 return (String) value;
 
-            case BOOLEAN:
+            case DataType.BOOLEAN:
                 return Boolean.toString((boolean) value);
 
-            case LIST_INTEGER:
+            case DataType.LIST_INTEGER:
                 List<Integer> integers = (List<Integer>) value;
                 return integers != null ? integers.toString() : null;
 
-            case LIST_BIG_INTEGER:
+            case DataType.LIST_BIG_INTEGER:
                 List<BigInteger> bigIntegers = (List<BigInteger>) value;
                 return bigIntegers != null ? bigIntegers.toString() : null;
 
-            case LIST_DOUBLE:
+            case DataType.LIST_DOUBLE:
                 List<Double> doubles = (List<Double>) value;
                 return doubles != null ? doubles.toString() : null;
 
-            case LIST_BYTE:
+            case DataType.LIST_BYTE:
                 List<Byte> bytes = (List<Byte>) value;
                 return bytes != null ? bytes.toString() : null;
 
-            case LIST_STRING:
+            case DataType.LIST_STRING:
                 List<String> strings = (List<String>) value;
                 return strings != null ? strings.toString() : null;
 
-            case LIST_BOOLEAN:
+            case DataType.LIST_BOOLEAN:
                 List<Boolean> booleans = (List<Boolean>) value;
                 return booleans != null ? booleans.toString() : null;
 
             default:
-                LOG.error(NO_DATA_TYPE_MESSAGE);
+                LOG.error(Message.NO_DATA_TYPE_MESSAGE);
                 return null;
         }
     }

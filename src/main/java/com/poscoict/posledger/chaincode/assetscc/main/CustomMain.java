@@ -1,9 +1,12 @@
-package kr.ac.postech.sslab.main;
+package com.poscoict.posledger.chaincode.assetscc.main;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.ac.postech.sslab.extension.*;
+import com.poscoict.posledger.chaincode.assetscc.constant.Function;
+import com.poscoict.posledger.chaincode.assetscc.extension.EERC721;
+import com.poscoict.posledger.chaincode.assetscc.extension.XNFT;
+import com.poscoict.posledger.chaincode.assetscc.extension.XType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hyperledger.fabric.shim.ChaincodeStub;
@@ -11,8 +14,7 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.*;
-import static kr.ac.postech.sslab.constant.Message.ARG_MESSAGE;
-import static kr.ac.postech.sslab.constant.Function.*;
+import static com.poscoict.posledger.chaincode.assetscc.constant.Message.ARG_MESSAGE;
 import static io.netty.util.internal.StringUtil.isNullOrEmpty;
 
 public class CustomMain extends Main {
@@ -28,65 +30,65 @@ public class CustomMain extends Main {
             String response;
 
             switch (func) {
-                case BALANCE_OF_FUNCTION_NAME:
+                case Function.BALANCE_OF_FUNCTION_NAME:
                     if (args.size() == 1) {
                         return super.invoke(stub);
                     }
                     response = xBalanceOf(stub, args);
                     break;
 
-                case TOKEN_IDS_OF_FUNCTION_NAME:
+                case Function.TOKEN_IDS_OF_FUNCTION_NAME:
                     response = tokenIdsOf(stub, args);
                     break;
 
-                case DIVIDE_FUNCTION_NAME:
+                case Function.DIVIDE_FUNCTION_NAME:
                     response = divide(stub, args);
                     break;
 
-                case DEACTIVATE_FUNCTION_NAME:
+                case Function.DEACTIVATE_FUNCTION_NAME:
                     response = deactivate(stub, args);
                     break;
 
-                case QUERY_FUNCTION_NAME:
+                case Function.QUERY_FUNCTION_NAME:
                     response = query(stub, args);
                     break;
 
-                case QUERY_HISTORY_FUNCTION_NAME:
+                case Function.QUERY_HISTORY_FUNCTION_NAME:
                     response = queryHistory(stub, args);
                     break;
 
-                case MINT_FUNCTION_NAME:
+                case Function.MINT_FUNCTION_NAME:
                     if (args.size() == 2) {
                         return super.invoke(stub);
                     }
                     response = xMint(stub, args);
                     break;
 
-                case SET_URI_FUNCTION_NAME:
+                case Function.SET_URI_FUNCTION_NAME:
                     response = setURI(stub, args);
                     break;
 
-                case  GET_URI_FUNCTION_NAME:
+                case  Function.GET_URI_FUNCTION_NAME:
                     response = getURI(stub, args);
                     break;
 
-                case SET_XATTR_FUNCTION_NAME:
+                case Function.SET_XATTR_FUNCTION_NAME:
                     response = setXAttr(stub, args);
                     break;
 
-                case GET_XATTR_FUNCTION_NAME:
+                case Function.GET_XATTR_FUNCTION_NAME:
                     response = getXAttr(stub, args);
                     break;
 
-                case REGISTER_TOKEN_TYPE_FUNCTION_NAME:
+                case Function.REGISTER_TOKEN_TYPE_FUNCTION_NAME:
                     response = registerTokenType(stub, args);
                     break;
 
-                case TOKEN_TYPES_OF_FUNCTION:
+                case Function.TOKEN_TYPES_OF_FUNCTION:
                     response = tokenTypesOf();
                     break;
 
-                case GET_TOKEN_TYPE_FUNCTION_NAME:
+                case Function.GET_TOKEN_TYPE_FUNCTION_NAME:
                     response = getTokenType(args);
                     break;
 

@@ -1,9 +1,11 @@
-package kr.ac.postech.sslab.main;
+package com.poscoict.posledger.chaincode.assetscc.main;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.ac.postech.sslab.structure.OperatorsApproval;
-import kr.ac.postech.sslab.structure.TokenTypes;
+import com.poscoict.posledger.chaincode.assetscc.constant.Key;
+import com.poscoict.posledger.chaincode.assetscc.constant.Message;
+import com.poscoict.posledger.chaincode.assetscc.structure.OperatorsApproval;
+import com.poscoict.posledger.chaincode.assetscc.structure.TokenTypes;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hyperledger.fabric.shim.ChaincodeBase;
@@ -12,10 +14,6 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static kr.ac.postech.sslab.constant.Key.OPERATORS_APPROVAL;
-import static kr.ac.postech.sslab.constant.Key.TOKEN_TYPES;
-import static kr.ac.postech.sslab.constant.Message.ARG_MESSAGE;
 
 public class CustomChaincodeBase extends ChaincodeBase {
     private static final Log LOG = LogFactory.getLog(CustomChaincodeBase.class);
@@ -34,12 +32,12 @@ public class CustomChaincodeBase extends ChaincodeBase {
 
             List<String> args = stub.getParameters();
             if (!args.isEmpty()) {
-                throw new IllegalArgumentException(String.format(ARG_MESSAGE, "0"));
+                throw new IllegalArgumentException(String.format(Message.ARG_MESSAGE, "0"));
             }
 
-            String operatorsApprovalString = stub.getStringState(OPERATORS_APPROVAL);
+            String operatorsApprovalString = stub.getStringState(Key.OPERATORS_APPROVAL);
             if (operatorsApprovalString.trim().length() == 0) {
-                stub.putStringState(OPERATORS_APPROVAL, mapper.writeValueAsString(OperatorsApproval.getOperatorsApproval()));
+                stub.putStringState(Key.OPERATORS_APPROVAL, mapper.writeValueAsString(OperatorsApproval.getOperatorsApproval()));
             }
             else {
                 LOG.info("CustomChaincodeBase::init [operatorsApproval] " + operatorsApprovalString);
@@ -47,9 +45,9 @@ public class CustomChaincodeBase extends ChaincodeBase {
                         new TypeReference<HashMap<String, Map<String, Boolean>>>(){}));
             }
 
-            String tokenTypesString = stub.getStringState(TOKEN_TYPES);
+            String tokenTypesString = stub.getStringState(Key.TOKEN_TYPES);
             if (tokenTypesString.trim().length() == 0) {
-                stub.putStringState(TOKEN_TYPES, mapper.writeValueAsString(TokenTypes.getTokenTypes()));
+                stub.putStringState(Key.TOKEN_TYPES, mapper.writeValueAsString(TokenTypes.getTokenTypes()));
             }
             else {
                 LOG.info("CustomChaincodeBase::init [tokenTypes] " + tokenTypesString);

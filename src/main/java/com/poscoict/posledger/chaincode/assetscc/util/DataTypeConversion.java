@@ -1,4 +1,4 @@
-package kr.ac.postech.sslab.util;
+package com.poscoict.posledger.chaincode.assetscc.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static kr.ac.postech.sslab.constant.DataType.*;
-import static kr.ac.postech.sslab.constant.DataType.LIST_BOOLEAN;
-import static kr.ac.postech.sslab.constant.Message.NO_DATA_TYPE_MESSAGE;
+import static com.poscoict.posledger.chaincode.assetscc.constant.DataType.*;
+import static com.poscoict.posledger.chaincode.assetscc.constant.DataType.LIST_BOOLEAN;
+import static com.poscoict.posledger.chaincode.assetscc.constant.Message.NO_DATA_TYPE_MESSAGE;
 
 public class DataTypeConversion {
     private static final Log LOG = LogFactory.getLog(DataTypeConversion.class);

@@ -1,4 +1,4 @@
-package kr.ac.postech.sslab.structure;
+package com.poscoict.posledger.chaincode.assetscc.structure;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,4 +1,4 @@
-package kr.ac.postech.sslab.constant;
+package com.poscoict.posledger.chaincode.assetscc.constant;
 
 public final class Message {
     private Message() {}

@@ -1,11 +1,11 @@
-package kr.ac.postech.sslab.extension;
+package com.poscoict.posledger.chaincode.assetscc.extension;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.ac.postech.sslab.main.CustomChaincodeBase;
-import kr.ac.postech.sslab.structure.TokenTypes;
-import kr.ac.postech.sslab.util.DataTypeConversion;
+import com.poscoict.posledger.chaincode.assetscc.structure.TokenTypes;
+import com.poscoict.posledger.chaincode.assetscc.util.DataTypeConversion;
+import com.poscoict.posledger.chaincode.assetscc.main.CustomChaincodeBase;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hyperledger.fabric.shim.ChaincodeStub;
@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.*;
 
-import static kr.ac.postech.sslab.constant.Key.*;
+import static com.poscoict.posledger.chaincode.assetscc.constant.Key.*;
 
 public class XType extends CustomChaincodeBase {
     private static final Log LOG = LogFactory.getLog(XType.class);
