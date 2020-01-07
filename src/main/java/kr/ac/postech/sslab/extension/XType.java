@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.*;
 
-import static kr.ac.postech.sslab.constant.Key.TOKEN_TYPES;
+import static kr.ac.postech.sslab.constant.Key.*;
 
 public class XType extends CustomChaincodeBase {
     private static final Log LOG = LogFactory.getLog(XType.class);
@@ -89,10 +89,6 @@ public class XType extends CustomChaincodeBase {
     }
 
     public static boolean addXAttrForEERC721(Map<String, Object> xattr) {
-        final String PARENT_KEY = "parent";
-        final String CHILDREN_KEY = "children";
-        final String ACTIVATED_KEY = "activated";
-
         if (!xattr.containsKey(PARENT_KEY)) {
             xattr.put(PARENT_KEY, BigInteger.valueOf(-1));
         }
