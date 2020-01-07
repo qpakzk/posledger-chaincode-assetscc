@@ -2,7 +2,6 @@ package kr.ac.postech.sslab.main;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jdk.nashorn.internal.parser.Token;
 import kr.ac.postech.sslab.structure.OperatorsApproval;
 import kr.ac.postech.sslab.structure.TokenTypes;
 import org.apache.commons.logging.Log;
