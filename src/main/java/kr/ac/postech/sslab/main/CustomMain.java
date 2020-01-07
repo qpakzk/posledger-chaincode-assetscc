@@ -56,6 +56,9 @@ public class CustomMain extends Main {
                     break;
 
                 case MINT_FUNCTION_NAME:
+                    if (args.size() == 2) {
+                        return super.invoke(stub);
+                    }
                     response = mint(stub, args);
                     break;
 
