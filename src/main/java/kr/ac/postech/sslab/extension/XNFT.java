@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import kr.ac.postech.sslab.main.CustomChaincodeBase;
 import kr.ac.postech.sslab.structure.NFT;
 import kr.ac.postech.sslab.structure.TokenTypes;
+import kr.ac.postech.sslab.util.DataTypeConversion;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hyperledger.fabric.shim.ChaincodeStub;
@@ -63,100 +64,12 @@ public class XNFT extends CustomChaincodeBase {
         }
 
         List<String> attr = TokenTypes.getTokenTypes().get(nft.getType()).get(index);
-        switch (attr.get(0)) {
-            case INTEGER:
-                nft.setXAttr(stub, index, Integer.parseInt(value));
-                break;
-
-            case BIG_INTEGER:
-                nft.setXAttr(stub, index, new BigInteger(value));
-                break;
-
-            case DOUBLE:
-                nft.setXAttr(stub, index, Double.parseDouble(value));
-                break;
-
-            case BYTE:
-                nft.setXAttr(stub, index, Byte.parseByte(value));
-                break;
-
-            case STRING:
-                nft.setXAttr(stub, index, value);
-                break;
-
-            case BOOLEAN:
-                nft.setXAttr(stub, index, Boolean.parseBoolean(value));
-                break;
-
-            case LIST_INTEGER: {
-                List<String> values1 = toList(value);
-                        List<Integer> values2 = new ArrayList<>();
-                for (String value1 : values1) {
-                    Integer value2 = Integer.parseInt(value1);
-                    values2.add(value2);
-                }
-
-                nft.setXAttr(stub, index, values2);
-                break;
-            }
-
-            case LIST_BIG_INTEGER: {
-                List<String> values1 = toList(value);
-                List<BigInteger> values2 = new ArrayList<>();
-                for (String value1 : values1) {
-                    BigInteger value2 = new BigInteger(value1);
-                    values2.add(value2);
-                }
-
-                nft.setXAttr(stub, index, values2);
-                break;
-            }
-
-            case LIST_DOUBLE: {
-                List<String> values1 = toList(value);
-                List<Double> values2 = new ArrayList<>();
-                for (String value1 : values1) {
-                    Double value2 = Double.parseDouble(value1);
-                    values2.add(value2);
-                }
-
-                nft.setXAttr(stub, index, values2);
-                break;
-            }
-
-            case LIST_BYTE: {
-                List<String> values1 = toList(value);
-                List<Byte> values2 = new ArrayList<>();
-                for (String value1 : values1) {
-                    Byte value2 = Byte.parseByte(value1);
-                    values2.add(value2);
-                }
-
-                nft.setXAttr(stub, index, values2);
-                break;
-            }
-
-            case LIST_STRING: {
-                List<String> values = toList(value);
-                nft.setXAttr(stub, index, values);
-                break;
-            }
-
-            case LIST_BOOLEAN: {
-                List<String> values1 = toList(value);
-                List<Boolean> values2 = new ArrayList<>();
-                for (String value1 : values1) {
-                    Boolean value2 = Boolean.parseBoolean(value1);
-                    values2.add(value2);
-                }
-
-                nft.setXAttr(stub, index, values2);
-                break;
-            }
-
-            default:
-                return false;
+        Object object = DataTypeConversion.strToDataType(attr.get(0), value);
+        if (object == null) {
+            return false;
         }
+
+        nft.setXAttr(stub, index, object);
 
         return true;
     }

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.*;
 
+import kr.ac.postech.sslab.util.DataTypeConversion;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hyperledger.fabric.shim.ChaincodeStub;
@@ -16,7 +17,6 @@ import org.hyperledger.fabric.shim.ledger.KeyModification;
 import org.hyperledger.fabric.shim.ledger.KeyValue;
 import org.hyperledger.fabric.shim.ledger.QueryResultsIterator;
 
-import static kr.ac.postech.sslab.constant.DataType.*;
 import static kr.ac.postech.sslab.constant.Key.*;
 import static kr.ac.postech.sslab.constant.Message.BASE_TYPE_ERROR_MESSAGE;
 import static kr.ac.postech.sslab.constant.Message.DEACTIVATED_MESSAGE;
@@ -148,7 +148,6 @@ public class EERC721 extends CustomChaincodeBase {
 			return false;
 		}
 
-		List<NFT> children = new ArrayList<>();
 		for (int i = 0; i < 2; i++) {
 			String xattrJson = objectMapper.writeValueAsString(nft.getXAttr());
 			Map<String, Object> xattr = objectMapper.readValue(xattrJson, new TypeReference<HashMap<String, Object>>() {});
@@ -160,45 +159,13 @@ public class EERC721 extends CustomChaincodeBase {
 			child.mint(stub, newIds.get(i), nft.getType(), nft.getOwner(), xattr, uri);
 
 			Map<String, List<String>> tokenType = XType.getTokenType(nft.getType());
-			String dataType = tokenType.get(index).get(0);
-			switch (dataType) {
-				case INTEGER: {
-					int value = Integer.parseInt(values.get(i));
-					child.setXAttr(stub, index, value);
-					break;
-				}
-
-				case BIG_INTEGER: {
-					BigInteger value = new BigInteger(values.get(1));
-					child.setXAttr(stub, index, value);
-					break;
-				}
-
-				case DOUBLE: {
-					double value = Double.parseDouble(values.get(1));
-					child.setXAttr(stub, index, value);
-					break;
-				}
-
-				case BYTE: {
-					byte value = Byte.parseByte(values.get(1));
-					child.setXAttr(stub, index, value);
-					break;
-				}
-
-				case STRING: {
-					String value = values.get(1);
-					child.setXAttr(stub, index, value);
-					break;
-				}
-
-				default:
-					LOG.error("No such data type");
-					return false;
+			Object value = DataTypeConversion.strToDataType(tokenType.get(index).get(0), values.get(i));
+			if (value == null) {
+				return false;
 			}
 
+			child.setXAttr(stub, index, value);
 			child.setXAttr(stub, PARENT_KEY, nft.getId());
-			children.add(child);
 		}
 
 		nft.setXAttr(stub, ACTIVATED_KEY, false);
