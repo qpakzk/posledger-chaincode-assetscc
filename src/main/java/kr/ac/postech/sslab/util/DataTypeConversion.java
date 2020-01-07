@@ -15,6 +15,8 @@ import static kr.ac.postech.sslab.constant.Message.NO_DATA_TYPE_MESSAGE;
 public class DataTypeConversion {
     private static final Log LOG = LogFactory.getLog(DataTypeConversion.class);
 
+    private DataTypeConversion() {}
+
     public static Object strToDataType(String dataType, String value) {
         switch (dataType) {
             case INTEGER:
