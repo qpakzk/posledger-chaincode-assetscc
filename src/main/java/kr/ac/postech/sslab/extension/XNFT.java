@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import static kr.ac.postech.sslab.constant.DataType.*;
+import static kr.ac.postech.sslab.constant.Message.NO_DATA_TYPE_MESSAGE;
 
 public class XNFT extends CustomChaincodeBase {
     private static final Log LOG = LogFactory.getLog(XNFT.class);
@@ -87,10 +88,10 @@ public class XNFT extends CustomChaincodeBase {
             case INTEGER:
                 return Integer.toString((int) value);
 
-            case BIG_INTEGER: {
-                BigInteger bigInt = (BigInteger) value;
-                return bigInt.toString();
-            }
+            case BIG_INTEGER:
+                BigInteger bigInteger = (BigInteger) value;
+                return bigInteger.toString();
+
             case DOUBLE:
                 return Double.toString((double) value);
 
@@ -103,36 +104,32 @@ public class XNFT extends CustomChaincodeBase {
             case BOOLEAN:
                 return Boolean.toString((boolean) value);
 
-            case LIST_INTEGER: {
-                List<Integer> list = (List<Integer>) value;
-                return list != null ? list.toString() : null;
-            }
+            case LIST_INTEGER:
+                List<Integer> integers = (List<Integer>) value;
+                return integers != null ? integers.toString() : null;
 
-            case LIST_BIG_INTEGER: {
-                List<BigInteger> list = (List<BigInteger>) value;
-                return list != null ? list.toString() : null;
-            }
+            case LIST_BIG_INTEGER:
+                List<BigInteger> bigIntegers = (List<BigInteger>) value;
+                return bigIntegers != null ? bigIntegers.toString() : null;
 
-            case LIST_DOUBLE: {
-                List<Double> list = (List<Double>) value;
-                return list != null ? list.toString() : null;
-            }
+            case LIST_DOUBLE:
+                List<Double> doubles = (List<Double>) value;
+                return doubles != null ? doubles.toString() : null;
 
-            case LIST_BYTE: {
-                List<Byte> list = (List<Byte>) value;
-                return list != null ? list.toString() : null;
-            }
+            case LIST_BYTE:
+                List<Byte> bytes = (List<Byte>) value;
+                return bytes != null ? bytes.toString() : null;
 
-            case LIST_STRING: {
-                List<String> list = (List<String>) value;
-                return list != null ? list.toString() : null;
-            }
+            case LIST_STRING:
+                List<String> strings = (List<String>) value;
+                return strings != null ? strings.toString() : null;
 
-            case LIST_BOOLEAN: {
-                List<Boolean> list = (List<Boolean>) value;
-                return list != null ? list.toString() : null;
-            }
+            case LIST_BOOLEAN:
+                List<Boolean> booleans = (List<Boolean>) value;
+                return booleans != null ? booleans.toString() : null;
+
             default:
+                LOG.error(NO_DATA_TYPE_MESSAGE);
                 return null;
         }
     }
