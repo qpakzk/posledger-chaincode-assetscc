@@ -56,152 +56,19 @@ public class XType extends CustomChaincodeBase {
             }
 
             for (Map.Entry<String, List<String>> entry : attributes.entrySet()) {
-
                 if (!xattr.containsKey(entry.getKey())) {
                     List<String> attr = entry.getValue();
-                    if (attr.size() != 2) {
+                    if (entry.getValue().size() != 2) {
                         LOG.info("XType::initXAttr:: List attr should have two elements");
                         return false;
                     }
 
-                    switch (attr.get(0)) {
-                        case INTEGER: {
-                            int value = Integer.parseInt(attr.get(1));
-                            xattr.put(entry.getKey(), value);
-                            break;
-                        }
-
-                        case BIG_INTEGER: {
-                            BigInteger value = new BigInteger(attr.get(1));
-                            xattr.put(entry.getKey(), value);
-                            break;
-                        }
-
-                        case DOUBLE: {
-                            double value = Double.parseDouble(attr.get(1));
-                            xattr.put(entry.getKey(), value);
-                            break;
-                        }
-
-                        case BYTE: {
-                            byte value = Byte.parseByte(attr.get(1));
-                            xattr.put(entry.getKey(), value);
-                            break;
-                        }
-
-                        case STRING: {
-                            String value = attr.get(1);
-                            xattr.put(entry.getKey(), value);
-                            break;
-                        }
-
-                        case BOOLEAN: {
-                            boolean value = Boolean.parseBoolean(attr.get(1));
-                            xattr.put(entry.getKey(), value);
-                            break;
-                        }
-
-                        case LIST_INTEGER: {
-                            List<Integer> values2;
-                            if (attr.get(1) != null) {
-                                List<String> values1 = toList(attr.get(1));
-                                values2 = new ArrayList<>();
-                                for (String value1 : values1) {
-                                    int value2 = Integer.parseInt(value1);
-                                    values2.add(value2);
-                                }
-                            }
-                            else {
-                                values2 = null;
-                            }
-
-                            xattr.put(entry.getKey(), values2);
-                            break;
-                        }
-
-                        case LIST_BIG_INTEGER: {
-                            List<BigInteger> values2;
-                            if (attr.get(1) != null) {
-                                List<String> values1 = toList(attr.get(1));
-                                values2 = new ArrayList<>();
-                                for (String value1 : values1) {
-                                    BigInteger value2 = new BigInteger(value1);
-                                    values2.add(value2);
-                                }
-                            }
-                            else {
-                                values2 = null;
-                            }
-
-                            xattr.put(entry.getKey(), values2);
-                            break;
-                        }
-
-                        case LIST_DOUBLE: {
-                            List<Double> values2;
-                            if (attr.get(1) != null) {
-                                List<String> values1 = toList(attr.get(1));
-                                values2 = new ArrayList<>();
-                                for (String value1 : values1) {
-                                    double value2 = Double.parseDouble(value1);
-                                    values2.add(value2);
-                                }
-                            }
-                            else {
-                                values2 = null;
-                            }
-
-                            xattr.put(entry.getKey(), values2);
-                            break;
-                        }
-
-                        case LIST_BYTE: {
-                            List<Byte> values2;
-                            if (attr.get(1) != null) {
-                                List<String> values1 = toList(attr.get(1));
-                                values2 = new ArrayList<>();
-                                for (String value1 : values1) {
-                                    byte value2 = Byte.parseByte(value1);
-                                    values2.add(value2);
-                                }
-                            }
-                            else {
-                                values2 = null;
-                            }
-
-                            xattr.put(entry.getKey(), values2);
-                            break;
-                        }
-
-                        case LIST_STRING: {
-                            List<String> values
-                                    = attr.get(1) != null ? toList(attr.get(1)) : null;
-                            xattr.put(entry.getKey(), values);
-                            break;
-                        }
-
-                        case LIST_BOOLEAN: {
-                            List<Boolean> values2;
-                            if (attr.get(1) != null) {
-                                List<String> values1 = toList(attr.get(1));
-                                values2 = new ArrayList<>();
-                                for (String value1 : values1) {
-                                    boolean value2 = Boolean.parseBoolean(value1);
-                                    values2.add(value2);
-                                }
-                            }
-                            else {
-                                values2 = null;
-                            }
-
-                            xattr.put(entry.getKey(), values2);
-                            break;
-                        }
-
-                        default:
-                            LOG.error(NO_DATA_TYPE_MESSAGE);
-                            return false;
+                    Object value = strToDataType(entry.getValue().get(0), entry.getValue().get(1));
+                    if (value == null) {
+                        return false;
                     }
+
+                    xattr.put(entry.getKey(), value);
                 }
             }
         }
@@ -235,6 +102,109 @@ public class XType extends CustomChaincodeBase {
         }
 
         return true;
+    }
+
+    private static Object strToDataType(String dataType, String value) {
+        List<String> strings;
+
+        switch (dataType) {
+            case INTEGER:
+                return Integer.parseInt(value);
+
+            case BIG_INTEGER:
+                return new BigInteger(value);
+
+            case DOUBLE:
+                return Double.parseDouble(value);
+
+            case BYTE:
+                return Byte.parseByte(value);
+
+            case STRING:
+                return value;
+
+            case BOOLEAN:
+                return Boolean.parseBoolean(value);
+
+            case LIST_INTEGER:
+                List<Integer> integers = new ArrayList<>();
+                if (value == null) {
+                    return integers;
+                }
+
+                strings = toList(value);
+                for (String string : strings) {
+                    integers.add(Integer.parseInt(string));
+                }
+
+                return integers;
+
+            case LIST_BIG_INTEGER:
+                List<BigInteger> bigIntegers = new ArrayList<>();
+                if (value == null) {
+                    return bigIntegers;
+                }
+
+                strings = toList(value);
+                for (String string : strings) {
+                    bigIntegers.add(new BigInteger(string));
+                }
+
+                return bigIntegers;
+
+            case LIST_DOUBLE:
+                List<Double> doubles = new ArrayList<>();
+                if (value == null) {
+                    return doubles;
+                }
+
+                strings = toList(value);
+                for (String string : strings) {
+                    doubles.add(Double.parseDouble(string));
+                }
+
+                return doubles;
+
+            case LIST_BYTE:
+                List<Byte> bytes = new ArrayList<>();
+                if (value == null) {
+                    return bytes;
+                }
+
+                strings = toList(value);
+                for (String string : strings) {
+                    bytes.add(Byte.parseByte(string));
+                }
+
+                return bytes;
+
+            case LIST_STRING:
+                strings = new ArrayList<>();
+                if (value == null) {
+                    return strings;
+                }
+
+                strings = toList(value);
+                return strings;
+
+            case LIST_BOOLEAN:
+                List<Boolean> booleans = new ArrayList<>();
+                if (value == null) {
+                    return booleans;
+                }
+
+                strings = toList(value);
+                for (String string : strings) {
+                    booleans.add(Boolean.parseBoolean(string));
+                }
+
+                return booleans;
+
+            default:
+                LOG.error(NO_DATA_TYPE_MESSAGE);
+                return null;
+        }
+
     }
 
     private static String toJSONString(Map<String, Map<String, List<String>>> map) throws JsonProcessingException {
