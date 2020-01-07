@@ -47,30 +47,44 @@ public class XType extends CustomChaincodeBase {
 
         Map<String, List<String>> attributes = TokenTypes.getTokenTypes().get(type);
         if (xattr != null) {
-            for (String key : xattr.keySet()) {
-                if (!attributes.containsKey(key)) {
-                    LOG.info(String.format("XType::initXAttr:: No attribute %s in xattr", key));
-                    return false;
-                }
+            if (!existKeys(xattr, attributes)) {
+                return false;
             }
 
             for (Map.Entry<String, List<String>> entry : attributes.entrySet()) {
-                if (!xattr.containsKey(entry.getKey())) {
-                    List<String> attr = entry.getValue();
-                    if (entry.getValue().size() != 2) {
-                        LOG.info("XType::initXAttr:: List attr should have two elements");
-                        return false;
-                    }
-
-                    Object value = DataTypeConversion.strToDataType(entry.getValue().get(0), entry.getValue().get(1));
-                    if (value == null) {
-                        return false;
-                    }
-
-                    xattr.put(entry.getKey(), value);
+                if(!insertNewEntries(entry.getKey(), entry.getValue(), xattr)) {
+                    return false;
                 }
             }
         }
+        return true;
+    }
+
+    private static boolean existKeys(Map<String, Object> xattr, Map<String, List<String>> attributes) {
+        for (String key : xattr.keySet()) {
+            if (!attributes.containsKey(key)) {
+                LOG.info(String.format("XType::initXAttr:: No attribute %s in xattr", key));
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static boolean insertNewEntries(String key, List<String> value, Map<String, Object> xattr) {
+        if (!xattr.containsKey(key)) {
+            if (value.size() != 2) {
+                return false;
+            }
+
+            Object object = DataTypeConversion.strToDataType(value.get(0), value.get(1));
+            if (object == null) {
+                return false;
+            }
+
+            xattr.put(key, object);
+        }
+
         return true;
     }
 
