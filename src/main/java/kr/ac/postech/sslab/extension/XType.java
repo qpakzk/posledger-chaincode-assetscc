@@ -105,12 +105,8 @@ public class XType extends CustomChaincodeBase {
     }
 
     public static boolean checkURI(Map<String, String> uri) {
-        if (uri != null && (uri.keySet().size() != 2
-                || !uri.containsKey("path") || !uri.containsKey("hash"))) {
-            return false;
-        }
-
-        return true;
+        return uri == null || (uri.keySet().size() == 2
+                && uri.containsKey("path") && uri.containsKey("hash"));
     }
 
     private static String toJSONString(Map<String, Map<String, List<String>>> map) throws JsonProcessingException {
