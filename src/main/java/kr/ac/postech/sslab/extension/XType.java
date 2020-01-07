@@ -14,6 +14,7 @@ import java.util.*;
 
 import static kr.ac.postech.sslab.constant.DataType.*;
 import static kr.ac.postech.sslab.constant.Key.TOKEN_TYPES;
+import static kr.ac.postech.sslab.constant.Message.NO_DATA_TYPE_MESSAGE;
 
 public class XType extends CustomChaincodeBase {
     private static final Log LOG = LogFactory.getLog(XType.class);
@@ -195,6 +196,10 @@ public class XType extends CustomChaincodeBase {
                             xattr.put(entry.getKey(), values2);
                             break;
                         }
+
+                        default:
+                            LOG.error(NO_DATA_TYPE_MESSAGE);
+                            return false;
                     }
                 }
             }
