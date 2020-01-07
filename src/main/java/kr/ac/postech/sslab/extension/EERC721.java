@@ -69,45 +69,60 @@ public class EERC721 extends CustomChaincodeBase {
 	}
 
 	public static List<BigInteger> tokenIdsOf(ChaincodeStub stub, String owner, String type) throws IOException {
-		String query;
-		QueryResultsIterator<KeyValue> resultsIterator;
-		List<BigInteger> tokenIds = new ArrayList<>();
-		boolean activated;
+		List<BigInteger> tokenIds;
 		if (type.equals("_")) {
-			query = String.format(QUERY_OWNER, owner);
-
-			resultsIterator = stub.getQueryResult(query);
-			while(resultsIterator.iterator().hasNext()) {
-				BigInteger tokenId = new BigInteger(resultsIterator.iterator().next().getKey());
-				NFT nft = NFT.read(stub, tokenId);
-
-				if (nft.getType().equals(BASE_TYPE)) {
-					activated = true;
-				} else {
-					activated = (boolean) nft.getXAttr(ACTIVATED_KEY);
-				}
-
-				if (activated) {
-					tokenIds.add(tokenId);
-				}
-			}
+			tokenIds = tokenIdsOfForAllActivated(stub, owner);
 		} else {
-			query = "{\"selector\":{\"owner\":\"" + owner + "\"," +
-					"\"type\":\"" + type + "\"}}";
+			tokenIds = tokenIdsOfForType(stub, owner, type);
+		}
 
-			resultsIterator = stub.getQueryResult(query);
-			while (resultsIterator.iterator().hasNext()) {
-				BigInteger tokenId = new BigInteger(resultsIterator.iterator().next().getKey());
-				if (type.equals(BASE_TYPE)) {
-					activated = true;
-				} else {
-					NFT nft = NFT.read(stub, tokenId);
-					activated = (boolean) nft.getXAttr(ACTIVATED_KEY);
-				}
+		return tokenIds;
+	}
 
-				if (activated) {
-					tokenIds.add(tokenId);
-				}
+	private static List<BigInteger> tokenIdsOfForAllActivated(ChaincodeStub stub, String owner) throws IOException {
+		List<BigInteger> tokenIds = new ArrayList<>();
+
+		String query = String.format(QUERY_OWNER, owner);
+		QueryResultsIterator<KeyValue> resultsIterator = stub.getQueryResult(query);
+		while(resultsIterator.iterator().hasNext()) {
+			BigInteger tokenId = new BigInteger(resultsIterator.iterator().next().getKey());
+			NFT nft = NFT.read(stub, tokenId);
+
+			boolean activated;
+			if (nft.getType().equals(BASE_TYPE)) {
+				activated = true;
+			} else {
+				activated = (boolean) nft.getXAttr(ACTIVATED_KEY);
+			}
+
+			if (activated) {
+				tokenIds.add(tokenId);
+			}
+		}
+
+		return tokenIds;
+	}
+
+	private static List<BigInteger> tokenIdsOfForType(ChaincodeStub stub, String owner, String type) throws IOException {
+		List<BigInteger> tokenIds = new ArrayList<>();
+
+		String query = "{\"selector\":{\"owner\":\"" + owner + "\"," +
+				"\"type\":\"" + type + "\"}}";
+
+		QueryResultsIterator<KeyValue> resultsIterator = stub.getQueryResult(query);
+		while (resultsIterator.iterator().hasNext()) {
+			BigInteger tokenId = new BigInteger(resultsIterator.iterator().next().getKey());
+
+			boolean activated;
+			if (type.equals(BASE_TYPE)) {
+				activated = true;
+			} else {
+				NFT nft = NFT.read(stub, tokenId);
+				activated = (boolean) nft.getXAttr(ACTIVATED_KEY);
+			}
+
+			if (activated) {
+				tokenIds.add(tokenId);
 			}
 		}
 
