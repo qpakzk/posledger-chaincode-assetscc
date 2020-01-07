@@ -130,7 +130,7 @@ public class EERC721 extends CustomChaincodeBase {
 	}
 
 	public static boolean divide(ChaincodeStub stub, BigInteger tokenId, List<BigInteger> newIds, List<String> values, String index)
-			throws IndexOutOfBoundsException, IOException {
+			throws IOException {
 		if (newIds.size() != 2 || values.size() != 2) {
 			throw new IndexOutOfBoundsException("Both array 'newIds' and 'values' should have only two elements");
 		}
