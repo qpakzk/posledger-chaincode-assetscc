@@ -31,8 +31,8 @@ public class XNFT extends CustomChaincodeBase {
         }
 
         XType.addXAttrForEERC721(xattr);
-        boolean result = nft.mint(stub, tokenId, type, owner, xattr, uri);
-        return result;
+
+        return nft.mint(stub, tokenId, type, owner, xattr, uri);
     }
 
     public static boolean setURI(ChaincodeStub stub, BigInteger tokenId, String index, String value) throws IOException {
@@ -42,8 +42,7 @@ public class XNFT extends CustomChaincodeBase {
             return false;
         }
 
-        nft.setURI(stub, index, value);
-        return true;
+        return nft.setURI(stub, index, value);
     }
 
     public static String getURI(ChaincodeStub stub, BigInteger tokenId, String index) throws IOException {
@@ -53,8 +52,7 @@ public class XNFT extends CustomChaincodeBase {
             return null;
         }
 
-        String value = nft.getURI(index);
-        return value;
+        return nft.getURI(index);
     }
 
     public static boolean setXAttr(ChaincodeStub stub, BigInteger tokenId, String index, String value) throws IOException {
