@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.ac.postech.sslab.main.CustomChaincodeBase;
 import kr.ac.postech.sslab.structure.NFT;
+import kr.ac.postech.sslab.structure.OperatorsApproval;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ledger.KeyValue;
 import org.hyperledger.fabric.shim.ledger.QueryResultsIterator;
@@ -56,6 +57,8 @@ public class ERC721 extends CustomChaincodeBase {
 
 	public static boolean setApprovalForAll(ChaincodeStub stub, String caller, String operator, boolean approved) throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
+		Map<String, Map<String, Boolean>> operatorsApproval
+				= OperatorsApproval.getOperatorsApproval();
 
 		Map<String, Boolean> operatorMap;
 		if (operatorsApproval.containsKey(caller)) {
@@ -78,6 +81,9 @@ public class ERC721 extends CustomChaincodeBase {
 	}
 
 	public static boolean isApprovedForAll(String owner, String operator) {
+		Map<String, Map<String, Boolean>> operatorsApproval
+				= OperatorsApproval.getOperatorsApproval();
+
 		if (operatorsApproval.containsKey(owner)) {
 			return operatorsApproval.get(owner).getOrDefault(operator, false);
 		}

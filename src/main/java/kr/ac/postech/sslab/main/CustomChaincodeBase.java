@@ -2,6 +2,7 @@ package kr.ac.postech.sslab.main;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kr.ac.postech.sslab.structure.OperatorsApproval;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hyperledger.fabric.shim.ChaincodeBase;
@@ -19,8 +20,6 @@ public class CustomChaincodeBase extends ChaincodeBase {
     private static final Log LOG = LogFactory.getLog(CustomChaincodeBase.class);
 
 	private static ObjectMapper mapper = new ObjectMapper();
-
-    protected static Map<String, Map<String, Boolean>> operatorsApproval = new HashMap<>();
 
     protected static Map<String, Map<String, List<String>>> tokenTypes = new HashMap<>();
 
@@ -41,11 +40,12 @@ public class CustomChaincodeBase extends ChaincodeBase {
 
             String operatorsApprovalString = stub.getStringState(OPERATORS_APPROVAL);
             if (operatorsApprovalString.trim().length() == 0) {
-                stub.putStringState(OPERATORS_APPROVAL, mapper.writeValueAsString(operatorsApproval));
+                stub.putStringState(OPERATORS_APPROVAL, mapper.writeValueAsString(OperatorsApproval.getOperatorsApproval()));
             }
             else {
                 LOG.info("CustomChaincodeBase::init [operatorsApproval] " + operatorsApprovalString);
-                operatorsApproval = mapper.readValue(operatorsApprovalString, new TypeReference<HashMap<String, Map<String, Boolean>>>(){});
+                OperatorsApproval.setOperatorsApproval(mapper.readValue(operatorsApprovalString,
+                        new TypeReference<HashMap<String, Map<String, Boolean>>>(){}));
             }
 
             String tokenTypesString = stub.getStringState(TOKEN_TYPES);
