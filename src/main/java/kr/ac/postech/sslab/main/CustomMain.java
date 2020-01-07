@@ -32,7 +32,7 @@ public class CustomMain extends Main {
                     if (args.size() == 1) {
                         return super.invoke(stub);
                     }
-                    response = balanceOf(stub, args);
+                    response = xBalanceOf(stub, args);
                     break;
 
                 case TOKEN_IDS_OF_FUNCTION_NAME:
@@ -59,7 +59,7 @@ public class CustomMain extends Main {
                     if (args.size() == 2) {
                         return super.invoke(stub);
                     }
-                    response = mint(stub, args);
+                    response = xMint(stub, args);
                     break;
 
                 case SET_URI_FUNCTION_NAME:
@@ -101,7 +101,7 @@ public class CustomMain extends Main {
         }
     }
 
-    private String balanceOf(ChaincodeStub stub, List<String> args) throws IOException {
+    private String xBalanceOf(ChaincodeStub stub, List<String> args) throws IOException {
         if (args.size() != 2 || isNullOrEmpty(args.get(0))
                 || isNullOrEmpty(args.get(1))) {
             throw new IllegalArgumentException(String.format(ARG_MESSAGE + "1 or 2"));
@@ -195,7 +195,7 @@ public class CustomMain extends Main {
         return EERC721.queryHistory(stub, tokenId).toString();
     }
 
-    private String mint(ChaincodeStub stub, List<String> args) throws IOException {
+    private String xMint(ChaincodeStub stub, List<String> args) throws IOException {
         if (args.size() != 5 || isNullOrEmpty(args.get(0))
                 || isNullOrEmpty(args.get(1)) || isNullOrEmpty(args.get(2))
                 || isNullOrEmpty(args.get(3)) || isNullOrEmpty(args.get(4))) {
