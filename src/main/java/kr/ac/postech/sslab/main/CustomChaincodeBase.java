@@ -2,7 +2,9 @@ package kr.ac.postech.sslab.main;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jdk.nashorn.internal.parser.Token;
 import kr.ac.postech.sslab.structure.OperatorsApproval;
+import kr.ac.postech.sslab.structure.TokenTypes;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hyperledger.fabric.shim.ChaincodeBase;
@@ -20,8 +22,6 @@ public class CustomChaincodeBase extends ChaincodeBase {
     private static final Log LOG = LogFactory.getLog(CustomChaincodeBase.class);
 
 	private static ObjectMapper mapper = new ObjectMapper();
-
-    protected static Map<String, Map<String, List<String>>> tokenTypes = new HashMap<>();
 
     @Override
     public Response init(ChaincodeStub stub) {
@@ -50,11 +50,12 @@ public class CustomChaincodeBase extends ChaincodeBase {
 
             String tokenTypesString = stub.getStringState(TOKEN_TYPES);
             if (tokenTypesString.trim().length() == 0) {
-                stub.putStringState(TOKEN_TYPES, mapper.writeValueAsString(tokenTypes));
+                stub.putStringState(TOKEN_TYPES, mapper.writeValueAsString(TokenTypes.getTokenTypes()));
             }
             else {
                 LOG.info("CustomChaincodeBase::init [tokenTypes] " + tokenTypesString);
-                tokenTypes = mapper.readValue(tokenTypesString, new TypeReference<HashMap<String, Map<String, List<String>>>>() {});
+                TokenTypes.setTokenTypes(mapper.readValue(tokenTypesString,
+                        new TypeReference<HashMap<String, Map<String, List<String>>>>() {}));
             }
 
             return newSuccessResponse();

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.ac.postech.sslab.main.CustomChaincodeBase;
+import kr.ac.postech.sslab.structure.TokenTypes;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hyperledger.fabric.shim.ChaincodeStub;
@@ -25,27 +26,27 @@ public class XType extends CustomChaincodeBase {
         Map<String, List<String>> attributes
                 = mapper.readValue(json, new TypeReference<HashMap<String, List<String>>>(){});
 
-        tokenTypes.put(type, attributes);
+        TokenTypes.getTokenTypes().put(type, attributes);
 
-        stub.putStringState(TOKEN_TYPES, toJSONString(tokenTypes));
+        stub.putStringState(TOKEN_TYPES, toJSONString(TokenTypes.getTokenTypes()));
         return true;
     }
 
     public static List<String> tokenTypesOf() {
-        return new ArrayList<>(tokenTypes.keySet());
+        return new ArrayList<>(TokenTypes.getTokenTypes().keySet());
     }
 
     public static Map<String, List<String>> getTokenType(String type) {
-        return tokenTypes.get(type);
+        return TokenTypes.getTokenTypes().get(type);
     }
 
     public static boolean initXAttr(String type, Map<String, Object> xattr) {
-        if (!tokenTypes.containsKey(type)) {
+        if (!TokenTypes.getTokenTypes().containsKey(type)) {
             LOG.info(String.format("XType::initXAttr:: No Token type %s in tokenTypes", type));
             return false;
         }
 
-        Map<String, List<String>> attributes = tokenTypes.get(type);
+        Map<String, List<String>> attributes = TokenTypes.getTokenTypes().get(type);
         if (xattr != null) {
             for (String key : xattr.keySet()) {
                 if (!attributes.containsKey(key)) {

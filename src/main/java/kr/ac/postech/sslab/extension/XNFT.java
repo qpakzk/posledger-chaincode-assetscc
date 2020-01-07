@@ -3,6 +3,7 @@ package kr.ac.postech.sslab.extension;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import kr.ac.postech.sslab.main.CustomChaincodeBase;
 import kr.ac.postech.sslab.structure.NFT;
+import kr.ac.postech.sslab.structure.TokenTypes;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hyperledger.fabric.shim.ChaincodeStub;
@@ -63,7 +64,7 @@ public class XNFT extends CustomChaincodeBase {
             return false;
         }
 
-        List<String> attr = tokenTypes.get(nft.getType()).get(index);
+        List<String> attr = TokenTypes.getTokenTypes().get(nft.getType()).get(index);
         switch (attr.get(0)) {
             case INTEGER:
                 nft.setXAttr(stub, index, Integer.parseInt(value));
@@ -172,7 +173,7 @@ public class XNFT extends CustomChaincodeBase {
 
        Object value = nft.getXAttr(index);
 
-        List<String> attr = tokenTypes.get(nft.getType()).get(index);
+        List<String> attr = TokenTypes.getTokenTypes().get(nft.getType()).get(index);
         switch (attr.get(0)) {
             case INTEGER:
                 return Integer.toString((int) value);
