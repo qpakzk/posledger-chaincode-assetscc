@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.*;
 import static kr.ac.postech.sslab.constant.Message.ARG_MESSAGE;
+import static kr.ac.postech.sslab.constant.Function.*;
 import static io.netty.util.internal.StringUtil.isNullOrEmpty;
 
 public class CustomMain extends Main {
@@ -27,62 +28,62 @@ public class CustomMain extends Main {
             String response;
 
             switch (func) {
-                case "balanceOf":
+                case BALANCE_OF_FUNCTION_NAME:
                     if (args.size() == 1) {
                         return super.invoke(stub);
                     }
                     response = balanceOf(stub, args);
                     break;
 
-                case "tokenIdsOf":
+                case TOKEN_IDS_OF_FUNCTION_NAME:
                     response = tokenIdsOf(stub, args);
                     break;
 
-                case "divide":
+                case DIVIDE_FUNCTION_NAME:
                     response = divide(stub, args);
                     break;
 
-                case "deactivate":
+                case DEACTIVATE_FUNCTION_NAME:
                     response = deactivate(stub, args);
                     break;
 
-                case "query":
+                case QUERY_FUNCTION_NAME:
                     response = query(stub, args);
                     break;
 
-                case "queryHistory":
+                case QUERY_HISTORY_FUNCTION_NAME:
                     response = queryHistory(stub, args);
                     break;
 
-                case "mint":
+                case MINT_FUNCTION_NAME:
                     response = mint(stub, args);
                     break;
 
-                case "setURI":
+                case SET_URI_FUNCTION_NAME:
                     response = setURI(stub, args);
                     break;
 
-                case  "getURI":
+                case  GET_URI_FUNCTION_NAME:
                     response = getURI(stub, args);
                     break;
 
-                case "setXAttr":
+                case SET_XATTR_FUNCTION_NAME:
                     response = setXAttr(stub, args);
                     break;
 
-                case "getXAttr":
+                case GET_XATTR_FUNCTION_NAME:
                     response = getXAttr(stub, args);
                     break;
 
-                case "registerTokenType":
+                case REGISTER_TOKEN_TYPE_FUNCTION_NAME:
                     response = registerTokenType(stub, args);
                     break;
 
-                case "tokenTypesOf":
+                case TOKEN_TYPES_OF_FUNCTION:
                     response = tokenTypesOf();
                     break;
 
-                case "getTokenType":
+                case GET_TOKEN_TYPE_FUNCTION_NAME:
                     response = getTokenType(args);
                     break;
 
