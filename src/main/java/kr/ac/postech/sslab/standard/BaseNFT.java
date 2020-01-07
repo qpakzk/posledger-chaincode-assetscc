@@ -1,7 +1,7 @@
 package kr.ac.postech.sslab.standard;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import kr.ac.postech.sslab.nft.NFT;
+import kr.ac.postech.sslab.structure.NFT;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 
 import java.io.IOException;

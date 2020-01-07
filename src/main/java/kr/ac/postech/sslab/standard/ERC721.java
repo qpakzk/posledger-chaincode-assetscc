@@ -3,7 +3,7 @@ package kr.ac.postech.sslab.standard;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.ac.postech.sslab.main.CustomChaincodeBase;
-import kr.ac.postech.sslab.nft.NFT;
+import kr.ac.postech.sslab.structure.NFT;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ledger.KeyValue;
 import org.hyperledger.fabric.shim.ledger.QueryResultsIterator;

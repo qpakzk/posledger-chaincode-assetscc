@@ -2,7 +2,7 @@ package kr.ac.postech.sslab.extension;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import kr.ac.postech.sslab.main.CustomChaincodeBase;
-import kr.ac.postech.sslab.nft.NFT;
+import kr.ac.postech.sslab.structure.NFT;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hyperledger.fabric.shim.ChaincodeStub;

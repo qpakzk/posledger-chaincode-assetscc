@@ -1,4 +1,4 @@
-package kr.ac.postech.sslab.nft;
+package kr.ac.postech.sslab.structure;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;

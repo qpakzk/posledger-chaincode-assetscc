@@ -3,7 +3,7 @@ package kr.ac.postech.sslab.extension;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.ac.postech.sslab.main.CustomChaincodeBase;
-import kr.ac.postech.sslab.nft.NFT;
+import kr.ac.postech.sslab.structure.NFT;
 
 import java.io.IOException;
 import java.math.BigInteger;
