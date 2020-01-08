@@ -5,7 +5,7 @@ import com.poscoict.posledger.chaincode.assetscc.constant.DataType;
 import com.poscoict.posledger.chaincode.assetscc.constant.Message;
 import com.poscoict.posledger.chaincode.assetscc.main.CustomChaincodeBase;
 import com.poscoict.posledger.chaincode.assetscc.structure.NFT;
-import com.poscoict.posledger.chaincode.assetscc.structure.TokenTypes;
+import com.poscoict.posledger.chaincode.assetscc.structure.TokenTypeManager;
 import com.poscoict.posledger.chaincode.assetscc.util.DataTypeConversion;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -61,7 +61,7 @@ public class XNFT extends CustomChaincodeBase {
             return false;
         }
 
-        List<String> attr = TokenTypes.getTokenTypes().get(nft.getType()).get(index);
+        List<String> attr = TokenTypeManager.getTokenTypes().get(nft.getType()).get(index);
         Object object = DataTypeConversion.strToDataType(attr.get(0), value);
         if (object == null) {
             return false;
@@ -82,7 +82,7 @@ public class XNFT extends CustomChaincodeBase {
 
        Object value = nft.getXAttr(index);
 
-        List<String> attr = TokenTypes.getTokenTypes().get(nft.getType()).get(index);
+        List<String> attr = TokenTypeManager.getTokenTypes().get(nft.getType()).get(index);
         switch (attr.get(0)) {
             case DataType.INTEGER:
                 return Integer.toString((int) value);

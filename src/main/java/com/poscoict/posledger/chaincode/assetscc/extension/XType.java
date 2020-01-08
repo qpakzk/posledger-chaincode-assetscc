@@ -3,7 +3,7 @@ package com.poscoict.posledger.chaincode.assetscc.extension;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.poscoict.posledger.chaincode.assetscc.structure.TokenTypes;
+import com.poscoict.posledger.chaincode.assetscc.structure.TokenTypeManager;
 import com.poscoict.posledger.chaincode.assetscc.util.DataTypeConversion;
 import com.poscoict.posledger.chaincode.assetscc.main.CustomChaincodeBase;
 import org.apache.commons.logging.Log;
@@ -27,27 +27,27 @@ public class XType extends CustomChaincodeBase {
         Map<String, List<String>> attributes
                 = objectMapper.readValue(json, new TypeReference<HashMap<String, List<String>>>(){});
 
-        TokenTypes.getTokenTypes().put(type, attributes);
+        TokenTypeManager.getTokenTypes().put(type, attributes);
 
-        stub.putStringState(TOKEN_TYPES, toJSONString(TokenTypes.getTokenTypes()));
+        stub.putStringState(TOKEN_TYPES, toJSONString(TokenTypeManager.getTokenTypes()));
         return true;
     }
 
     public static List<String> tokenTypesOf() {
-        return new ArrayList<>(TokenTypes.getTokenTypes().keySet());
+        return new ArrayList<>(TokenTypeManager.getTokenTypes().keySet());
     }
 
     public static Map<String, List<String>> getTokenType(String type) {
-        return TokenTypes.getTokenTypes().get(type);
+        return TokenTypeManager.getTokenTypes().get(type);
     }
 
     public static boolean initXAttr(String type, Map<String, Object> xattr) {
-        if (!TokenTypes.getTokenTypes().containsKey(type)) {
+        if (!TokenTypeManager.getTokenTypes().containsKey(type)) {
             LOG.error(NO_TOKEN_TYPE_MESSAGE);
             return false;
         }
 
-        Map<String, List<String>> attributes = TokenTypes.getTokenTypes().get(type);
+        Map<String, List<String>> attributes = TokenTypeManager.getTokenTypes().get(type);
         if (xattr != null) {
             if (!existKeys(xattr, attributes)) {
                 return false;

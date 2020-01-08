@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.poscoict.posledger.chaincode.assetscc.constant.Key;
 import com.poscoict.posledger.chaincode.assetscc.constant.Message;
 import com.poscoict.posledger.chaincode.assetscc.structure.OperatorsApproval;
-import com.poscoict.posledger.chaincode.assetscc.structure.TokenTypes;
+import com.poscoict.posledger.chaincode.assetscc.structure.TokenTypeManager;
 import org.hyperledger.fabric.shim.ChaincodeBase;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 
@@ -42,10 +42,10 @@ public class CustomChaincodeBase extends ChaincodeBase {
 
             String tokenTypesString = stub.getStringState(Key.TOKEN_TYPES);
             if (tokenTypesString.trim().length() == 0) {
-                stub.putStringState(Key.TOKEN_TYPES, objectMapper.writeValueAsString(TokenTypes.getTokenTypes()));
+                stub.putStringState(Key.TOKEN_TYPES, objectMapper.writeValueAsString(TokenTypeManager.getTokenTypes()));
             }
             else {
-                TokenTypes.setTokenTypes(objectMapper.readValue(tokenTypesString,
+                TokenTypeManager.setTokenTypes(objectMapper.readValue(tokenTypesString,
                         new TypeReference<HashMap<String, Map<String, List<String>>>>() {}));
             }
 
