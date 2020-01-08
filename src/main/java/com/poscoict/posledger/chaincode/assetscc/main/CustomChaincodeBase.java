@@ -18,7 +18,7 @@ import java.util.Map;
 public class CustomChaincodeBase extends ChaincodeBase {
     private static final Log LOG = LogFactory.getLog(CustomChaincodeBase.class);
 
-	private static ObjectMapper mapper = new ObjectMapper();
+	private static ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public Response init(ChaincodeStub stub) {
@@ -37,21 +37,21 @@ public class CustomChaincodeBase extends ChaincodeBase {
 
             String operatorsApprovalString = stub.getStringState(Key.OPERATORS_APPROVAL);
             if (operatorsApprovalString.trim().length() == 0) {
-                stub.putStringState(Key.OPERATORS_APPROVAL, mapper.writeValueAsString(OperatorsApproval.getOperatorsApproval()));
+                stub.putStringState(Key.OPERATORS_APPROVAL, objectMapper.writeValueAsString(OperatorsApproval.getOperatorsApproval()));
             }
             else {
                 LOG.info("CustomChaincodeBase::init [operatorsApproval] " + operatorsApprovalString);
-                OperatorsApproval.setOperatorsApproval(mapper.readValue(operatorsApprovalString,
+                OperatorsApproval.setOperatorsApproval(objectMapper.readValue(operatorsApprovalString,
                         new TypeReference<HashMap<String, Map<String, Boolean>>>(){}));
             }
 
             String tokenTypesString = stub.getStringState(Key.TOKEN_TYPES);
             if (tokenTypesString.trim().length() == 0) {
-                stub.putStringState(Key.TOKEN_TYPES, mapper.writeValueAsString(TokenTypes.getTokenTypes()));
+                stub.putStringState(Key.TOKEN_TYPES, objectMapper.writeValueAsString(TokenTypes.getTokenTypes()));
             }
             else {
                 LOG.info("CustomChaincodeBase::init [tokenTypes] " + tokenTypesString);
-                TokenTypes.setTokenTypes(mapper.readValue(tokenTypesString,
+                TokenTypes.setTokenTypes(objectMapper.readValue(tokenTypesString,
                         new TypeReference<HashMap<String, Map<String, List<String>>>>() {}));
             }
 

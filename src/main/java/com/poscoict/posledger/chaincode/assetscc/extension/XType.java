@@ -19,11 +19,11 @@ import static com.poscoict.posledger.chaincode.assetscc.constant.Key.*;
 public class XType extends CustomChaincodeBase {
     private static final Log LOG = LogFactory.getLog(XType.class);
 
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static boolean registerTokenType(ChaincodeStub stub, String type, String json) throws IOException {
         Map<String, List<String>> attributes
-                = mapper.readValue(json, new TypeReference<HashMap<String, List<String>>>(){});
+                = objectMapper.readValue(json, new TypeReference<HashMap<String, List<String>>>(){});
 
         TokenTypes.getTokenTypes().put(type, attributes);
 
@@ -110,6 +110,6 @@ public class XType extends CustomChaincodeBase {
     }
 
     private static String toJSONString(Map<String, Map<String, List<String>>> map) throws JsonProcessingException {
-        return mapper.writeValueAsString(map);
+        return objectMapper.writeValueAsString(map);
     }
 }

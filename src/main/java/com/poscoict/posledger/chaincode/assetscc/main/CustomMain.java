@@ -20,7 +20,7 @@ import static io.netty.util.internal.StringUtil.isNullOrEmpty;
 public class CustomMain extends Main {
     private static final Log LOG = LogFactory.getLog(CustomMain.class);
 
-	private static ObjectMapper mapper = new ObjectMapper();
+	private static ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public Response invoke(ChaincodeStub stub) {
@@ -208,9 +208,9 @@ public class CustomMain extends Main {
         String type = args.get(1);
         String owner = args.get(2);
         Map<String, Object> xattr =
-                mapper.readValue(args.get(3), new TypeReference<HashMap<String, Object>>(){});
+                objectMapper.readValue(args.get(3), new TypeReference<HashMap<String, Object>>(){});
         Map<String, String> uri =
-                mapper.readValue(args.get(4), new TypeReference<HashMap<String, String>>(){});
+                objectMapper.readValue(args.get(4), new TypeReference<HashMap<String, String>>(){});
 
         return Boolean.toString(XNFT.mint(stub, tokenId, type, owner, xattr, uri));
     }
@@ -288,7 +288,7 @@ public class CustomMain extends Main {
         String type = args.get(0);
         Map<String, List<String>> map = XType.getTokenType(type);
 
-        return mapper.writeValueAsString(map);
+        return objectMapper.writeValueAsString(map);
     }
 
     private List<String> strToList(String str) {

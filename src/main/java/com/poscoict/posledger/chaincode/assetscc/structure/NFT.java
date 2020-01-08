@@ -12,7 +12,7 @@ import java.util.Map;
 
 
 public class NFT {
-    private static ObjectMapper mapper = new ObjectMapper();
+    private static ObjectMapper objectMapper = new ObjectMapper();
 
     private BigInteger tokenId;
     private String type;
@@ -49,7 +49,7 @@ public class NFT {
         String json = stub.getStringState(tokenId.toString());
 
         Map<String, Object> map =
-                mapper.readValue(json, new TypeReference<HashMap<String, Object>>(){});
+                objectMapper.readValue(json, new TypeReference<HashMap<String, Object>>(){});
 
         String type = (String) map.get(Key.TYPE_KEY);
         String owner = (String) map.get(Key.OWNER_KEY);
@@ -126,7 +126,7 @@ public class NFT {
     }
 
     public String toJSONString() throws JsonProcessingException {
-        return mapper.writeValueAsString(this.toMap());
+        return objectMapper.writeValueAsString(this.toMap());
     }
 
     public Map<String, Object> toMap() {

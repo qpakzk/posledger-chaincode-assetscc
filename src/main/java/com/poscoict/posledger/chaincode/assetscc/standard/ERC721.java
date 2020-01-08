@@ -17,6 +17,8 @@ import java.util.Map;
 import static com.poscoict.posledger.chaincode.assetscc.constant.Key.OPERATORS_APPROVAL;
 
 public class ERC721 extends CustomChaincodeBase {
+	private static ObjectMapper objectMapper = new ObjectMapper();
+
 	private static final String QUERY_OWNER = "{\"selector\":{\"owner\":\"%s\"}}";
 
 	public static BigInteger balanceOf(ChaincodeStub stub, String owner) {
@@ -56,7 +58,6 @@ public class ERC721 extends CustomChaincodeBase {
 	}
 
 	public static boolean setApprovalForAll(ChaincodeStub stub, String caller, String operator, boolean approved) throws JsonProcessingException {
-		ObjectMapper mapper = new ObjectMapper();
 		Map<String, Map<String, Boolean>> operatorsApproval
 				= OperatorsApproval.getOperatorsApproval();
 
@@ -71,7 +72,7 @@ public class ERC721 extends CustomChaincodeBase {
 		operatorMap.put(operator, approved);
 		operatorsApproval.put(caller, operatorMap);
 
-		stub.putStringState(OPERATORS_APPROVAL, mapper.writeValueAsString(operatorsApproval));
+		stub.putStringState(OPERATORS_APPROVAL, objectMapper.writeValueAsString(operatorsApproval));
 		return true;
 	}
 
