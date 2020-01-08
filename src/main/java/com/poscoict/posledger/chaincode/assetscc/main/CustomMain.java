@@ -292,7 +292,7 @@ public class CustomMain extends Main {
     }
 
     private List<String> strToList(String str) {
-        return Arrays.asList(str.substring(1, str.length() - 1).trim().split(","));
+        return Arrays.asList(str.substring(1, str.length() - 1).split(", "));
     }
 
     public static void main(String[] args) {
