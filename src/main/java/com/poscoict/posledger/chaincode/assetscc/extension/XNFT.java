@@ -1,6 +1,5 @@
 package com.poscoict.posledger.chaincode.assetscc.extension;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.poscoict.posledger.chaincode.assetscc.constant.DataType;
 import com.poscoict.posledger.chaincode.assetscc.constant.Message;
 import com.poscoict.posledger.chaincode.assetscc.main.CustomChaincodeBase;
@@ -10,28 +9,90 @@ import com.poscoict.posledger.chaincode.assetscc.util.DataTypeConversion;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hyperledger.fabric.shim.ChaincodeStub;
-
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.poscoict.posledger.chaincode.assetscc.constant.DataType.*;
+import static com.poscoict.posledger.chaincode.assetscc.constant.Message.NO_ATTRIBUTE_MESSAGE;
+import static com.poscoict.posledger.chaincode.assetscc.constant.Message.NO_TOKEN_TYPE_MESSAGE;
 
 public class XNFT extends CustomChaincodeBase {
     private static final Log LOG = LogFactory.getLog(XNFT.class);
 
-    public static boolean mint(ChaincodeStub stub, BigInteger tokenId, String type, String owner, Map<String, Object> xattr, Map<String, String> uri) throws JsonProcessingException {
-        NFT nft = new NFT();
-        boolean check1 = XType.initXAttr(type, xattr);
-        LOG.info("XNFT::mint:: XType.initXAttr returns " + check1);
-        boolean check2 = XType.checkURI(uri);
-        LOG.info("XNFT::mint:: XType.checkURI returns " + check2);
-        if (!(check1 && check2)) {
+    public static boolean mint(ChaincodeStub stub, BigInteger tokenId, String type, String owner, Map<String, Object> xattr, Map<String, String> uri) throws IOException {
+        TokenTypeManager manager = TokenTypeManager.read(stub);
+        Map<String, List<String>> attributes = manager.getTokenType(type);
+        if (attributes == null) {
+            LOG.error(NO_TOKEN_TYPE_MESSAGE);
             return false;
         }
 
-        XType.addXAttrForEERC721(xattr);
+        if (xattr == null) {
+            xattr = new HashMap<>();
+        }
 
+        if (!haveValidAttributes(xattr, attributes)) {
+            return false;
+        }
+
+        if (!addNoInputAttributes(xattr, attributes)) {
+            return false;
+        }
+
+        if (!haveValidURIAttributes(uri)) {
+            return false;
+        }
+
+        NFT nft = new NFT();
         return nft.mint(stub, tokenId, type, owner, xattr, uri);
+    }
+
+    private static boolean haveValidAttributes(Map<String, Object> xattr, Map<String, List<String>> attributes) {
+        for (String key : xattr.keySet()) {
+            if (!attributes.containsKey(key)) {
+                LOG.error(NO_ATTRIBUTE_MESSAGE);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static boolean addNoInputAttributes(Map<String, Object> xattr, Map<String, List<String>> attributes) {
+        for (Map.Entry<String, List<String>> entry : attributes.entrySet()) {
+            if(!insertNewEntry(entry.getKey(), entry.getValue(), xattr)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static boolean insertNewEntry(String attribute, List<String> pair, Map<String, Object> xattr) {
+        if (!xattr.containsKey(attribute)) {
+            if (pair.size() != 2) {
+                return false;
+            }
+
+            String dataType = pair.get(0);
+            String initialValueStr = pair.get(1);
+            Object initialValue = DataTypeConversion.strToDataType(dataType, initialValueStr);
+            if (initialValue == null) {
+                return false;
+            }
+
+            xattr.put(attribute, initialValue);
+        }
+
+        return true;
+    }
+
+    private static boolean haveValidURIAttributes(Map<String, String> uri) {
+        return uri == null || (uri.keySet().size() == 2
+                && uri.containsKey("path") && uri.containsKey("hash"));
     }
 
     public static boolean setURI(ChaincodeStub stub, BigInteger tokenId, String index, String value) throws IOException {
@@ -61,8 +122,10 @@ public class XNFT extends CustomChaincodeBase {
             return false;
         }
 
-        List<String> attr = TokenTypeManager.getTokenTypes().get(nft.getType()).get(index);
-        Object object = DataTypeConversion.strToDataType(attr.get(0), value);
+        TokenTypeManager manager = TokenTypeManager.read(stub);
+        List<String> attr = manager.getAttributeOfTokenType(nft.getType(), index);
+        String dataType = attr.get(0);
+        Object object = DataTypeConversion.strToDataType(dataType, value);
         if (object == null) {
             return false;
         }
@@ -80,9 +143,10 @@ public class XNFT extends CustomChaincodeBase {
             return null;
         }
 
-       Object value = nft.getXAttr(index);
+        Object value = nft.getXAttr(index);
 
-        List<String> attr = TokenTypeManager.getTokenTypes().get(nft.getType()).get(index);
+        TokenTypeManager manager = TokenTypeManager.read(stub);
+        List<String> attr = manager.getAttributeOfTokenType(nft.getType(), index);
         switch (attr.get(0)) {
             case DataType.INTEGER:
                 return Integer.toString((int) value);
@@ -103,15 +167,15 @@ public class XNFT extends CustomChaincodeBase {
             case DataType.BOOLEAN:
                 return Boolean.toString((boolean) value);
 
-            case DataType.LIST_INTEGER:
+            case LIST_INTEGER:
                 List<Integer> integers = (List<Integer>) value;
                 return integers != null ? integers.toString() : null;
 
-            case DataType.LIST_BIG_INTEGER:
+            case LIST_BIG_INTEGER:
                 List<BigInteger> bigIntegers = (List<BigInteger>) value;
                 return bigIntegers != null ? bigIntegers.toString() : null;
 
-            case DataType.LIST_DOUBLE:
+            case LIST_DOUBLE:
                 List<Double> doubles = (List<Double>) value;
                 return doubles != null ? doubles.toString() : null;
 

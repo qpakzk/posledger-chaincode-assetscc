@@ -12,6 +12,8 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.*;
+
+import static com.poscoict.posledger.chaincode.assetscc.constant.Function.*;
 import static com.poscoict.posledger.chaincode.assetscc.constant.Message.ARG_MESSAGE;
 import static io.netty.util.internal.StringUtil.isNullOrEmpty;
 
@@ -26,66 +28,90 @@ public class CustomMain extends Main {
             String response;
 
             switch (func) {
-                case Function.BALANCE_OF_FUNCTION_NAME:
+                case BALANCE_OF_FUNCTION_NAME:
                     if (args.size() == 1) {
                         return super.invoke(stub);
                     }
                     response = xBalanceOf(stub, args);
                     break;
 
-                case Function.TOKEN_IDS_OF_FUNCTION_NAME:
+                case TOKEN_IDS_OF_FUNCTION_NAME:
                     response = tokenIdsOf(stub, args);
                     break;
 
-                case Function.DIVIDE_FUNCTION_NAME:
+                case DIVIDE_FUNCTION_NAME:
                     response = divide(stub, args);
                     break;
 
-                case Function.DEACTIVATE_FUNCTION_NAME:
+                case DEACTIVATE_FUNCTION_NAME:
                     response = deactivate(stub, args);
                     break;
 
-                case Function.QUERY_FUNCTION_NAME:
+                case QUERY_FUNCTION_NAME:
                     response = query(stub, args);
                     break;
 
-                case Function.QUERY_HISTORY_FUNCTION_NAME:
+                case QUERY_HISTORY_FUNCTION_NAME:
                     response = queryHistory(stub, args);
                     break;
 
-                case Function.MINT_FUNCTION_NAME:
+                case MINT_FUNCTION_NAME:
                     if (args.size() == 2) {
                         return super.invoke(stub);
                     }
                     response = xMint(stub, args);
                     break;
 
-                case Function.SET_URI_FUNCTION_NAME:
+                case SET_URI_FUNCTION_NAME:
                     response = setURI(stub, args);
                     break;
 
-                case  Function.GET_URI_FUNCTION_NAME:
+                case GET_URI_FUNCTION_NAME:
                     response = getURI(stub, args);
                     break;
 
-                case Function.SET_XATTR_FUNCTION_NAME:
+                case SET_XATTR_FUNCTION_NAME:
                     response = setXAttr(stub, args);
                     break;
 
-                case Function.GET_XATTR_FUNCTION_NAME:
+                case GET_XATTR_FUNCTION_NAME:
                     response = getXAttr(stub, args);
                     break;
 
-                case Function.REGISTER_TOKEN_TYPE_FUNCTION_NAME:
-                    response = registerTokenType(stub, args);
+                case ENROLL_TOKEN_TYPE_FUNCTION_NAME:
+                    response = enrollTokenType(stub, args);
                     break;
 
-                case Function.TOKEN_TYPES_OF_FUNCTION:
-                    response = tokenTypesOf();
+                case DROP_TOKEN_TYPE_FUNCTION_NAME:
+                    response = dropTokenType(stub, args);
                     break;
 
-                case Function.GET_TOKEN_TYPE_FUNCTION_NAME:
-                    response = getTokenType(args);
+                case TOKEN_TYPES_OF_FUNCTION_NAME:
+                    response = tokenTypesOf(stub);
+                    break;
+
+                case UPDATE_TOKEN_TYPE_FUNCTION_NAME:
+                    response = updateTokenType(stub, args);
+                    break;
+
+                case RETRIEVE_TOKEN_TYPE_FUNCTION_NAME:
+                    response = retrieveTokenType(stub, args);
+                    break;
+
+                case EMROLL_ATTRIBUTE_OF_TOKEN_TYPE_FUNCTION_NAME:
+                    response = enrollAttributeOfTokenType(stub, args);
+                    break;
+
+                case DROP_ATTRIBUTE_OF_TOKEN_TYPE_FUNCTION_NAME:
+                    response = dropAttributeOfTokenType(stub, args);
+                    break;
+
+                case UPDATE_ATTRIBUTE_OF_TOKEN_TYPE_FUNCTION_NAME:
+                    response = updateAttributeOfTokenType(stub, args);
+                    break;
+
+                case RETRIEVE_ATTRIBUTE_OF_TOKEN_TYPE_FUNCTION_NAME:
+                    response = retrieveAttributeOfTokenType(stub, args);
                     break;
 
                 default:
@@ -258,7 +284,7 @@ public class CustomMain extends Main {
         return XNFT.getXAttr(stub, tokenId, index);
     }
 
-    private String registerTokenType(ChaincodeStub stub, List<String> args) throws IOException {
+    private String enrollTokenType(ChaincodeStub stub, List<String> args) throws IOException {
         if (args.size() != 2 || isNullOrEmpty(args.get(0))
                 || isNullOrEmpty(args.get(1))) {
             throw new IllegalArgumentException(String.format(ARG_MESSAGE, "2"));
@@ -267,23 +293,97 @@ public class CustomMain extends Main {
         String type = args.get(0);
         String json = args.get(1);
 
-        return Boolean.toString(XType.registerTokenType(stub, type, json));
+        return Boolean.toString(XType.enroll(stub, type, json));
     }
 
-    private String tokenTypesOf() {
-        List<String> tokenTypes = XType.tokenTypesOf();
-        return tokenTypes.toString();
-    }
-
-    private String getTokenType(List<String> args) throws JsonProcessingException {
+    private String dropTokenType(ChaincodeStub stub, List<String> args) throws IOException {
         if (args.size() != 1 || isNullOrEmpty(args.get(0))) {
             throw new IllegalArgumentException(String.format(ARG_MESSAGE, "1"));
         }
 
         String type = args.get(0);
-        Map<String, List<String>> map = XType.getTokenType(type);
+
+        return Boolean.toString(XType.drop(stub, type));
+    }
+
+    private String tokenTypesOf(ChaincodeStub stub) throws IOException {
+        List<String> tokenTypes = XType.tokenTypesOf(stub);
+        return tokenTypes.toString();
+    }
+
+    private static String updateTokenType(ChaincodeStub stub, List<String> args) throws IOException {
+        if (args.size() != 2 || isNullOrEmpty(args.get(0))
+                || isNullOrEmpty(args.get(1))) {
+            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "2"));
+        }
+
+        String type = args.get(0);
+        String attributesStr = args.get(1);
+        Map<String, List<String>> attributes
+                = objectMapper.readValue(attributesStr, new TypeReference<HashMap<String, List<String>>>() {});
+
+        return Boolean.toString(XType.update(stub, type, attributes));
+    }
+
+    private String retrieveTokenType(ChaincodeStub stub, List<String> args) throws IOException {
+        if (args.size() != 1 || isNullOrEmpty(args.get(0))) {
+            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "1"));
+        }
+
+        String type = args.get(0);
+        Map<String, List<String>> map = XType.retrieve(stub, type);
 
         return objectMapper.writeValueAsString(map);
+    }
+
+    private String enrollAttributeOfTokenType(ChaincodeStub stub, List<String> args) throws IOException {
+        if (args.size() != 4 || isNullOrEmpty(args.get(0))
+                || isNullOrEmpty(args.get(1)) || isNullOrEmpty(args.get(2)) || isNullOrEmpty(args.get(3))) {
+            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "4"));
+        }
+
+        String tokenType = args.get(0);
+        String attribute = args.get(1);
+        String dataType = args.get(2);
+        String initialValue = args.get(3);
+
+        return Boolean.toString(XType.enrollAttribute(stub, tokenType, attribute, dataType, initialValue));
+    }
+
+    private String dropAttributeOfTokenType(ChaincodeStub stub, List<String> args) throws IOException {
+        if (args.size() != 2 || isNullOrEmpty(args.get(0)) || isNullOrEmpty(args.get(1))) {
+            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "2"));
+        }
+
+        String tokenType = args.get(0);
+        String attribute = args.get(1);
+
+        return Boolean.toString(XType.dropAttribute(stub, tokenType, attribute));
+    }
+
+    private String updateAttributeOfTokenType(ChaincodeStub stub, List<String> args) throws IOException {
+        if (args.size() != 3 || isNullOrEmpty(args.get(0))
+                || isNullOrEmpty(args.get(1)) || isNullOrEmpty(args.get(2))) {
+            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "3"));
+        }
+
+        String tokenType = args.get(0);
+        String attribute = args.get(1);
+        String pairStr = args.get(2);
+        List<String> pair = strToList(pairStr);
+
+        return Boolean.toString(XType.updateAttribute(stub, tokenType, attribute, pair));
+    }
+
+    private String retrieveAttributeOfTokenType(ChaincodeStub stub, List<String> args) throws IOException {
+        if (args.size() != 2 || isNullOrEmpty(args.get(0)) || isNullOrEmpty(args.get(1))) {
+            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "2"));
+        }
+
+        String tokenType = args.get(0);
+        String attribute = args.get(1);
+
+        return XType.retrieveAttribute(stub, tokenType, attribute).toString();
     }
 
     private List<String> strToList(String str) {

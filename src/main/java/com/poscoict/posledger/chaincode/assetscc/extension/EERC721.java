@@ -6,6 +6,7 @@ import com.poscoict.posledger.chaincode.assetscc.constant.Key;
 import com.poscoict.posledger.chaincode.assetscc.constant.Message;
 import com.poscoict.posledger.chaincode.assetscc.main.CustomChaincodeBase;
 import com.poscoict.posledger.chaincode.assetscc.structure.NFT;
+import com.poscoict.posledger.chaincode.assetscc.structure.TokenTypeManager;
 import com.poscoict.posledger.chaincode.assetscc.util.DataTypeConversion;
 
 import java.io.IOException;
@@ -156,8 +157,9 @@ public class EERC721 extends CustomChaincodeBase {
 			NFT child = new NFT();
 			child.mint(stub, newIds.get(i), nft.getType(), nft.getOwner(), xattr, uri);
 
-			Map<String, List<String>> tokenType = XType.getTokenType(nft.getType());
-			Object value = DataTypeConversion.strToDataType(tokenType.get(index).get(0), values.get(i));
+			TokenTypeManager manager = TokenTypeManager.read(stub);
+			String dataType = manager.getAttributeOfTokenType(nft.getType(), index).get(0);
+			Object value = DataTypeConversion.strToDataType(dataType, values.get(i));
 			if (value == null) {
 				return false;
 			}

@@ -1,10 +1,8 @@
 package com.poscoict.posledger.chaincode.assetscc.extension;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.poscoict.posledger.chaincode.assetscc.structure.TokenTypeManager;
-import com.poscoict.posledger.chaincode.assetscc.util.DataTypeConversion;
 import com.poscoict.posledger.chaincode.assetscc.main.CustomChaincodeBase;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,104 +12,76 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.*;
 
+import static com.poscoict.posledger.chaincode.assetscc.constant.DataType.*;
 import static com.poscoict.posledger.chaincode.assetscc.constant.Key.*;
-import static com.poscoict.posledger.chaincode.assetscc.constant.Message.NO_ATTRIBUTE_MESSAGE;
-import static com.poscoict.posledger.chaincode.assetscc.constant.Message.NO_TOKEN_TYPE_MESSAGE;
 
 public class XType extends CustomChaincodeBase {
     private static final Log LOG = LogFactory.getLog(XType.class);
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static boolean registerTokenType(ChaincodeStub stub, String type, String json) throws IOException {
-        Map<String, List<String>> attributes
-                = objectMapper.readValue(json, new TypeReference<HashMap<String, List<String>>>(){});
+    public static boolean enroll(ChaincodeStub stub, String type, String json) throws IOException {
+        Map<String, List<String>> attributes = objectMapper.readValue(json, new TypeReference<HashMap<String, List<String>>>() {});
 
-        TokenTypeManager.getTokenTypes().put(type, attributes);
-
-        stub.putStringState(TOKEN_TYPES, toJSONString(TokenTypeManager.getTokenTypes()));
-        return true;
-    }
-
-    public static List<String> tokenTypesOf() {
-        return new ArrayList<>(TokenTypeManager.getTokenTypes().keySet());
-    }
-
-    public static Map<String, List<String>> getTokenType(String type) {
-        return TokenTypeManager.getTokenTypes().get(type);
-    }
-
-    public static boolean initXAttr(String type, Map<String, Object> xattr) {
-        if (!TokenTypeManager.getTokenTypes().containsKey(type)) {
-            LOG.error(NO_TOKEN_TYPE_MESSAGE);
-            return false;
+        if (!attributes.containsKey(PARENT_KEY)) {
+            BigInteger parentValue = BigInteger.valueOf(-1);
+            List<String> parent = new ArrayList<>(Arrays.asList(BIG_INTEGER, parentValue.toString()));
+            attributes.put(PARENT_KEY, parent);
         }
 
-        Map<String, List<String>> attributes = TokenTypeManager.getTokenTypes().get(type);
-        if (xattr != null) {
-            if (!existKeys(xattr, attributes)) {
-                return false;
-            }
-
-            for (Map.Entry<String, List<String>> entry : attributes.entrySet()) {
-                if(!insertNewEntries(entry.getKey(), entry.getValue(), xattr)) {
-                    return false;
-                }
-            }
+        if (!attributes.containsKey(CHILDREN_KEY)) {
+            List<BigInteger> childrenValue = new ArrayList<>();
+            List<String> children = new ArrayList<>(Arrays.asList(LIST_BIG_INTEGER, childrenValue.toString()));
+            attributes.put(CHILDREN_KEY, children);
         }
-        return true;
+
+        if (!attributes.containsKey(ACTIVATED_KEY)) {
+            boolean activatedValue = true;
+            List<String> activated = new ArrayList<>(Arrays.asList(BOOLEAN, Boolean.toString(activatedValue)));
+            attributes.put(ACTIVATED_KEY, activated);
+        }
+
+        TokenTypeManager manager = TokenTypeManager.read(stub);
+        return manager.addTokenType(stub, type, attributes);
     }
 
-    private static boolean existKeys(Map<String, Object> xattr, Map<String, List<String>> attributes) {
-        for (String key : xattr.keySet()) {
-            if (!attributes.containsKey(key)) {
-                LOG.error(NO_ATTRIBUTE_MESSAGE);
-                return false;
-            }
-        }
-
-        return true;
+    public static boolean drop(ChaincodeStub stub, String tokenType) throws IOException {
+        TokenTypeManager manager = TokenTypeManager.read(stub);
+        return manager.removeTokenType(stub, tokenType);
     }
 
-    private static boolean insertNewEntries(String key, List<String> value, Map<String, Object> xattr) {
-        if (!xattr.containsKey(key)) {
-            if (value.size() != 2) {
-                return false;
-            }
-
-            Object object = DataTypeConversion.strToDataType(value.get(0), value.get(1));
-            if (object == null) {
-                return false;
-            }
-
-            xattr.put(key, object);
-        }
-
-        return true;
+    public static List<String> tokenTypesOf(ChaincodeStub stub) throws IOException {
+        TokenTypeManager manager = TokenTypeManager.read(stub);
+        return new ArrayList<>(manager.getTokenTypes().keySet());
     }
 
-    public static boolean addXAttrForEERC721(Map<String, Object> xattr) {
-        if (!xattr.containsKey(PARENT_KEY)) {
-            xattr.put(PARENT_KEY, BigInteger.valueOf(-1));
-        }
-
-        if (!xattr.containsKey(CHILDREN_KEY)) {
-            xattr.put(CHILDREN_KEY, new ArrayList<String>());
-        }
-
-        if (!xattr.containsKey(ACTIVATED_KEY)) {
-            xattr.put(ACTIVATED_KEY, true);
-        }
-
-        return true;
+    public static boolean update(ChaincodeStub stub, String tokenType, Map<String, List<String>> attributes) throws IOException {
+        TokenTypeManager manager = TokenTypeManager.read(stub);
+        return manager.setTokenType(stub, tokenType, attributes);
     }
 
-    public static boolean checkURI(Map<String, String> uri) {
-        return uri == null || (uri.keySet().size() == 2
-                && uri.containsKey("path") && uri.containsKey("hash"));
+    public static Map<String, List<String>> retrieve(ChaincodeStub stub, String tokenType) throws IOException {
+        TokenTypeManager manager = TokenTypeManager.read(stub);
+        return manager.getTokenType(tokenType);
     }
 
-    private static String toJSONString(Map<String, Map<String, List<String>>> map) throws JsonProcessingException {
-        return objectMapper.writeValueAsString(map);
+    public static boolean enrollAttribute(ChaincodeStub stub, String tokenType, String attribute, String dataType, String initialValue) throws IOException {
+        TokenTypeManager manager = TokenTypeManager.read(stub);
+        return manager.addAttributeOfTokenType(stub, tokenType, attribute, dataType, initialValue);
+    }
+
+    public static boolean dropAttribute(ChaincodeStub stub, String tokenType, String attribute) throws IOException {
+        TokenTypeManager manager = TokenTypeManager.read(stub);
+        return manager.removeAttributeOfTokenType(stub, tokenType, attribute);
+    }
+
+    public static boolean updateAttribute(ChaincodeStub stub, String tokenType, String attribute, List<String> pair) throws IOException {
+        TokenTypeManager manager = TokenTypeManager.read(stub);
+        return manager.setAttributeOfTokenType(stub, tokenType, attribute, pair);
+    }
+
+    public static List<String> retrieveAttribute(ChaincodeStub stub, String tokenType, String attribute) throws IOException {
+        TokenTypeManager manager = TokenTypeManager.read(stub);
+        return manager.getAttributeOfTokenType(tokenType, attribute);
     }
 }

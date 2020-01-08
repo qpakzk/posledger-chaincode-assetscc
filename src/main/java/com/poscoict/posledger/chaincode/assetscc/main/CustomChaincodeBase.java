@@ -40,14 +40,9 @@ public class CustomChaincodeBase extends ChaincodeBase {
                         new TypeReference<HashMap<String, Map<String, Boolean>>>(){}));
             }
 
-            String tokenTypesString = stub.getStringState(Key.TOKEN_TYPES);
-            if (tokenTypesString.trim().length() == 0) {
-                stub.putStringState(Key.TOKEN_TYPES, objectMapper.writeValueAsString(TokenTypeManager.getTokenTypes()));
-            }
-            else {
-                TokenTypeManager.setTokenTypes(objectMapper.readValue(tokenTypesString,
-                        new TypeReference<HashMap<String, Map<String, List<String>>>>() {}));
-            }
+            TokenTypeManager manager = TokenTypeManager.read(stub);
+            Map<String, Map<String, List<String>>> tokenTypes = manager.getTokenTypes();
+            manager.setTokenTypes(stub, tokenTypes);
 
             return newSuccessResponse();
         } catch (Exception e) {

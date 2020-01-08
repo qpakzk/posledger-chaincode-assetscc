@@ -26,7 +26,13 @@ public final class Function {
     public static final String SET_XATTR_FUNCTION_NAME = "setXAttr";
     public static final String GET_XATTR_FUNCTION_NAME = "getXAttr";
 
-    public static final String REGISTER_TOKEN_TYPE_FUNCTION_NAME = "registerTokenType";
-    public static final String TOKEN_TYPES_OF_FUNCTION = "tokenTypesOf";
-    public static final String GET_TOKEN_TYPE_FUNCTION_NAME = "getTokenType";
+    public static final String ENROLL_TOKEN_TYPE_FUNCTION_NAME = "enrollTokenType";
+    public static final String DROP_TOKEN_TYPE_FUNCTION_NAME = "dropTokenType";
+    public static final String TOKEN_TYPES_OF_FUNCTION_NAME = "tokenTypesOf";
+    public static final String UPDATE_TOKEN_TYPE_FUNCTION_NAME = "updateTokenType";
+    public static final String RETRIEVE_TOKEN_TYPE_FUNCTION_NAME = "retrieveTokenType";
+    public static final String EMROLL_ATTRIBUTE_OF_TOKEN_TYPE_FUNCTION_NAME = "enrollAttributeOfTokenType";
+    public static final String DROP_ATTRIBUTE_OF_TOKEN_TYPE_FUNCTION_NAME = "dropAttributeOfTokenType";
+    public static final String UPDATE_ATTRIBUTE_OF_TOKEN_TYPE_FUNCTION_NAME = "updateAttributeOfTokenType";
+    public static final String RETRIEVE_ATTRIBUTE_OF_TOKEN_TYPE_FUNCTION_NAME = "retrieveAttributeOfTokenType";
 }
