@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.poscoict.posledger.chaincode.assetscc.structure.TokenTypeManager;
 import com.poscoict.posledger.chaincode.assetscc.main.CustomChaincodeBase;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 
 import java.io.IOException;
@@ -16,8 +14,6 @@ import static com.poscoict.posledger.chaincode.assetscc.constant.DataType.*;
 import static com.poscoict.posledger.chaincode.assetscc.constant.Key.*;
 
 public class XType extends CustomChaincodeBase {
-    private static final Log LOG = LogFactory.getLog(XType.class);
-
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static boolean enroll(ChaincodeStub stub, String type, String json) throws IOException {
