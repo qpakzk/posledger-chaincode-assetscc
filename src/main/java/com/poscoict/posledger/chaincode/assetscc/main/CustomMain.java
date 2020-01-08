@@ -7,8 +7,6 @@ import com.poscoict.posledger.chaincode.assetscc.constant.Function;
 import com.poscoict.posledger.chaincode.assetscc.extension.EERC721;
 import com.poscoict.posledger.chaincode.assetscc.extension.XNFT;
 import com.poscoict.posledger.chaincode.assetscc.extension.XType;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 
 import java.io.IOException;
@@ -18,8 +16,6 @@ import static com.poscoict.posledger.chaincode.assetscc.constant.Message.ARG_MES
 import static io.netty.util.internal.StringUtil.isNullOrEmpty;
 
 public class CustomMain extends Main {
-    private static final Log LOG = LogFactory.getLog(CustomMain.class);
-
 	private static ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
@@ -98,7 +94,6 @@ public class CustomMain extends Main {
 
             return newSuccessResponse(response);
         } catch (Exception e) {
-            LOG.error("CustomMain::invoke:: invoke error");
             return newErrorResponse(e.getMessage());
         }
     }

@@ -6,8 +6,6 @@ import com.poscoict.posledger.chaincode.assetscc.constant.Key;
 import com.poscoict.posledger.chaincode.assetscc.constant.Message;
 import com.poscoict.posledger.chaincode.assetscc.structure.OperatorsApproval;
 import com.poscoict.posledger.chaincode.assetscc.structure.TokenTypes;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hyperledger.fabric.shim.ChaincodeBase;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 
@@ -16,9 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CustomChaincodeBase extends ChaincodeBase {
-    private static final Log LOG = LogFactory.getLog(CustomChaincodeBase.class);
-
-	private static ObjectMapper objectMapper = new ObjectMapper();
+    private static ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public Response init(ChaincodeStub stub) {
@@ -40,7 +36,6 @@ public class CustomChaincodeBase extends ChaincodeBase {
                 stub.putStringState(Key.OPERATORS_APPROVAL, objectMapper.writeValueAsString(OperatorsApproval.getOperatorsApproval()));
             }
             else {
-                LOG.info("CustomChaincodeBase::init [operatorsApproval] " + operatorsApprovalString);
                 OperatorsApproval.setOperatorsApproval(objectMapper.readValue(operatorsApprovalString,
                         new TypeReference<HashMap<String, Map<String, Boolean>>>(){}));
             }
@@ -50,7 +45,6 @@ public class CustomChaincodeBase extends ChaincodeBase {
                 stub.putStringState(Key.TOKEN_TYPES, objectMapper.writeValueAsString(TokenTypes.getTokenTypes()));
             }
             else {
-                LOG.info("CustomChaincodeBase::init [tokenTypes] " + tokenTypesString);
                 TokenTypes.setTokenTypes(objectMapper.readValue(tokenTypesString,
                         new TypeReference<HashMap<String, Map<String, List<String>>>>() {}));
             }

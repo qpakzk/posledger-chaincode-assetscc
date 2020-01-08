@@ -15,6 +15,8 @@ import java.math.BigInteger;
 import java.util.*;
 
 import static com.poscoict.posledger.chaincode.assetscc.constant.Key.*;
+import static com.poscoict.posledger.chaincode.assetscc.constant.Message.NO_ATTRIBUTE_MESSAGE;
+import static com.poscoict.posledger.chaincode.assetscc.constant.Message.NO_TOKEN_TYPE_MESSAGE;
 
 public class XType extends CustomChaincodeBase {
     private static final Log LOG = LogFactory.getLog(XType.class);
@@ -41,7 +43,7 @@ public class XType extends CustomChaincodeBase {
 
     public static boolean initXAttr(String type, Map<String, Object> xattr) {
         if (!TokenTypes.getTokenTypes().containsKey(type)) {
-            LOG.info(String.format("XType::initXAttr:: No Token type %s in tokenTypes", type));
+            LOG.error(NO_TOKEN_TYPE_MESSAGE);
             return false;
         }
 
@@ -63,7 +65,7 @@ public class XType extends CustomChaincodeBase {
     private static boolean existKeys(Map<String, Object> xattr, Map<String, List<String>> attributes) {
         for (String key : xattr.keySet()) {
             if (!attributes.containsKey(key)) {
-                LOG.info(String.format("XType::initXAttr:: No attribute %s in xattr", key));
+                LOG.error(NO_ATTRIBUTE_MESSAGE);
                 return false;
             }
         }
