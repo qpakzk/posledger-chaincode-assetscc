@@ -1,9 +1,7 @@
 package com.poscoict.posledger.chaincode.assetscc.main;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.poscoict.posledger.chaincode.assetscc.constant.Function;
 import com.poscoict.posledger.chaincode.assetscc.extension.EERC721;
 import com.poscoict.posledger.chaincode.assetscc.extension.XNFT;
 import com.poscoict.posledger.chaincode.assetscc.extension.XType;
