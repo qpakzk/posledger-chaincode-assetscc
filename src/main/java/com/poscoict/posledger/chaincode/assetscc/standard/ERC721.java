@@ -57,22 +57,22 @@ public class ERC721 extends CustomChaincodeBase {
 		return nft.setApprovee(stub, approved);
 	}
 
-	public static boolean setApprovalForAll(ChaincodeStub stub, String caller, String operator, boolean approved) throws JsonProcessingException {
-		Map<String, Map<String, Boolean>> operatorsApproval
-				= OperatorsApproval.getOperatorsApproval();
+	public static boolean setApprovalForAll(ChaincodeStub stub, String caller, String operator, boolean approved) throws IOException {
+		OperatorsApproval approval = OperatorsApproval.read(stub);
+		Map<String, Map<String, Boolean>> operators = approval.getOperatorsApproval();
 
-		Map<String, Boolean> operatorMap;
-		if (operatorsApproval.containsKey(caller)) {
-			operatorMap = operatorsApproval.get(caller);
+		Map<String, Boolean> map;
+		if (operators.containsKey(caller)) {
+			map = operators.get(caller);
 		}
 		else {
-			operatorMap = new HashMap<>();
+			map = new HashMap<>();
 		}
 
-		operatorMap.put(operator, approved);
-		operatorsApproval.put(caller, operatorMap);
+		map.put(operator, approved);
+		operators.put(caller, map);
 
-		stub.putStringState(OPERATORS_APPROVAL, objectMapper.writeValueAsString(operatorsApproval));
+		approval.setOperatorsApproval(stub, operators);
 		return true;
 	}
 
@@ -81,12 +81,12 @@ public class ERC721 extends CustomChaincodeBase {
 		return nft.getApprovee();
 	}
 
-	public static boolean isApprovedForAll(String owner, String operator) {
-		Map<String, Map<String, Boolean>> operatorsApproval
-				= OperatorsApproval.getOperatorsApproval();
+	public static boolean isApprovedForAll(ChaincodeStub stub, String owner, String operator) throws IOException {
+		OperatorsApproval approval = OperatorsApproval.read(stub);
+		Map<String, Map<String, Boolean>> operators = approval.getOperatorsApproval();
 
-		if (operatorsApproval.containsKey(owner)) {
-			return operatorsApproval.get(owner).getOrDefault(operator, false);
+		if (operators.containsKey(owner)) {
+			return operators.get(owner).getOrDefault(operator, false);
 		}
 		else {
 			return false;

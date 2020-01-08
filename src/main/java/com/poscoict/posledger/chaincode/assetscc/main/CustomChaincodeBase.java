@@ -31,14 +31,9 @@ public class CustomChaincodeBase extends ChaincodeBase {
                 throw new IllegalArgumentException(String.format(Message.ARG_MESSAGE, "0"));
             }
 
-            String operatorsApprovalString = stub.getStringState(Key.OPERATORS_APPROVAL);
-            if (operatorsApprovalString.trim().length() == 0) {
-                stub.putStringState(Key.OPERATORS_APPROVAL, objectMapper.writeValueAsString(OperatorsApproval.getOperatorsApproval()));
-            }
-            else {
-                OperatorsApproval.setOperatorsApproval(objectMapper.readValue(operatorsApprovalString,
-                        new TypeReference<HashMap<String, Map<String, Boolean>>>(){}));
-            }
+            OperatorsApproval approval = OperatorsApproval.read(stub);
+            Map<String, Map<String, Boolean>> operators = approval.getOperatorsApproval();
+            approval.setOperatorsApproval(stub, operators);
 
             TokenTypeManager manager = TokenTypeManager.read(stub);
             Map<String, Map<String, List<String>>> tokenTypes = manager.getTokenTypes();

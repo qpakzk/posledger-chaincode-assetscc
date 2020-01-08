@@ -47,7 +47,7 @@ public class Main extends CustomChaincodeBase {
                     break;
 
                 case Function.IS_APPROVED_FOR_ALL_FUNCTION_NAME:
-                    response = isApprovedForAll(args);
+                    response = isApprovedForAll(stub, args);
                     break;
 
                 case Function.MINT_FUNCTION_NAME:
@@ -117,7 +117,7 @@ public class Main extends CustomChaincodeBase {
         return Boolean.toString(ERC721.approve(stub, approved, tokenId));
     }
 
-    private String setApprovalForAll(ChaincodeStub stub, List<String> args) throws JsonProcessingException {
+    private String setApprovalForAll(ChaincodeStub stub, List<String> args) throws IOException {
         if (args.size() != 3 || isNullOrEmpty(args.get(0))
                 || isNullOrEmpty(args.get(1)) || isNullOrEmpty(args.get(2))) {
             throw new IllegalArgumentException(String.format(Message.ARG_MESSAGE, "3"));
@@ -125,7 +125,7 @@ public class Main extends CustomChaincodeBase {
 
         String caller = args.get(0);
         String operator = args.get(1);
-        Boolean approved = Boolean.parseBoolean(args.get(2));
+        boolean approved = Boolean.parseBoolean(args.get(2));
 
         return Boolean.toString(ERC721.setApprovalForAll(stub, caller, operator, approved));
     }
@@ -140,7 +140,7 @@ public class Main extends CustomChaincodeBase {
         return ERC721.getApproved(stub, tokenId);
     }
 
-    private String isApprovedForAll(List<String> args) {
+    private String isApprovedForAll(ChaincodeStub stub, List<String> args) throws IOException {
         if (args.size() != 2 || isNullOrEmpty(args.get(0))
                 || isNullOrEmpty(args.get(1))) {
             throw new IllegalArgumentException(String.format(Message.ARG_MESSAGE, "2"));
@@ -149,7 +149,7 @@ public class Main extends CustomChaincodeBase {
         String owner = args.get(0);
         String operator = args.get(1);
 
-        return Boolean.toString(ERC721.isApprovedForAll(owner, operator));
+        return Boolean.toString(ERC721.isApprovedForAll(stub, owner, operator));
     }
 
     private String mint(ChaincodeStub stub, List<String> args) throws JsonProcessingException {

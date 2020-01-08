@@ -1,18 +1,49 @@
 package com.poscoict.posledger.chaincode.assetscc.structure;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.poscoict.posledger.chaincode.assetscc.constant.Key;
+import org.hyperledger.fabric.shim.ChaincodeStub;
+
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import static com.poscoict.posledger.chaincode.assetscc.constant.Key.OPERATORS_APPROVAL;
+
 public class OperatorsApproval {
-    private OperatorsApproval() {}
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    private static Map<String, Map<String, Boolean>> operators = new HashMap<>();
+    private OperatorsApproval(Map<String, Map<String, Boolean>> operators) {
+        this.operators = operators;
+    }
 
-    public static Map<String, Map<String, Boolean>> getOperatorsApproval() {
+    private Map<String, Map<String, Boolean>> operators;
+
+    public static OperatorsApproval read(ChaincodeStub stub) throws IOException {
+        String json = stub.getStringState(OPERATORS_APPROVAL);
+        if (json.trim().length() == 0) {
+            return new OperatorsApproval(new HashMap<>());
+        }
+        else {
+            Map<String, Map<String, Boolean>> map
+                    = objectMapper.readValue(json, new TypeReference<HashMap<String, Map<String, Boolean>>>() {});
+            return new OperatorsApproval(map);
+        }
+    }
+
+    public Map<String, Map<String, Boolean>> getOperatorsApproval() {
         return operators;
     }
 
-    public static void setOperatorsApproval(Map<String, Map<String, Boolean>> operators) {
-        OperatorsApproval.operators = operators;
+    public void setOperatorsApproval(ChaincodeStub stub, Map<String, Map<String, Boolean>> operators) throws JsonProcessingException {
+        this.operators = operators;
+        stub.putStringState(OPERATORS_APPROVAL, toJSONString());
+    }
+
+    private String toJSONString() throws JsonProcessingException {
+        return objectMapper.writeValueAsString(operators);
     }
 }
