@@ -158,7 +158,11 @@ public class EERC721 extends CustomChaincodeBase {
 			child.mint(stub, newIds.get(i), nft.getType(), nft.getOwner(), xattr, uri);
 
 			TokenTypeManager manager = TokenTypeManager.read(stub);
-			String dataType = manager.getAttributeOfTokenType(nft.getType(), index).get(0);
+			List<String> attribute = manager.getAttributeOfTokenType(nft.getType(), index);
+			if (attribute.isEmpty()) {
+				return false;
+			}
+			String dataType = attribute.get(0);
 			Object value = DataTypeConversion.strToDataType(dataType, values.get(i));
 			if (value == null) {
 				return false;

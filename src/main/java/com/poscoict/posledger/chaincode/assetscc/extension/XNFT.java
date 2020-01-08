@@ -147,6 +147,11 @@ public class XNFT extends CustomChaincodeBase {
 
         TokenTypeManager manager = TokenTypeManager.read(stub);
         List<String> attr = manager.getAttributeOfTokenType(nft.getType(), index);
+
+        if (attr.isEmpty()) {
+            return null;
+        }
+
         switch (attr.get(0)) {
             case DataType.INTEGER:
                 return Integer.toString((int) value);

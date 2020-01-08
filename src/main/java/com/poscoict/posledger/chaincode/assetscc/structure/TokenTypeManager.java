@@ -132,11 +132,11 @@ public class TokenTypeManager {
 
     public List<String> getAttributeOfTokenType(String tokenType, String attribute) {
         if (!hashTokenType(tokenType)) {
-            return null;
+            return new ArrayList<>();
         }
 
         if (!hasAttribute(tokenType, attribute)) {
-            return null;
+            return new ArrayList<>();
         }
 
         return tokenTypes.get(tokenType).get(attribute);
