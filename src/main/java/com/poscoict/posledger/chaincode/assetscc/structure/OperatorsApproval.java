@@ -3,12 +3,10 @@ package com.poscoict.posledger.chaincode.assetscc.structure;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.poscoict.posledger.chaincode.assetscc.constant.Key;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.poscoict.posledger.chaincode.assetscc.constant.Key.OPERATORS_APPROVAL;

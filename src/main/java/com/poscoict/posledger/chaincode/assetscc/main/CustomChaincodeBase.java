@@ -1,21 +1,14 @@
 package com.poscoict.posledger.chaincode.assetscc.main;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.poscoict.posledger.chaincode.assetscc.constant.Key;
 import com.poscoict.posledger.chaincode.assetscc.constant.Message;
 import com.poscoict.posledger.chaincode.assetscc.structure.OperatorsApproval;
 import com.poscoict.posledger.chaincode.assetscc.structure.TokenTypeManager;
 import org.hyperledger.fabric.shim.ChaincodeBase;
 import org.hyperledger.fabric.shim.ChaincodeStub;
-
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class CustomChaincodeBase extends ChaincodeBase {
-    private static ObjectMapper objectMapper = new ObjectMapper();
-
     @Override
     public Response init(ChaincodeStub stub) {
 

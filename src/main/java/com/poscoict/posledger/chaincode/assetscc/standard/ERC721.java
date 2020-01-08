@@ -1,24 +1,17 @@
 package com.poscoict.posledger.chaincode.assetscc.standard;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.poscoict.posledger.chaincode.assetscc.main.CustomChaincodeBase;
 import com.poscoict.posledger.chaincode.assetscc.structure.NFT;
 import com.poscoict.posledger.chaincode.assetscc.structure.OperatorsApproval;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ledger.KeyValue;
 import org.hyperledger.fabric.shim.ledger.QueryResultsIterator;
-
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.poscoict.posledger.chaincode.assetscc.constant.Key.OPERATORS_APPROVAL;
-
 public class ERC721 extends CustomChaincodeBase {
-	private static ObjectMapper objectMapper = new ObjectMapper();
-
 	private static final String QUERY_OWNER = "{\"selector\":{\"owner\":\"%s\"}}";
 
 	public static BigInteger balanceOf(ChaincodeStub stub, String owner) {
