@@ -10,7 +10,6 @@ import com.poscoict.posledger.chaincode.assetscc.structure.TokenTypeManager;
 import com.poscoict.posledger.chaincode.assetscc.util.DataTypeConversion;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.*;
 
 import org.apache.commons.logging.Log;
@@ -29,13 +28,13 @@ public class EERC721 extends CustomChaincodeBase {
 
 	private static final String QUERY_OWNER = "{\"selector\":{\"owner\":\"%s\"}}";
 
-	public static BigInteger balanceOf(ChaincodeStub stub, String owner, String type) throws IOException {
+	public static long balanceOf(ChaincodeStub stub, String owner, String type) throws IOException {
 		String query = String.format(QUERY_OWNER, owner);
 
 		long ownedTokensCount = 0;
 		QueryResultsIterator<KeyValue> resultsIterator = stub.getQueryResult(query);
 		while(resultsIterator.iterator().hasNext()) {
-			BigInteger tokenId = new BigInteger(resultsIterator.iterator().next().getKey());
+			String tokenId = resultsIterator.iterator().next().getKey();
 			NFT nft = NFT.read(stub, tokenId);
 
 			boolean activated;
@@ -51,24 +50,24 @@ public class EERC721 extends CustomChaincodeBase {
 			}
 		}
 
-		return BigInteger.valueOf(ownedTokensCount);
+		return ownedTokensCount;
 	}
 
-	public static List<BigInteger> tokenIdsOf(ChaincodeStub stub, String owner) {
+	public static List<String> tokenIdsOf(ChaincodeStub stub, String owner) {
 		String query = String.format(QUERY_OWNER, owner);
 
-		List<BigInteger> tokenIds = new ArrayList<>();
+		List<String> tokenIds = new ArrayList<>();
 		QueryResultsIterator<KeyValue> resultsIterator = stub.getQueryResult(query);
 		while(resultsIterator.iterator().hasNext()) {
-			BigInteger tokenId = new BigInteger(resultsIterator.iterator().next().getKey());
+			String tokenId = resultsIterator.iterator().next().getKey();
 			tokenIds.add(tokenId);
 		}
 
 		return tokenIds;
 	}
 
-	public static List<BigInteger> tokenIdsOf(ChaincodeStub stub, String owner, String type) throws IOException {
-		List<BigInteger> tokenIds;
+	public static List<String> tokenIdsOf(ChaincodeStub stub, String owner, String type) throws IOException {
+		List<String> tokenIds;
 		if (type.equals("_")) {
 			tokenIds = tokenIdsOfForAllActivated(stub, owner);
 		} else {
@@ -78,13 +77,13 @@ public class EERC721 extends CustomChaincodeBase {
 		return tokenIds;
 	}
 
-	private static List<BigInteger> tokenIdsOfForAllActivated(ChaincodeStub stub, String owner) throws IOException {
-		List<BigInteger> tokenIds = new ArrayList<>();
+	private static List<String> tokenIdsOfForAllActivated(ChaincodeStub stub, String owner) throws IOException {
+		List<String> tokenIds = new ArrayList<>();
 
 		String query = String.format(QUERY_OWNER, owner);
 		QueryResultsIterator<KeyValue> resultsIterator = stub.getQueryResult(query);
 		while(resultsIterator.iterator().hasNext()) {
-			BigInteger tokenId = new BigInteger(resultsIterator.iterator().next().getKey());
+			String tokenId = resultsIterator.iterator().next().getKey();
 			NFT nft = NFT.read(stub, tokenId);
 
 			boolean activated;
@@ -102,15 +101,15 @@ public class EERC721 extends CustomChaincodeBase {
 		return tokenIds;
 	}
 
-	private static List<BigInteger> tokenIdsOfForType(ChaincodeStub stub, String owner, String type) throws IOException {
-		List<BigInteger> tokenIds = new ArrayList<>();
+	private static List<String> tokenIdsOfForType(ChaincodeStub stub, String owner, String type) throws IOException {
+		List<String> tokenIds = new ArrayList<>();
 
 		String query = "{\"selector\":{\"owner\":\"" + owner + "\"," +
 				"\"type\":\"" + type + "\"}}";
 
 		QueryResultsIterator<KeyValue> resultsIterator = stub.getQueryResult(query);
 		while (resultsIterator.iterator().hasNext()) {
-			BigInteger tokenId = new BigInteger(resultsIterator.iterator().next().getKey());
+			String tokenId = resultsIterator.iterator().next().getKey();
 
 			boolean activated;
 			if (type.equals(BASE_TYPE)) {
@@ -128,7 +127,7 @@ public class EERC721 extends CustomChaincodeBase {
 		return tokenIds;
 	}
 
-	public static boolean divide(ChaincodeStub stub, BigInteger tokenId, List<BigInteger> newIds, List<String> values, String index)
+	public static boolean divide(ChaincodeStub stub, String tokenId, List<String> newIds, List<String> values, String index)
 			throws IOException {
 		if (newIds.size() != 2 || values.size() != 2) {
 			throw new IndexOutOfBoundsException("Both array 'newIds' and 'values' should have only two elements");
@@ -178,7 +177,7 @@ public class EERC721 extends CustomChaincodeBase {
 		return true;
 	}
 
-    public static boolean deactivate(ChaincodeStub stub, BigInteger tokenId) throws IOException {
+    public static boolean deactivate(ChaincodeStub stub, String tokenId) throws IOException {
 		NFT nft = NFT.read(stub, tokenId);
 		if (nft.getType().equals(BASE_TYPE)) {
 			LOG.error(Message.BASE_TYPE_ERROR_MESSAGE);
@@ -188,12 +187,12 @@ public class EERC721 extends CustomChaincodeBase {
 		return nft.setXAttr(stub, Key.ACTIVATED_KEY, false);
 	}
 
-    public static String query(ChaincodeStub stub, BigInteger tokenId) throws IOException {
+    public static String query(ChaincodeStub stub, String tokenId) throws IOException {
 		NFT nft = NFT.read(stub, tokenId);
 		return nft.toJSONString();
 	}
 
-    public static List<String> queryHistory(ChaincodeStub stub, BigInteger tokenId) {
+    public static List<String> queryHistory(ChaincodeStub stub, String tokenId) {
 		List<String> histories = new LinkedList<>();
 		QueryResultsIterator<KeyModification> resultsIterator = stub.getHistoryForKey(tokenId.toString());
 		while (resultsIterator.iterator().hasNext()) {

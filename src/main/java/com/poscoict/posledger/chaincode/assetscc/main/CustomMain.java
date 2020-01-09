@@ -8,7 +8,6 @@ import com.poscoict.posledger.chaincode.assetscc.extension.XType;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.*;
 
 import static com.poscoict.posledger.chaincode.assetscc.constant.Function.*;
@@ -131,11 +130,11 @@ public class CustomMain extends Main {
         String owner = args.get(0);
         String type = args.get(1);
 
-        return EERC721.balanceOf(stub, owner, type).toString();
+        return Long.toString(EERC721.balanceOf(stub, owner, type));
     }
 
     private String tokenIdsOf(ChaincodeStub stub, List<String> args) throws IOException {
-        List<BigInteger> tokenIds;
+        List<String> tokenIds;
 
         if (args.size() == 1) {
             if (isNullOrEmpty(args.get(0))) {
@@ -170,17 +169,9 @@ public class CustomMain extends Main {
             throw new IllegalArgumentException(String.format(ARG_MESSAGE, "4"));
         }
 
-        BigInteger tokenId = new BigInteger(args.get(0));
-
-        List<String> newIdsStr = strToList(args.get(1));
-        List<BigInteger> newIds = new ArrayList<>();
-        for (String newIdStr : newIdsStr) {
-            BigInteger newId = new BigInteger(newIdStr);
-            newIds.add(newId);
-        }
-
+        String tokenId = args.get(0);
+        List<String> newIds = strToList(args.get(1));
         List<String> values = strToList(args.get(2));
-
         String index = args.get(3);
 
         return Boolean.toString(EERC721.divide(stub, tokenId, newIds, values, index));
@@ -191,7 +182,7 @@ public class CustomMain extends Main {
             throw new IllegalArgumentException(String.format(ARG_MESSAGE, "1"));
         }
 
-        BigInteger tokenId = new BigInteger(args.get(0));
+        String tokenId = args.get(0);
 
         return Boolean.toString(EERC721.deactivate(stub, tokenId));
     }
@@ -201,7 +192,7 @@ public class CustomMain extends Main {
             throw new IllegalArgumentException(String.format(ARG_MESSAGE, "1"));
         }
 
-        BigInteger tokenId = new BigInteger(args.get(0));
+        String tokenId = args.get(0);
 
         return EERC721.query(stub, tokenId);
     }
@@ -211,7 +202,7 @@ public class CustomMain extends Main {
             throw new IllegalArgumentException(String.format(ARG_MESSAGE, "1"));
         }
 
-        BigInteger tokenId = new BigInteger(args.get(0));
+        String tokenId = args.get(0);
 
         return EERC721.queryHistory(stub, tokenId).toString();
     }
@@ -223,7 +214,7 @@ public class CustomMain extends Main {
             throw new IllegalArgumentException(String.format(ARG_MESSAGE, "5"));
         }
 
-        BigInteger tokenId = new BigInteger(args.get(0));
+        String tokenId = args.get(0);
         String type = args.get(1);
         String owner = args.get(2);
         Map<String, Object> xattr =
@@ -240,7 +231,7 @@ public class CustomMain extends Main {
             throw new IllegalArgumentException(String.format(ARG_MESSAGE, "3"));
         }
 
-        BigInteger tokenId = new BigInteger(args.get(0));
+        String tokenId = args.get(0);
         String index = args.get(1);
         String value = args.get(2);
 
@@ -252,7 +243,7 @@ public class CustomMain extends Main {
                 || isNullOrEmpty(args.get(1))) {
             throw new IllegalArgumentException(String.format(ARG_MESSAGE, "2"));
         }
-        BigInteger tokenId = new BigInteger(args.get(0));
+        String tokenId = args.get(0);
         String index = args.get(1);
         return XNFT.getURI(stub, tokenId, index);
     }
@@ -263,7 +254,7 @@ public class CustomMain extends Main {
             throw new IllegalArgumentException(String.format(ARG_MESSAGE, "3"));
         }
 
-        BigInteger tokenId = new BigInteger(args.get(0));
+        String tokenId = args.get(0);
         String index = args.get(1);
         String value = args.get(2);
 
@@ -276,7 +267,7 @@ public class CustomMain extends Main {
             throw new IllegalArgumentException(String.format(ARG_MESSAGE, "2"));
         }
 
-        BigInteger tokenId = new BigInteger(args.get(0));
+        String tokenId = args.get(0);
         String index = args.get(1);
 
         return XNFT.getXAttr(stub, tokenId, index);

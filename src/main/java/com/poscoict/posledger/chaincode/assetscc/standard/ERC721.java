@@ -7,14 +7,13 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ledger.KeyValue;
 import org.hyperledger.fabric.shim.ledger.QueryResultsIterator;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ERC721 extends CustomChaincodeBase {
 	private static final String QUERY_OWNER = "{\"selector\":{\"owner\":\"%s\"}}";
 
-	public static BigInteger balanceOf(ChaincodeStub stub, String owner) {
+	public static long balanceOf(ChaincodeStub stub, String owner) {
 		String query = String.format(QUERY_OWNER, owner);
 
 		long ownedTokensCount = 0;
@@ -24,15 +23,15 @@ public class ERC721 extends CustomChaincodeBase {
 			ownedTokensCount++;
 		}
 
-		return BigInteger.valueOf(ownedTokensCount);
+		return ownedTokensCount;
 	}
 
-	public static String ownerOf(ChaincodeStub stub, BigInteger tokenId) throws IOException {
+	public static String ownerOf(ChaincodeStub stub, String tokenId) throws IOException {
 		NFT nft = NFT.read(stub, tokenId);
 		return nft.getOwner();
 	}
 
-	public static boolean transferFrom(ChaincodeStub stub, String from, String to, BigInteger tokenId) throws IOException {
+	public static boolean transferFrom(ChaincodeStub stub, String from, String to, String tokenId) throws IOException {
 			NFT nft = NFT.read(stub, tokenId);
 
 			String owner = nft.getOwner();
@@ -45,7 +44,7 @@ public class ERC721 extends CustomChaincodeBase {
 			return true;
 	}
 
-	public static boolean approve(ChaincodeStub stub, String approved, BigInteger tokenId) throws IOException {
+	public static boolean approve(ChaincodeStub stub, String approved, String tokenId) throws IOException {
 		NFT nft = NFT.read(stub, tokenId);
 		return nft.setApprovee(stub, approved);
 	}
@@ -69,7 +68,7 @@ public class ERC721 extends CustomChaincodeBase {
 		return true;
 	}
 
-    public static String getApproved(ChaincodeStub stub, BigInteger tokenId) throws IOException {
+    public static String getApproved(ChaincodeStub stub, String tokenId) throws IOException {
 		NFT nft = NFT.read(stub, tokenId);
 		return nft.getApprovee();
 	}

@@ -3,7 +3,6 @@ package com.poscoict.posledger.chaincode.assetscc.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,9 +23,6 @@ public class DataTypeConversion {
             case INTEGER:
                 return Integer.parseInt(value);
 
-            case BIG_INTEGER:
-                return new BigInteger(value);
-
             case DOUBLE:
                 return Double.parseDouble(value);
 
@@ -41,9 +37,6 @@ public class DataTypeConversion {
 
             case LIST_INTEGER:
                 return toListInteger(value);
-
-            case LIST_BIG_INTEGER:
-                return toListBigInteger(value);
 
             case LIST_DOUBLE:
                 return toListDouble(value);
@@ -75,20 +68,6 @@ public class DataTypeConversion {
         }
 
         return integers;
-    }
-
-    private static List<BigInteger> toListBigInteger(String value) {
-        List<BigInteger> bigIntegers = new ArrayList<>();
-        if (value == null || value.equals(EMPTY_LIST)) {
-            return bigIntegers;
-        }
-
-        List<String> strings = toList(value);
-        for (String string : strings) {
-            bigIntegers.add(new BigInteger(string));
-        }
-
-        return bigIntegers;
     }
 
     private static List<Double> toListDouble(String value) {

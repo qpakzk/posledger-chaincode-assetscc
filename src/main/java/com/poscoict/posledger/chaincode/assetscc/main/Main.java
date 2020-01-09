@@ -11,7 +11,6 @@ import static com.poscoict.posledger.chaincode.assetscc.constant.Message.NO_FUNC
 import static io.netty.util.internal.StringUtil.isNullOrEmpty;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.*;
 
 
@@ -81,7 +80,7 @@ public class Main extends CustomChaincodeBase {
 
         String owner = args.get(0);
 
-        return ERC721.balanceOf(stub, owner).toString();
+        return Long.toString(ERC721.balanceOf(stub, owner));
     }
 
     private String ownerOf(ChaincodeStub stub, List<String> args) throws IOException {
@@ -89,7 +88,7 @@ public class Main extends CustomChaincodeBase {
             throw new IllegalArgumentException(String.format(ARG_MESSAGE, "1"));
         }
 
-        BigInteger tokenId = new BigInteger(args.get(0));
+        String tokenId = args.get(0);
 
         return ERC721.ownerOf(stub, tokenId);
     }
@@ -102,7 +101,7 @@ public class Main extends CustomChaincodeBase {
 
         String from = args.get(0);
         String to = args.get(1);
-        BigInteger tokenId = new BigInteger(args.get(2));
+        String tokenId = args.get(2);
 
         return Boolean.toString(ERC721.transferFrom(stub, from, to, tokenId));
     }
@@ -114,7 +113,7 @@ public class Main extends CustomChaincodeBase {
         }
 
         String approved = args.get(0);
-        BigInteger tokenId = new BigInteger(args.get(1));
+        String tokenId = args.get(1);
 
         return Boolean.toString(ERC721.approve(stub, approved, tokenId));
     }
@@ -137,7 +136,7 @@ public class Main extends CustomChaincodeBase {
             throw new IllegalArgumentException(String.format(ARG_MESSAGE, "1"));
         }
 
-        BigInteger tokenId = new BigInteger(args.get(0));
+        String tokenId = args.get(0);
 
         return ERC721.getApproved(stub, tokenId);
     }
@@ -160,7 +159,7 @@ public class Main extends CustomChaincodeBase {
             throw new IllegalArgumentException(String.format(ARG_MESSAGE, "2"));
         }
 
-        BigInteger tokenId = new BigInteger(args.get(0));
+        String tokenId = args.get(0);
         String owner = args.get(1);
 
         return Boolean.toString(BaseNFT.mint(stub, tokenId, owner));
@@ -171,7 +170,7 @@ public class Main extends CustomChaincodeBase {
             throw new IllegalArgumentException(String.format(ARG_MESSAGE, "1"));
         }
 
-        BigInteger tokenId = new BigInteger(args.get(0));
+        String tokenId = args.get(0);
 
         return Boolean.toString(BaseNFT.burn(stub, tokenId));
     }
@@ -181,7 +180,7 @@ public class Main extends CustomChaincodeBase {
             throw new IllegalArgumentException(String.format(ARG_MESSAGE, "1"));
         }
 
-        BigInteger tokenId = new BigInteger(args.get(0));
+        String tokenId = args.get(0);
 
         return BaseNFT.getType(stub, tokenId);
     }

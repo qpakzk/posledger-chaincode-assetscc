@@ -7,7 +7,6 @@ import com.poscoict.posledger.chaincode.assetscc.main.CustomChaincodeBase;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.*;
 
 import static com.poscoict.posledger.chaincode.assetscc.constant.DataType.*;
@@ -20,14 +19,14 @@ public class XType extends CustomChaincodeBase {
         Map<String, List<String>> attributes = objectMapper.readValue(json, new TypeReference<HashMap<String, List<String>>>() {});
 
         if (!attributes.containsKey(PARENT_KEY)) {
-            BigInteger parentValue = BigInteger.valueOf(-1);
-            List<String> parent = new ArrayList<>(Arrays.asList(BIG_INTEGER, parentValue.toString()));
+            String parentValue = "";
+            List<String> parent = new ArrayList<>(Arrays.asList(STRING, parentValue));
             attributes.put(PARENT_KEY, parent);
         }
 
         if (!attributes.containsKey(CHILDREN_KEY)) {
-            List<BigInteger> childrenValue = new ArrayList<>(Arrays.asList(BigInteger.valueOf(-1), BigInteger.valueOf(-1)));
-            List<String> children = new ArrayList<>(Arrays.asList(LIST_BIG_INTEGER, childrenValue.toString()));
+            List<String> childrenValue = new ArrayList<>();
+            List<String> children = new ArrayList<>(Arrays.asList(LIST_STRING, childrenValue.toString()));
             attributes.put(CHILDREN_KEY, children);
         }
 

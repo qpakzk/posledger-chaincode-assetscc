@@ -10,7 +10,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +21,7 @@ import static com.poscoict.posledger.chaincode.assetscc.constant.Message.NO_TOKE
 public class XNFT extends CustomChaincodeBase {
     private static final Log LOG = LogFactory.getLog(XNFT.class);
 
-    public static boolean mint(ChaincodeStub stub, BigInteger tokenId, String type, String owner, Map<String, Object> xattr, Map<String, String> uri) throws IOException {
+    public static boolean mint(ChaincodeStub stub, String tokenId, String type, String owner, Map<String, Object> xattr, Map<String, String> uri) throws IOException {
         TokenTypeManager manager = TokenTypeManager.read(stub);
         Map<String, List<String>> attributes = manager.getTokenType(type);
         if (attributes == null) {
@@ -95,7 +94,7 @@ public class XNFT extends CustomChaincodeBase {
                 && uri.containsKey("path") && uri.containsKey("hash"));
     }
 
-    public static boolean setURI(ChaincodeStub stub, BigInteger tokenId, String index, String value) throws IOException {
+    public static boolean setURI(ChaincodeStub stub, String tokenId, String index, String value) throws IOException {
         NFT nft = NFT.read(stub, tokenId);
         Map<String, String> uri = nft.getURI();
         if (!uri.containsKey(index)) {
@@ -105,7 +104,7 @@ public class XNFT extends CustomChaincodeBase {
         return nft.setURI(stub, index, value);
     }
 
-    public static String getURI(ChaincodeStub stub, BigInteger tokenId, String index) throws IOException {
+    public static String getURI(ChaincodeStub stub, String tokenId, String index) throws IOException {
         NFT nft = NFT.read(stub, tokenId);
         Map<String, String> uri = nft.getURI();
         if (!uri.containsKey(index)) {
@@ -115,7 +114,7 @@ public class XNFT extends CustomChaincodeBase {
         return nft.getURI(index);
     }
 
-    public static boolean setXAttr(ChaincodeStub stub, BigInteger tokenId, String index, String value) throws IOException {
+    public static boolean setXAttr(ChaincodeStub stub, String tokenId, String index, String value) throws IOException {
         NFT nft = NFT.read(stub, tokenId);
         Map<String, Object> xattr = nft.getXAttr();
         if (!xattr.containsKey(index)) {
@@ -136,7 +135,7 @@ public class XNFT extends CustomChaincodeBase {
     }
 
     @SuppressWarnings("unchecked")
-    public static String getXAttr(ChaincodeStub stub, BigInteger tokenId, String index) throws IOException {
+    public static String getXAttr(ChaincodeStub stub, String tokenId, String index) throws IOException {
         NFT nft = NFT.read(stub, tokenId);
         Map<String, Object> xattr = nft.getXAttr();
         if (!xattr.containsKey(index)) {
@@ -156,10 +155,6 @@ public class XNFT extends CustomChaincodeBase {
             case DataType.INTEGER:
                 return Integer.toString((int) value);
 
-            case DataType.BIG_INTEGER:
-                BigInteger bigInteger = (BigInteger) value;
-                return bigInteger.toString();
-
             case DataType.DOUBLE:
                 return Double.toString((double) value);
 
@@ -175,10 +170,6 @@ public class XNFT extends CustomChaincodeBase {
             case LIST_INTEGER:
                 List<Integer> integers = (List<Integer>) value;
                 return integers != null ? integers.toString() : null;
-
-            case LIST_BIG_INTEGER:
-                List<BigInteger> bigIntegers = (List<BigInteger>) value;
-                return bigIntegers != null ? bigIntegers.toString() : null;
 
             case LIST_DOUBLE:
                 List<Double> doubles = (List<Double>) value;
