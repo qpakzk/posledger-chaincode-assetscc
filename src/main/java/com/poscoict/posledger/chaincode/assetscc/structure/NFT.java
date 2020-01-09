@@ -88,7 +88,7 @@ public class NFT {
 
     public boolean setApprovee(ChaincodeStub stub, String approvee) throws JsonProcessingException {
         this.approvee = approvee;
-        stub.putStringState(this.tokenId.toString(), this.toJSONString());
+        stub.putStringState(this.tokenId, this.toJSONString());
         return true;
     }
 

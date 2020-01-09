@@ -194,7 +194,7 @@ public class EERC721 extends CustomChaincodeBase {
 
     public static List<String> queryHistory(ChaincodeStub stub, String tokenId) {
 		List<String> histories = new LinkedList<>();
-		QueryResultsIterator<KeyModification> resultsIterator = stub.getHistoryForKey(tokenId.toString());
+		QueryResultsIterator<KeyModification> resultsIterator = stub.getHistoryForKey(tokenId);
 		while (resultsIterator.iterator().hasNext()) {
 			histories.add(resultsIterator.iterator().next().getStringValue());
 		}
