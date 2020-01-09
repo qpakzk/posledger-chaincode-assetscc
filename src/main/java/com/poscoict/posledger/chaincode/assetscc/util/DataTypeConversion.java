@@ -15,6 +15,8 @@ import static com.poscoict.posledger.chaincode.assetscc.constant.Message.NO_DATA
 public class DataTypeConversion {
     private static final Log LOG = LogFactory.getLog(DataTypeConversion.class);
 
+    private static final String EMPTY_LIST = "[]";
+
     private DataTypeConversion() {}
 
     public static Object strToDataType(String dataType, String value) {
@@ -63,7 +65,7 @@ public class DataTypeConversion {
 
     private static List<Integer> toListInteger(String value) {
         List<Integer> integers = new ArrayList<>();
-        if (value == null) {
+        if (value == null || value.equals(EMPTY_LIST)) {
             return integers;
         }
 
@@ -77,7 +79,7 @@ public class DataTypeConversion {
 
     private static List<BigInteger> toListBigInteger(String value) {
         List<BigInteger> bigIntegers = new ArrayList<>();
-        if (value == null) {
+        if (value == null || value.equals(EMPTY_LIST)) {
             return bigIntegers;
         }
 
@@ -91,7 +93,7 @@ public class DataTypeConversion {
 
     private static List<Double> toListDouble(String value) {
         List<Double> doubles = new ArrayList<>();
-        if (value == null) {
+        if (value == null || value.equals(EMPTY_LIST)) {
             return doubles;
         }
 
@@ -105,7 +107,7 @@ public class DataTypeConversion {
 
     private static List<Byte> toListByte(String value) {
         List<Byte> bytes = new ArrayList<>();
-        if (value == null) {
+        if (value == null || value.equals(EMPTY_LIST)) {
             return bytes;
         }
 
@@ -119,7 +121,7 @@ public class DataTypeConversion {
 
     private static List<String> toListString(String value) {
         List<String> strings = new ArrayList<>();
-        if (value == null) {
+        if (value == null || value.equals(EMPTY_LIST)) {
             return strings;
         }
 
@@ -129,7 +131,7 @@ public class DataTypeConversion {
 
     private static List<Boolean> toListBoolean(String value) {
         List<Boolean> booleans = new ArrayList<>();
-        if (value == null) {
+        if (value == null || value.equals(EMPTY_LIST)) {
             return booleans;
         }
 
@@ -142,6 +144,6 @@ public class DataTypeConversion {
     }
 
     private static List<String> toList(String value) {
-        return Arrays.asList(value.substring(1, value.length() - 1).trim().split(","));
+        return Arrays.asList(value.substring(1, value.length() - 1).split(", "));
     }
 }
