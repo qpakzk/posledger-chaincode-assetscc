@@ -26,7 +26,7 @@ public class XType extends CustomChaincodeBase {
         }
 
         if (!attributes.containsKey(CHILDREN_KEY)) {
-            List<BigInteger> childrenValue = new ArrayList<>();
+            List<BigInteger> childrenValue = new ArrayList<>(Arrays.asList(BigInteger.valueOf(-1), BigInteger.valueOf(-1)));
             List<String> children = new ArrayList<>(Arrays.asList(LIST_BIG_INTEGER, childrenValue.toString()));
             attributes.put(CHILDREN_KEY, children);
         }
