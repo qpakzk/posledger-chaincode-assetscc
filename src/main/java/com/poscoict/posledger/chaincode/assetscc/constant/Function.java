@@ -3,6 +3,8 @@ package com.poscoict.posledger.chaincode.assetscc.constant;
 public final class Function {
     private Function() {}
 
+    public static final String INIT_FUNCTION_NAME = "init";
+    
     public static final String BALANCE_OF_FUNCTION_NAME = "balanceOf";
     public static final String OWNER_OF_FUNCTION_NAME = "ownerOf";
     public static final String TRANSFER_FROM_FUNCTION_NAME = "transferFrom";

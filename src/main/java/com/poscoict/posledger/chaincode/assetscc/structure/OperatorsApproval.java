@@ -27,7 +27,7 @@ public class OperatorsApproval {
         }
         else {
             Map<String, Map<String, Boolean>> map
-                    = objectMapper.readValue(json, new TypeReference<HashMap<String, Map<String, Boolean>>>() {});
+                    = objectMapper.readValue(json, new TypeReference<HashMap<String, HashMap<String, Boolean>>>() {});
             return new OperatorsApproval(map);
         }
     }

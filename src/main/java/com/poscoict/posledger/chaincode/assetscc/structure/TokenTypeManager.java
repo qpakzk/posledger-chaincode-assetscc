@@ -27,7 +27,7 @@ public class TokenTypeManager {
         }
         else {
             Map<String, Map<String, List<String>>> map
-                    = objectMapper.readValue(json, new TypeReference<HashMap<String, Map<String, List<String>>>>() {});
+                    = objectMapper.readValue(json, new TypeReference<HashMap<String, HashMap<String, List<String>>>>() {});
             return new TokenTypeManager(map);
         }
     }
