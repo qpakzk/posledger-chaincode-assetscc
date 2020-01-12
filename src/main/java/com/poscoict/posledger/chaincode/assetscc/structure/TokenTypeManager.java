@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.*;
 
 import static com.poscoict.posledger.chaincode.assetscc.constant.Key.TOKEN_TYPES;
+import static com.poscoict.posledger.chaincode.assetscc.constant.Key._ADMIN;
 
 public class TokenTypeManager {
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -140,6 +141,16 @@ public class TokenTypeManager {
         }
 
         return tokenTypes.get(tokenType).get(attribute);
+    }
+
+    public String getAdmin(String tokenType) {
+        List<String> pair = getAttributeOfTokenType(tokenType, _ADMIN);
+
+        if (pair.isEmpty()) {
+            return "";
+        }
+
+        return pair.get(1);
     }
 
     private String toJSONString() throws JsonProcessingException {

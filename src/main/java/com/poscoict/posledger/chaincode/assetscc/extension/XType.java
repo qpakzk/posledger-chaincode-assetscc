@@ -15,8 +15,16 @@ import static com.poscoict.posledger.chaincode.assetscc.constant.Key.*;
 public class XType extends CustomChaincodeBase {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static boolean enroll(ChaincodeStub stub, String type, String json) throws IOException {
+    public static boolean enroll(ChaincodeStub stub, String _admin, String type, String json) throws IOException {
         Map<String, List<String>> attributes = objectMapper.readValue(json, new TypeReference<HashMap<String, List<String>>>() {});
+
+        if (!attributes.containsKey(_ADMIN)) {
+            return false;
+        }
+
+        if (!_admin.equals(attributes.get(_ADMIN).get(1))) {
+            return false;
+        }
 
         if (!attributes.containsKey(PARENT_KEY)) {
             String parentValue = "";
@@ -40,8 +48,14 @@ public class XType extends CustomChaincodeBase {
         return manager.addTokenType(stub, type, attributes);
     }
 
-    public static boolean drop(ChaincodeStub stub, String tokenType) throws IOException {
+    public static boolean drop(ChaincodeStub stub, String _admin, String tokenType) throws IOException {
         TokenTypeManager manager = TokenTypeManager.read(stub);
+
+        String admin = manager.getAdmin(tokenType);
+        if (!_admin.equals(admin)) {
+            return false;
+        }
+
         return manager.removeTokenType(stub, tokenType);
     }
 
@@ -50,8 +64,14 @@ public class XType extends CustomChaincodeBase {
         return new ArrayList<>(manager.getTokenTypes().keySet());
     }
 
-    public static boolean update(ChaincodeStub stub, String tokenType, Map<String, List<String>> attributes) throws IOException {
+    public static boolean update(ChaincodeStub stub, String _admin, String tokenType, Map<String, List<String>> attributes) throws IOException {
         TokenTypeManager manager = TokenTypeManager.read(stub);
+
+        String admin = manager.getAdmin(tokenType);
+        if (!_admin.equals(admin)) {
+            return false;
+        }
+
         return manager.setTokenType(stub, tokenType, attributes);
     }
 
@@ -60,18 +80,36 @@ public class XType extends CustomChaincodeBase {
         return manager.getTokenType(tokenType);
     }
 
-    public static boolean enrollAttribute(ChaincodeStub stub, String tokenType, String attribute, String dataType, String initialValue) throws IOException {
+    public static boolean enrollAttribute(ChaincodeStub stub, String _admin, String tokenType, String attribute, String dataType, String initialValue) throws IOException {
         TokenTypeManager manager = TokenTypeManager.read(stub);
+
+        String admin = manager.getAdmin(tokenType);
+        if (!_admin.equals(admin)) {
+            return false;
+        }
+
         return manager.addAttributeOfTokenType(stub, tokenType, attribute, dataType, initialValue);
     }
 
-    public static boolean dropAttribute(ChaincodeStub stub, String tokenType, String attribute) throws IOException {
+    public static boolean dropAttribute(ChaincodeStub stub, String _admin, String tokenType, String attribute) throws IOException {
         TokenTypeManager manager = TokenTypeManager.read(stub);
+
+        String admin = manager.getAdmin(tokenType);
+        if (!_admin.equals(admin)) {
+            return false;
+        }
+
         return manager.removeAttributeOfTokenType(stub, tokenType, attribute);
     }
 
-    public static boolean updateAttribute(ChaincodeStub stub, String tokenType, String attribute, List<String> pair) throws IOException {
+    public static boolean updateAttribute(ChaincodeStub stub, String _admin, String tokenType, String attribute, List<String> pair) throws IOException {
         TokenTypeManager manager = TokenTypeManager.read(stub);
+
+        String admin = manager.getAdmin(tokenType);
+        if (!_admin.equals(admin)) {
+            return false;
+        }
+
         return manager.setAttributeOfTokenType(stub, tokenType, attribute, pair);
     }
 

@@ -274,25 +274,28 @@ public class CustomMain extends Main {
     }
 
     private String enrollTokenType(ChaincodeStub stub, List<String> args) throws IOException {
-        if (args.size() != 2 || isNullOrEmpty(args.get(0))
-                || isNullOrEmpty(args.get(1))) {
-            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "2"));
+        if (args.size() != 3
+                || isNullOrEmpty(args.get(0)) || isNullOrEmpty(args.get(1)) || isNullOrEmpty(args.get(2))) {
+            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "3"));
         }
 
-        String type = args.get(0);
-        String json = args.get(1);
+        String _admin = args.get(0);
+        String type = args.get(1);
+        String json = args.get(2);
 
-        return Boolean.toString(XType.enroll(stub, type, json));
+        return Boolean.toString(XType.enroll(stub, _admin, type, json));
     }
 
     private String dropTokenType(ChaincodeStub stub, List<String> args) throws IOException {
-        if (args.size() != 1 || isNullOrEmpty(args.get(0))) {
-            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "1"));
+        if (args.size() != 2
+                || isNullOrEmpty(args.get(0)) || isNullOrEmpty(args.get(1))) {
+            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "2"));
         }
 
-        String type = args.get(0);
+        String _admin = args.get(0);
+        String type = args.get(1);
 
-        return Boolean.toString(XType.drop(stub, type));
+        return Boolean.toString(XType.drop(stub, _admin, type));
     }
 
     private String tokenTypesOf(ChaincodeStub stub) throws IOException {
@@ -301,17 +304,18 @@ public class CustomMain extends Main {
     }
 
     private static String updateTokenType(ChaincodeStub stub, List<String> args) throws IOException {
-        if (args.size() != 2 || isNullOrEmpty(args.get(0))
-                || isNullOrEmpty(args.get(1))) {
-            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "2"));
+        if (args.size() != 3
+                || isNullOrEmpty(args.get(0)) || isNullOrEmpty(args.get(1)) || isNullOrEmpty(args.get(2))) {
+            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "3"));
         }
 
-        String type = args.get(0);
-        String attributesStr = args.get(1);
+        String _admin = args.get(0);
+        String type = args.get(1);
+        String attributesStr = args.get(2);
         Map<String, List<String>> attributes
                 = objectMapper.readValue(attributesStr, new TypeReference<HashMap<String, List<String>>>() {});
 
-        return Boolean.toString(XType.update(stub, type, attributes));
+        return Boolean.toString(XType.update(stub, _admin, type, attributes));
     }
 
     private String retrieveTokenType(ChaincodeStub stub, List<String> args) throws IOException {
@@ -326,28 +330,32 @@ public class CustomMain extends Main {
     }
 
     private String enrollAttributeOfTokenType(ChaincodeStub stub, List<String> args) throws IOException {
-        if (args.size() != 4 || isNullOrEmpty(args.get(0))
-                || isNullOrEmpty(args.get(1)) || isNullOrEmpty(args.get(2)) || isNullOrEmpty(args.get(3))) {
-            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "4"));
+        if (args.size() != 5
+                || isNullOrEmpty(args.get(0)) || isNullOrEmpty(args.get(1)) || isNullOrEmpty(args.get(2))
+                || isNullOrEmpty(args.get(3)) || isNullOrEmpty(args.get(4))) {
+            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "5"));
         }
 
-        String tokenType = args.get(0);
-        String attribute = args.get(1);
-        String dataType = args.get(2);
-        String initialValue = args.get(3);
+        String _admin = args.get(0);
+        String tokenType = args.get(1);
+        String attribute = args.get(2);
+        String dataType = args.get(3);
+        String initialValue = args.get(4);
 
-        return Boolean.toString(XType.enrollAttribute(stub, tokenType, attribute, dataType, initialValue));
+        return Boolean.toString(XType.enrollAttribute(stub, _admin, tokenType, attribute, dataType, initialValue));
     }
 
     private String dropAttributeOfTokenType(ChaincodeStub stub, List<String> args) throws IOException {
-        if (args.size() != 2 || isNullOrEmpty(args.get(0)) || isNullOrEmpty(args.get(1))) {
+        if (args.size() != 3
+                || isNullOrEmpty(args.get(0)) || isNullOrEmpty(args.get(1)) || isNullOrEmpty(args.get(2))) {
             throw new IllegalArgumentException(String.format(ARG_MESSAGE, "2"));
         }
 
-        String tokenType = args.get(0);
-        String attribute = args.get(1);
+        String _admin = args.get(0);
+        String tokenType = args.get(1);
+        String attribute = args.get(2);
 
-        return Boolean.toString(XType.dropAttribute(stub, tokenType, attribute));
+        return Boolean.toString(XType.dropAttribute(stub, _admin, tokenType, attribute));
     }
 
     private String updateAttributeOfTokenType(ChaincodeStub stub, List<String> args) throws IOException {
@@ -356,12 +364,13 @@ public class CustomMain extends Main {
             throw new IllegalArgumentException(String.format(ARG_MESSAGE, "3"));
         }
 
-        String tokenType = args.get(0);
-        String attribute = args.get(1);
-        String pairStr = args.get(2);
+        String _admin = args.get(0);
+        String tokenType = args.get(1);
+        String attribute = args.get(2);
+        String pairStr = args.get(3);
         List<String> pair = strToList(pairStr);
 
-        return Boolean.toString(XType.updateAttribute(stub, tokenType, attribute, pair));
+        return Boolean.toString(XType.updateAttribute(stub, _admin, tokenType, attribute, pair));
     }
 
     private String retrieveAttributeOfTokenType(ChaincodeStub stub, List<String> args) throws IOException {
