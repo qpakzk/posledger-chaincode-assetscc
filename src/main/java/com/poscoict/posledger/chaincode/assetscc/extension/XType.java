@@ -15,9 +15,7 @@ import static com.poscoict.posledger.chaincode.assetscc.constant.Key.*;
 public class XType extends CustomChaincodeBase {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static boolean enroll(ChaincodeStub stub, String admin, String type, String json) throws IOException {
-        Map<String, List<String>> attributes = objectMapper.readValue(json, new TypeReference<HashMap<String, List<String>>>() {});
-
+    private static void addAttributesAutomatically(String admin, Map<String, List<String>> attributes) {
         if (!attributes.containsKey(ADMIN_KEY)) {
             List<String> adminPair = new ArrayList<>(Arrays.asList(STRING, admin));
             attributes.put(ADMIN_KEY, adminPair);
@@ -40,7 +38,11 @@ public class XType extends CustomChaincodeBase {
             List<String> activated = new ArrayList<>(Arrays.asList(BOOLEAN, Boolean.toString(activatedValue)));
             attributes.put(ACTIVATED_KEY, activated);
         }
+    }
 
+    public static boolean enroll(ChaincodeStub stub, String admin, String type, String json) throws IOException {
+        Map<String, List<String>> attributes = objectMapper.readValue(json, new TypeReference<HashMap<String, List<String>>>() {});
+        addAttributesAutomatically(admin, attributes);
         TokenTypeManager manager = TokenTypeManager.read(stub);
         return manager.addTokenType(stub, type, attributes);
     }
@@ -67,29 +69,7 @@ public class XType extends CustomChaincodeBase {
             return false;
         }
 
-        if (!attributes.containsKey(ADMIN_KEY)) {
-            List<String> adminPair = new ArrayList<>(Arrays.asList(STRING, admin));
-            attributes.put(ADMIN_KEY, adminPair);
-        }
-
-        if (!attributes.containsKey(PARENT_KEY)) {
-            String parentValue = "";
-            List<String> parent = new ArrayList<>(Arrays.asList(STRING, parentValue));
-            attributes.put(PARENT_KEY, parent);
-        }
-
-        if (!attributes.containsKey(CHILDREN_KEY)) {
-            List<String> childrenValue = new ArrayList<>();
-            List<String> children = new ArrayList<>(Arrays.asList(LIST_STRING, childrenValue.toString()));
-            attributes.put(CHILDREN_KEY, children);
-        }
-
-        if (!attributes.containsKey(ACTIVATED_KEY)) {
-            boolean activatedValue = true;
-            List<String> activated = new ArrayList<>(Arrays.asList(BOOLEAN, Boolean.toString(activatedValue)));
-            attributes.put(ACTIVATED_KEY, activated);
-        }
-
+        addAttributesAutomatically(admin, attributes);
         return manager.setTokenType(stub, tokenType, attributes);
     }
 
