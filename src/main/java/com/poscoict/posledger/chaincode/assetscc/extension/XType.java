@@ -18,11 +18,11 @@ public class XType extends CustomChaincodeBase {
     public static boolean enroll(ChaincodeStub stub, String _admin, String type, String json) throws IOException {
         Map<String, List<String>> attributes = objectMapper.readValue(json, new TypeReference<HashMap<String, List<String>>>() {});
 
-        if (!attributes.containsKey(_ADMIN)) {
+        if (!attributes.containsKey(ADMIN_KEY)) {
             return false;
         }
 
-        if (!_admin.equals(attributes.get(_ADMIN).get(1))) {
+        if (!_admin.equals(attributes.get(ADMIN_KEY).get(1))) {
             return false;
         }
 
@@ -72,9 +72,9 @@ public class XType extends CustomChaincodeBase {
             return false;
         }
 
-        if (!attributes.containsKey(_ADMIN)) {
+        if (!attributes.containsKey(ADMIN_KEY)) {
             List<String> adminPair = new ArrayList<>(Arrays.asList(STRING, admin));
-            attributes.put(_ADMIN, adminPair);
+            attributes.put(ADMIN_KEY, adminPair);
         }
 
         if (!attributes.containsKey(PARENT_KEY)) {

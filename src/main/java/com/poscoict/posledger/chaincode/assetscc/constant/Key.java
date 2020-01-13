@@ -17,5 +17,5 @@ public final class Key {
     public static final String PARENT_KEY = "parent";
     public static final String CHILDREN_KEY = "children";
 
-    public static final String _ADMIN = "_admin";
+    public static final String ADMIN_KEY = "_admin";
 }

@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.*;
 
 import static com.poscoict.posledger.chaincode.assetscc.constant.Key.TOKEN_TYPES;
-import static com.poscoict.posledger.chaincode.assetscc.constant.Key._ADMIN;
+import static com.poscoict.posledger.chaincode.assetscc.constant.Key.ADMIN_KEY;
 
 public class TokenTypeManager {
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -144,7 +144,7 @@ public class TokenTypeManager {
     }
 
     public String getAdmin(String tokenType) {
-        List<String> pair = getAttributeOfTokenType(tokenType, _ADMIN);
+        List<String> pair = getAttributeOfTokenType(tokenType, ADMIN_KEY);
 
         if (pair.isEmpty()) {
             return "";
