@@ -19,11 +19,8 @@ public class XType extends CustomChaincodeBase {
         Map<String, List<String>> attributes = objectMapper.readValue(json, new TypeReference<HashMap<String, List<String>>>() {});
 
         if (!attributes.containsKey(ADMIN_KEY)) {
-            return false;
-        }
-
-        if (!admin.equals(attributes.get(ADMIN_KEY).get(1))) {
-            return false;
+            List<String> adminPair = new ArrayList<>(Arrays.asList(STRING, admin));
+            attributes.put(ADMIN_KEY, adminPair);
         }
 
         if (!attributes.containsKey(PARENT_KEY)) {
