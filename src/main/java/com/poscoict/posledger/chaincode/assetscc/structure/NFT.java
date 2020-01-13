@@ -32,6 +32,10 @@ public class NFT {
     }
 
     public boolean mint(ChaincodeStub stub, String tokenId, String type, String owner, Map<String, Object> xattr, Map<String, String> uri) throws JsonProcessingException {
+        if (stub.getStringState(tokenId).length() != 0) {
+            return false;
+        }
+
         this.tokenId = tokenId;
         this.type = type;
         this.owner = owner;
