@@ -72,6 +72,29 @@ public class XType extends CustomChaincodeBase {
             return false;
         }
 
+        if (!attributes.containsKey(_ADMIN)) {
+            List<String> adminPair = new ArrayList<>(Arrays.asList(STRING, admin));
+            attributes.put(_ADMIN, adminPair);
+        }
+
+        if (!attributes.containsKey(PARENT_KEY)) {
+            String parentValue = "";
+            List<String> parent = new ArrayList<>(Arrays.asList(STRING, parentValue));
+            attributes.put(PARENT_KEY, parent);
+        }
+
+        if (!attributes.containsKey(CHILDREN_KEY)) {
+            List<String> childrenValue = new ArrayList<>();
+            List<String> children = new ArrayList<>(Arrays.asList(LIST_STRING, childrenValue.toString()));
+            attributes.put(CHILDREN_KEY, children);
+        }
+
+        if (!attributes.containsKey(ACTIVATED_KEY)) {
+            boolean activatedValue = true;
+            List<String> activated = new ArrayList<>(Arrays.asList(BOOLEAN, Boolean.toString(activatedValue)));
+            attributes.put(ACTIVATED_KEY, activated);
+        }
+
         return manager.setTokenType(stub, tokenType, attributes);
     }
 
