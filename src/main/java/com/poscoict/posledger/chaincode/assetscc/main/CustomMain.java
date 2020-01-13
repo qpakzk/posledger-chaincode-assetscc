@@ -348,7 +348,7 @@ public class CustomMain extends Main {
     private String dropAttributeOfTokenType(ChaincodeStub stub, List<String> args) throws IOException {
         if (args.size() != 3
                 || isNullOrEmpty(args.get(0)) || isNullOrEmpty(args.get(1)) || isNullOrEmpty(args.get(2))) {
-            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "2"));
+            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "3"));
         }
 
         String admin = args.get(0);
@@ -359,9 +359,10 @@ public class CustomMain extends Main {
     }
 
     private String updateAttributeOfTokenType(ChaincodeStub stub, List<String> args) throws IOException {
-        if (args.size() != 3 || isNullOrEmpty(args.get(0))
-                || isNullOrEmpty(args.get(1)) || isNullOrEmpty(args.get(2))) {
-            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "3"));
+        if (args.size() != 4
+                || isNullOrEmpty(args.get(0)) || isNullOrEmpty(args.get(1)) || isNullOrEmpty(args.get(2))
+                || isNullOrEmpty(args.get(3))) {
+            throw new IllegalArgumentException(String.format(ARG_MESSAGE, "4"));
         }
 
         String admin = args.get(0);
