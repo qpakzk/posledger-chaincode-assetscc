@@ -283,7 +283,7 @@ public class CustomMain extends Main {
         String type = args.get(1);
         String json = args.get(2);
 
-        return Boolean.toString(XType.enroll(stub, admin, type, json));
+        return Boolean.toString(XType.enrollTokenType(stub, admin, type, json));
     }
 
     private String dropTokenType(ChaincodeStub stub, List<String> args) throws IOException {
@@ -295,7 +295,7 @@ public class CustomMain extends Main {
         String admin = args.get(0);
         String type = args.get(1);
 
-        return Boolean.toString(XType.drop(stub, admin, type));
+        return Boolean.toString(XType.dropTokenType(stub, admin, type));
     }
 
     private String tokenTypesOf(ChaincodeStub stub) throws IOException {
@@ -315,7 +315,7 @@ public class CustomMain extends Main {
         Map<String, List<String>> attributes
                 = objectMapper.readValue(attributesStr, new TypeReference<HashMap<String, List<String>>>() {});
 
-        return Boolean.toString(XType.update(stub, admin, type, attributes));
+        return Boolean.toString(XType.updateTokenType(stub, admin, type, attributes));
     }
 
     private String retrieveTokenType(ChaincodeStub stub, List<String> args) throws IOException {
@@ -324,7 +324,7 @@ public class CustomMain extends Main {
         }
 
         String type = args.get(0);
-        Map<String, List<String>> map = XType.retrieve(stub, type);
+        Map<String, List<String>> map = XType.retrieveTokenType(stub, type);
 
         return objectMapper.writeValueAsString(map);
     }
@@ -342,7 +342,7 @@ public class CustomMain extends Main {
         String dataType = args.get(3);
         String initialValue = args.get(4);
 
-        return Boolean.toString(XType.enrollAttribute(stub, admin, tokenType, attribute, dataType, initialValue));
+        return Boolean.toString(XType.enrollAttributeOfTokenType(stub, admin, tokenType, attribute, dataType, initialValue));
     }
 
     private String dropAttributeOfTokenType(ChaincodeStub stub, List<String> args) throws IOException {
@@ -355,7 +355,7 @@ public class CustomMain extends Main {
         String tokenType = args.get(1);
         String attribute = args.get(2);
 
-        return Boolean.toString(XType.dropAttribute(stub, admin, tokenType, attribute));
+        return Boolean.toString(XType.dropAttributeOfTokenType(stub, admin, tokenType, attribute));
     }
 
     private String updateAttributeOfTokenType(ChaincodeStub stub, List<String> args) throws IOException {
@@ -371,7 +371,7 @@ public class CustomMain extends Main {
         String pairStr = args.get(3);
         List<String> pair = strToList(pairStr);
 
-        return Boolean.toString(XType.updateAttribute(stub, admin, tokenType, attribute, pair));
+        return Boolean.toString(XType.updateAttributeOfTokenType(stub, admin, tokenType, attribute, pair));
     }
 
     private String retrieveAttributeOfTokenType(ChaincodeStub stub, List<String> args) throws IOException {
@@ -382,7 +382,7 @@ public class CustomMain extends Main {
         String tokenType = args.get(0);
         String attribute = args.get(1);
 
-        return XType.retrieveAttribute(stub, tokenType, attribute).toString();
+        return XType.retrieveAttributeOfTokenType(stub, tokenType, attribute).toString();
     }
 
     private List<String> strToList(String str) {

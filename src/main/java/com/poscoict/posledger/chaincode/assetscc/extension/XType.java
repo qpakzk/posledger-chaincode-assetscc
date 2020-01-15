@@ -40,14 +40,14 @@ public class XType extends CustomChaincodeBase {
         }
     }
 
-    public static boolean enroll(ChaincodeStub stub, String admin, String type, String json) throws IOException {
+    public static boolean enrollTokenType(ChaincodeStub stub, String admin, String type, String json) throws IOException {
         Map<String, List<String>> attributes = objectMapper.readValue(json, new TypeReference<HashMap<String, List<String>>>() {});
         addAttributesAutomatically(admin, attributes);
         TokenTypeManager manager = TokenTypeManager.read(stub);
         return manager.addTokenType(stub, type, attributes);
     }
 
-    public static boolean drop(ChaincodeStub stub, String admin, String tokenType) throws IOException {
+    public static boolean dropTokenType(ChaincodeStub stub, String admin, String tokenType) throws IOException {
         TokenTypeManager manager = TokenTypeManager.read(stub);
 
         if (!admin.equals(manager.getAdmin(tokenType))) {
@@ -62,7 +62,7 @@ public class XType extends CustomChaincodeBase {
         return new ArrayList<>(manager.getTokenTypes().keySet());
     }
 
-    public static boolean update(ChaincodeStub stub, String admin, String tokenType, Map<String, List<String>> attributes) throws IOException {
+    public static boolean updateTokenType(ChaincodeStub stub, String admin, String tokenType, Map<String, List<String>> attributes) throws IOException {
         TokenTypeManager manager = TokenTypeManager.read(stub);
 
         if (!admin.equals(manager.getAdmin(tokenType))) {
@@ -73,12 +73,12 @@ public class XType extends CustomChaincodeBase {
         return manager.setTokenType(stub, tokenType, attributes);
     }
 
-    public static Map<String, List<String>> retrieve(ChaincodeStub stub, String tokenType) throws IOException {
+    public static Map<String, List<String>> retrieveTokenType(ChaincodeStub stub, String tokenType) throws IOException {
         TokenTypeManager manager = TokenTypeManager.read(stub);
         return manager.getTokenType(tokenType);
     }
 
-    public static boolean enrollAttribute(ChaincodeStub stub, String admin, String tokenType, String attribute, String dataType, String initialValue) throws IOException {
+    public static boolean enrollAttributeOfTokenType(ChaincodeStub stub, String admin, String tokenType, String attribute, String dataType, String initialValue) throws IOException {
         TokenTypeManager manager = TokenTypeManager.read(stub);
 
         if (!admin.equals(manager.getAdmin(tokenType))) {
@@ -88,7 +88,7 @@ public class XType extends CustomChaincodeBase {
         return manager.addAttributeOfTokenType(stub, tokenType, attribute, dataType, initialValue);
     }
 
-    public static boolean dropAttribute(ChaincodeStub stub, String admin, String tokenType, String attribute) throws IOException {
+    public static boolean dropAttributeOfTokenType(ChaincodeStub stub, String admin, String tokenType, String attribute) throws IOException {
         TokenTypeManager manager = TokenTypeManager.read(stub);
 
         if (!admin.equals(manager.getAdmin(tokenType))) {
@@ -98,7 +98,7 @@ public class XType extends CustomChaincodeBase {
         return manager.removeAttributeOfTokenType(stub, tokenType, attribute);
     }
 
-    public static boolean updateAttribute(ChaincodeStub stub, String admin, String tokenType, String attribute, List<String> pair) throws IOException {
+    public static boolean updateAttributeOfTokenType(ChaincodeStub stub, String admin, String tokenType, String attribute, List<String> pair) throws IOException {
         TokenTypeManager manager = TokenTypeManager.read(stub);
 
         if (!admin.equals(manager.getAdmin(tokenType))) {
@@ -108,7 +108,7 @@ public class XType extends CustomChaincodeBase {
         return manager.setAttributeOfTokenType(stub, tokenType, attribute, pair);
     }
 
-    public static List<String> retrieveAttribute(ChaincodeStub stub, String tokenType, String attribute) throws IOException {
+    public static List<String> retrieveAttributeOfTokenType(ChaincodeStub stub, String tokenType, String attribute) throws IOException {
         TokenTypeManager manager = TokenTypeManager.read(stub);
         return manager.getAttributeOfTokenType(tokenType, attribute);
     }
